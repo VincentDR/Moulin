@@ -1,12 +1,12 @@
 package moulin;
 
 public class Controleur {
-	private Vue vue;
+	private Fenetre fenetre;
 	private PlateauMoulin plateau;
 	
 	public Controleur()
 	{
-		vue = new Vue(this);
+		fenetre = new Fenetre(this);
 		
 
 		Humain H = new Humain("AVLEET");
