@@ -1024,7 +1024,7 @@ public class PlateauMoulin extends Plateau{
 			
 			int UnVoisinAmi=15;
 					
-			int FuturMoulin=100;
+			int FuturMoulin=1000;
 			int MoulinEtabli=50;
 	
 			
@@ -1159,18 +1159,18 @@ public class PlateauMoulin extends Plateau{
 	
 				//Si la piÃ¨ce possÃ¨de deux voisins
 				if(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]!=42){
-					IndiceOrdi+=DeuxVoisins;
+					IndiceJoueur+=DeuxVoisins;
 					
 					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
 					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession
 							&& getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession)
 					{
-						IndiceOrdi+=MoulinEtabli;
+						IndiceJoueur+=MoulinEtabli;
 					}else{//Si la piece possede un seul voisin ami
 						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession
 							|| getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession )
 						{
-							IndiceOrdi+=UnVoisinAmi;
+							IndiceJoueur+=UnVoisinAmi;
 						}					
 					}
 					//Si le prochain deplacement donne un moulin
@@ -1178,35 +1178,35 @@ public class PlateauMoulin extends Plateau{
 						if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][1] != 42){
 							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
 									&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][1]).getPossession() == Possession){
-								IndiceOrdi+=FuturMoulin;
+								IndiceJoueur+=FuturMoulin;
 							}							
 						}else{						
 							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
 								&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]][0]).getPossession() == Possession
 								|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]][1]).getPossession() == Possession)){
-								IndiceOrdi+=FuturMoulin;					
+								IndiceJoueur+=FuturMoulin;					
 							}
 						}				
 					}
 				}
 				else{
-					IndiceOrdi+=UnVoisin;
+					IndiceJoueur+=UnVoisin;
 					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession)
 					{
-						IndiceOrdi+=UnVoisinAmi;
+						IndiceJoueur+=UnVoisinAmi;
 					}
 					//Si le prochain deplacement donne un moulin
 					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == 0){
 						if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1] != 42){
 							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
 									&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]).getPossession() == Possession){
-								IndiceOrdi+=FuturMoulin;
+								IndiceJoueur+=FuturMoulin;
 							}							
 						}else{						
 							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
 								&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]][0]).getPossession() == Possession
 								|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]][1]).getPossession() == Possession)){
-								IndiceOrdi+=FuturMoulin;					
+								IndiceJoueur+=FuturMoulin;					
 							}
 						}				
 					}
@@ -1215,16 +1215,16 @@ public class PlateauMoulin extends Plateau{
 						
 						
 				if(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]!=42){
-					IndiceOrdi+=DeuxVoisins;
+					IndiceJoueur+=DeuxVoisins;
 								
 					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
 					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() ==Possession 
 						&& getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession){
-							IndiceOrdi+=MoulinEtabli;
+							IndiceJoueur+=MoulinEtabli;
 					}else{//Si la piece possede un seul voisin ami
 						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession 
 							|| getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession){
-								IndiceOrdi+=UnVoisinAmi;
+								IndiceJoueur+=UnVoisinAmi;
 						}					
 					}
 					//Si le prochain deplacement donne un moulin
@@ -1232,40 +1232,41 @@ public class PlateauMoulin extends Plateau{
 						if(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][1] != 42){
 							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
 								&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][1]).getPossession() == Possession){
-									IndiceOrdi+=FuturMoulin;
+									IndiceJoueur+=FuturMoulin;
 							}							
 						}else{						
 							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
 								&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]][0]).getPossession() == Possession
 								|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]][1]).getPossession() == Possession)){
-									IndiceOrdi+=FuturMoulin;					
+									IndiceJoueur+=FuturMoulin;					
 							}
 						}				
 					}
 				}
 				else{
-					IndiceOrdi+=UnVoisin;
+					IndiceJoueur+=UnVoisin;
 					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession)
 					{
-						IndiceOrdi+=UnVoisinAmi;
+						IndiceJoueur+=UnVoisinAmi;
 					}
 					//Si le prochain deplacement donne un moulin
 					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == 0){
 						if(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1] != 42){
 							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
 								&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]).getPossession() == Possession){
-									IndiceOrdi+=FuturMoulin;
+									IndiceJoueur+=FuturMoulin;
 							}							
 						}else{						
 							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
 								&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]][0]).getPossession() == Possession
 								|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]][1]).getPossession() == Possession)){
-									IndiceOrdi+=FuturMoulin;					
+									IndiceJoueur+=FuturMoulin;					
 							}
 						}				
 					}
 				}					
 			}
+			
 			return IndiceOrdi-IndiceJoueur;		
 		}//fin test (!fin de partie ?)
 		else{
@@ -1316,7 +1317,7 @@ public class PlateauMoulin extends Plateau{
 	
 	// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
 	public boolean EstFeuille(){
-		if(this.nivArbo==5){// On fait une profondeur de 2 pour l'instant
+		if(this.nivArbo==2){// On fait une profondeur de 2 pour l'instant
 			return true;
 		}
 		return false;
@@ -1326,7 +1327,7 @@ public class PlateauMoulin extends Plateau{
 	public int MinMax(int posses){
 		if(this.EstFeuille()){ // Si le noeud est une feuille
 			int eval = this.EvalPlateau();
-//System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
+System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
 
 			return eval;
 		}
@@ -1340,20 +1341,24 @@ public class PlateauMoulin extends Plateau{
 //System.out.println("Dans minMax noeud max + nivharbo :"+this.nivArbo);
 
 				
-				minMax=0;
+				minMax=-10000;
 				for(int i=0; i<vectPlateau.size();i++){
 					minMax = Math.max(minMax,vectPlateau.elementAt(i).MinMax(possesAdv));
 				}
+System.out.println("Result max:"+minMax);
+				
 				return minMax;
 			}
 			else{ // noeud Min
-//System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
+///System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
 
 				
 				minMax=10000000;
 				for(int i=0; i<vectPlateau.size();i++){
 					minMax = Math.min(minMax,vectPlateau.elementAt(i).MinMax(possesAdv));
 				}
+System.out.println("Result min:"+minMax);
+
 				return minMax;
 			}
 		}
@@ -1373,7 +1378,7 @@ public class PlateauMoulin extends Plateau{
 
 		for(int i=0; i<vectPlat.size();i++){
 //System.out.println("\nAppel minmax n° "+i);
-
+			vectPlat.elementAt(i).affichage();
 			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv));
 //System.out.println("maxInter:"+maxIntermediaire);
 			if(maxIntermediaire > Max){
@@ -1385,6 +1390,8 @@ public class PlateauMoulin extends Plateau{
 		}
 //System.out.println("max obtenu :"+Max);
 		PlateauMoulin aJouer = vectPlat.elementAt(indice);
+		System.out.println("\n Plateau bon :");
+		aJouer.affichage();
 		return aJouer;
 	}
 	
