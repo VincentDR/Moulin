@@ -1,6 +1,5 @@
 package moulin;
 
-import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
 import java.util.Vector;
@@ -955,13 +954,14 @@ public class PlateauMoulin extends Plateau{
 	 */
 	public int CiblePrioritaire(){
 		int possessionAdv = TourDeJeu%2==0 ? 2 : 1;	//Si tour de jeu==0(ordi) possessionAdversaire=2, sinon 1
-		int PrioriteDestructionMoulin=-100; //Detruire un moulin adverse permet à l'adversaire de le recr�er dans la foul�e
+		int PrioriteDestructionMoulin=-100; //Detruire un moulin adverse permet à l'adversaire de le recréer dans la foulée
 		//Pieces possédées par le joueur
 		Vector<Integer> V = PiecesPossedeesPar(possessionAdv);
 		int[] Priorites = new int[V.size()] ;		
 		
 		for(int i=0;i<V.size();i++){
-			Priorites[i]=0;
+			Priorites[i]=1;
+			
 			if(PresenceMoulin(V.elementAt(i))){
 				Priorites[i]+=PrioriteDestructionMoulin;
 			}			
@@ -1013,260 +1013,264 @@ public class PlateauMoulin extends Plateau{
 	/**
 	 * @return Renvoi un indice représentant l'intérêt d'un plateau, plus il sera haut, plus l'ordi sera en position de force
 	 */
-public int EvalPlateau(){
+	public int EvalPlateau(){
+		Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
+		Vector<Integer> piecesJoueur = PiecesPossedeesPar(2);
 		
-		int UnVoisin=1;
-		int DeuxVoisins=5;
-		
-		int UnVoisinAmi=15;
-				
-		int FuturMoulin=100;
-		int MoulinEtabli=50;
-
-		
-		
-		int Possession = 2;
-		Vector<Integer> PiecesOrdi = PiecesPossedeesPar(Possession-1);
-		Vector<Integer> PiecesJoueur = PiecesPossedeesPar(Possession);
-		
-		int IndiceOrdi =  PiecesOrdi.size();
-		int IndiceJoueur = PiecesJoueur.size();
-		
-		
-		//Indice Ordi
-		for(int i=0;i<PiecesOrdi.size();i++){
-
-			//Si la piÃ¨ce possÃ¨de deux voisins
-			if(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]!=42){
-				IndiceOrdi+=DeuxVoisins;
-				
-				//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-				if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1 
-						&& getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == Possession-1 )
-				{
-					IndiceOrdi+=MoulinEtabli;
-				}else{//Si la piece possede un seul voisin ami
+		//On est pas en fin de jeu, sinon return 0;	
+		if(piecesOrdi.size()>=3 && piecesJoueur.size()>=3){ 
+			int UnVoisin=1;
+			int DeuxVoisins=5;
+			
+			int UnVoisinAmi=15;
+					
+			int FuturMoulin=100;
+			int MoulinEtabli=50;
+	
+			
+			
+			int Possession = 2;
+			Vector<Integer> PiecesOrdi = PiecesPossedeesPar(Possession-1);
+			Vector<Integer> PiecesJoueur = PiecesPossedeesPar(Possession);
+			
+			int IndiceOrdi =  PiecesOrdi.size();
+			int IndiceJoueur = PiecesJoueur.size();
+			
+			
+			//Indice Ordi
+			for(int i=0;i<PiecesOrdi.size();i++){
+	
+				//Si la piÃ¨ce possÃ¨de deux voisins
+				if(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]!=42){
+					IndiceOrdi+=DeuxVoisins;
+					
+					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
 					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1 
-						|| getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == Possession-1 )
+							&& getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == Possession-1 )
+					{
+						IndiceOrdi+=MoulinEtabli;
+					}else{//Si la piece possede un seul voisin ami
+						if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1 
+							|| getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == Possession-1 )
+						{
+							IndiceOrdi+=UnVoisinAmi;
+						}					
+					}
+					//Si le prochain deplacement donne un moulin
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == 0){
+						if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][1] != 42){
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][0]).getPossession() == 1
+									&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][1]).getPossession() == 1){
+								IndiceOrdi+=FuturMoulin;
+							}							
+						}else{						
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][0]).getPossession() == 1
+								&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][0]][0]).getPossession() == 1
+								|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][0]][1]).getPossession() == 1)){
+								IndiceOrdi+=FuturMoulin;					
+							}
+						}				
+					}
+				}
+				else{
+						IndiceOrdi+=UnVoisin;
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1)
 					{
 						IndiceOrdi+=UnVoisinAmi;
-					}					
+					}
+					//Si le prochain deplacement donne un moulin
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == 0){
+						if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][1] != 42){
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][0]).getPossession() == 1
+									&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][1]).getPossession() == 1){
+								IndiceOrdi+=FuturMoulin;
+							}							
+						}else{						
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][0]).getPossession() == 1
+								&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][0]][0]).getPossession() == 1
+								|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][0]][1]).getPossession() == 1)){
+								IndiceOrdi+=FuturMoulin;					
+							}
+						}				
+					}
 				}
-				//Si le prochain deplacement donne un moulin
-				if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == 0){
-					if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][1] != 42){
-						if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][0]).getPossession() == 1
-								&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][1]).getPossession() == 1){
-							IndiceOrdi+=FuturMoulin;
-						}							
-					}else{						
-						if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][0]).getPossession() == 1
-							&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][0]][0]).getPossession() == 1
-							|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]][0]][1]).getPossession() == 1)){
-							IndiceOrdi+=FuturMoulin;					
-						}
-					}				
-				}
-			}
-			else{
-					IndiceOrdi+=UnVoisin;
-				if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1)
-				{
-					IndiceOrdi+=UnVoisinAmi;
-				}
-				//Si le prochain deplacement donne un moulin
-				if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == 0){
-					if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][1] != 42){
-						if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][0]).getPossession() == 1
-								&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][1]).getPossession() == 1){
-							IndiceOrdi+=FuturMoulin;
-						}							
-					}else{						
-						if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][0]).getPossession() == 1
-							&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][0]][0]).getPossession() == 1
-							|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]][0]][1]).getPossession() == 1)){
-							IndiceOrdi+=FuturMoulin;					
-						}
-					}				
-				}
-			}
-			
-			
-			
-			if(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]!=42){
-				IndiceOrdi+=DeuxVoisins;
 				
-				//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-				if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1 
-						&& getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == Possession-1 )
-				{
-					IndiceOrdi+=MoulinEtabli;
-				}else{//Si la piece possede un seul voisin ami
+				
+				
+				if(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]!=42){
+					IndiceOrdi+=DeuxVoisins;
+					
+					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
 					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1 
-						|| getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == Possession-1 )
+							&& getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == Possession-1 )
+					{
+						IndiceOrdi+=MoulinEtabli;
+					}else{//Si la piece possede un seul voisin ami
+						if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1 
+							|| getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == Possession-1 )
+						{
+							IndiceOrdi+=UnVoisinAmi;
+						}					
+					}
+					//Si le prochain deplacement donne un moulin
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == 0){
+						if(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][1] != 42){
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][0]).getPossession() == 1
+									&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][1]).getPossession() == 1){
+								IndiceOrdi+=FuturMoulin;
+							}							
+						}else{						
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][0]).getPossession() == 1
+								&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][0]][0]).getPossession() == 1
+								|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][0]][1]).getPossession() == 1)){
+								IndiceOrdi+=FuturMoulin;					
+							}
+						}				
+					}
+				}
+				else{
+						IndiceOrdi+=UnVoisin;
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1)
 					{
 						IndiceOrdi+=UnVoisinAmi;
-					}					
-				}
-				//Si le prochain deplacement donne un moulin
-				if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == 0){
-					if(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][1] != 42){
-						if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][0]).getPossession() == 1
-								&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][1]).getPossession() == 1){
-							IndiceOrdi+=FuturMoulin;
-						}							
-					}else{						
-						if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][0]).getPossession() == 1
-							&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][0]][0]).getPossession() == 1
-							|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]][0]][1]).getPossession() == 1)){
-							IndiceOrdi+=FuturMoulin;					
-						}
-					}				
-				}
+					}
+					//Si le prochain deplacement donne un moulin
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == 0){
+						if(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][1] != 42){
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][0]).getPossession() == 1
+									&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][1]).getPossession() == 1){
+								IndiceOrdi+=FuturMoulin;
+							}							
+						}else{						
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][0]).getPossession() == 1
+								&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][0]][0]).getPossession() == 1
+								|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][0]][1]).getPossession() == 1)){
+								IndiceOrdi+=FuturMoulin;					
+							}
+						}				
+					}
+				}					
 			}
-			else{
-					IndiceOrdi+=UnVoisin;
-				if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == Possession-1)
-				{
-					IndiceOrdi+=UnVoisinAmi;
-				}
-				//Si le prochain deplacement donne un moulin
-				if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == 0){
-					if(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][1] != 42){
-						if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][0]).getPossession() == 1
-								&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][1]).getPossession() == 1){
-							IndiceOrdi+=FuturMoulin;
-						}							
-					}else{						
-						if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][0]).getPossession() == 1
-							&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][0]][0]).getPossession() == 1
-							|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]][0]][1]).getPossession() == 1)){
-							IndiceOrdi+=FuturMoulin;					
-						}
-					}				
-				}
-			}					
-		}
-		
-		
-		
-		//Indice Joueur
-				for(int i=0;i<PiecesJoueur.size();i++){
-
-					//Si la piÃ¨ce possÃ¨de deux voisins
-					if(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]!=42){
-						IndiceOrdi+=DeuxVoisins;
-						
-						//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession
-								&& getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession)
-						{
-							IndiceOrdi+=MoulinEtabli;
-						}else{//Si la piece possede un seul voisin ami
-							if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession
-								|| getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession )
-							{
-								IndiceOrdi+=UnVoisinAmi;
-							}					
-						}
-						//Si le prochain deplacement donne un moulin
-						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == 0){
-							if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][1] != 42){
-								if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
-										&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][1]).getPossession() == Possession){
-									IndiceOrdi+=FuturMoulin;
-								}							
-							}else{						
-								if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
-									&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]][0]).getPossession() == Possession
-									|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]][1]).getPossession() == Possession)){
-									IndiceOrdi+=FuturMoulin;					
-								}
-							}				
-						}
-					}
-					else{
-							IndiceOrdi+=UnVoisin;
-						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession)
-						{
-							IndiceOrdi+=UnVoisinAmi;
-						}
-						//Si le prochain deplacement donne un moulin
-						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == 0){
-							if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1] != 42){
-								if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
-										&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]).getPossession() == Possession){
-									IndiceOrdi+=FuturMoulin;
-								}							
-							}else{						
-								if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
-									&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]][0]).getPossession() == Possession
-									|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]][1]).getPossession() == Possession)){
-									IndiceOrdi+=FuturMoulin;					
-								}
-							}				
-						}
-					}
-					
-					
-					
-					if(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]!=42){
-						IndiceOrdi+=DeuxVoisins;
-						
-						//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() ==Possession 
-								&& getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession)
-						{
-							IndiceOrdi+=MoulinEtabli;
-						}else{//Si la piece possede un seul voisin ami
-							if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession 
-								|| getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession)
-							{
-								IndiceOrdi+=UnVoisinAmi;
-							}					
-						}
-						//Si le prochain deplacement donne un moulin
-						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == 0){
-							if(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][1] != 42){
-								if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
-										&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][1]).getPossession() == Possession){
-									IndiceOrdi+=FuturMoulin;
-								}							
-							}else{						
-								if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
-									&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]][0]).getPossession() == Possession
-									|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]][1]).getPossession() == Possession)){
-									IndiceOrdi+=FuturMoulin;					
-								}
-							}				
-						}
-					}
-					else{
-							IndiceOrdi+=UnVoisin;
-						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession)
-						{
-							IndiceOrdi+=UnVoisinAmi;
-						}
-						//Si le prochain deplacement donne un moulin
-						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == 0){
-							if(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1] != 42){
-								if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
-										&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]).getPossession() == Possession){
-									IndiceOrdi+=FuturMoulin;
-								}							
-							}else{						
-								if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
-									&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]][0]).getPossession() == Possession
-									|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]][1]).getPossession() == Possession)){
-									IndiceOrdi+=FuturMoulin;					
-								}
-							}				
-						}
-					}					
-				}
 			
-				
-				return IndiceOrdi-IndiceJoueur;		
+			
+			
+			//Indice Joueur
+			for(int i=0;i<PiecesJoueur.size();i++){
+	
+				//Si la piÃ¨ce possÃ¨de deux voisins
+				if(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]!=42){
+					IndiceOrdi+=DeuxVoisins;
+					
+					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession
+							&& getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession)
+					{
+						IndiceOrdi+=MoulinEtabli;
+					}else{//Si la piece possede un seul voisin ami
+						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession
+							|| getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession )
+						{
+							IndiceOrdi+=UnVoisinAmi;
+						}					
+					}
+					//Si le prochain deplacement donne un moulin
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == 0){
+						if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][1] != 42){
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
+									&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][1]).getPossession() == Possession){
+								IndiceOrdi+=FuturMoulin;
+							}							
+						}else{						
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
+								&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]][0]).getPossession() == Possession
+								|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]][0]][1]).getPossession() == Possession)){
+								IndiceOrdi+=FuturMoulin;					
+							}
+						}				
+					}
+				}
+				else{
+					IndiceOrdi+=UnVoisin;
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession)
+					{
+						IndiceOrdi+=UnVoisinAmi;
+					}
+					//Si le prochain deplacement donne un moulin
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == 0){
+						if(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1] != 42){
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
+									&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]).getPossession() == Possession){
+								IndiceOrdi+=FuturMoulin;
+							}							
+						}else{						
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
+								&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]][0]).getPossession() == Possession
+								|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]][1]][1]).getPossession() == Possession)){
+								IndiceOrdi+=FuturMoulin;					
+							}
+						}				
+					}
+				}
+						
+						
+						
+				if(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]!=42){
+					IndiceOrdi+=DeuxVoisins;
+								
+					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() ==Possession 
+						&& getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession){
+							IndiceOrdi+=MoulinEtabli;
+					}else{//Si la piece possede un seul voisin ami
+						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession 
+							|| getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == Possession){
+								IndiceOrdi+=UnVoisinAmi;
+						}					
+					}
+					//Si le prochain deplacement donne un moulin
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == 0){
+						if(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][1] != 42){
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
+								&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][1]).getPossession() == Possession){
+									IndiceOrdi+=FuturMoulin;
+							}							
+						}else{						
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]).getPossession() == Possession
+								&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]][0]).getPossession() == Possession
+								|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]][0]][1]).getPossession() == Possession)){
+									IndiceOrdi+=FuturMoulin;					
+							}
+						}				
+					}
+				}
+				else{
+					IndiceOrdi+=UnVoisin;
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == Possession)
+					{
+						IndiceOrdi+=UnVoisinAmi;
+					}
+					//Si le prochain deplacement donne un moulin
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == 0){
+						if(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1] != 42){
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
+								&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]).getPossession() == Possession){
+									IndiceOrdi+=FuturMoulin;
+							}							
+						}else{						
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][0]).getPossession() == Possession
+								&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]][0]).getPossession() == Possession
+								|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]][1]][1]).getPossession() == Possession)){
+									IndiceOrdi+=FuturMoulin;					
+							}
+						}				
+					}
+				}					
+			}
+			return IndiceOrdi-IndiceJoueur;		
+		}//fin test (!fin de partie ?)
+		else{
+			return 0;
+		}
 	}
 	// Renvoi un tableau contenant les plateaux fils de pm, ceux qui contiennent un coup suivant. Appelé seulement par ordi
 	public Vector<PlateauMoulin> plateauCoupSuivant(int possession){
@@ -1312,7 +1316,7 @@ public int EvalPlateau(){
 	
 	// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
 	public boolean EstFeuille(){
-		if(this.nivArbo==2){// On fait une profondeur de 2 pour l'instant
+		if(this.nivArbo==5){// On fait une profondeur de 2 pour l'instant
 			return true;
 		}
 		return false;
@@ -1321,20 +1325,34 @@ public int EvalPlateau(){
 	// Renvoi le min ou le max en fonction de niveauHarbo
 	public int MinMax(int posses){
 		if(this.EstFeuille()){ // Si le noeud est une feuille
-			return this.EvalPlateau();
+			int eval = this.EvalPlateau();
+//System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
+
+			return eval;
 		}
 		else{
 			Vector<PlateauMoulin> vectPlateau = this.plateauCoupSuivant(posses);
-			int minMax=0;
-			if(this.noeudMax(posses)){ //Alors noeud max
+			// On va utiliser la possession de l'adversaire pour le minMax des "sous plateaux"
+			int possesAdv = posses==1 ? 2 : 1;
+			
+			int minMax;
+			if(this.noeudMax(posses)){ // posses ==1
+//System.out.println("Dans minMax noeud max + nivharbo :"+this.nivArbo);
+
+				
+				minMax=0;
 				for(int i=0; i<vectPlateau.size();i++){
-					minMax = Math.max(minMax,vectPlateau.elementAt(i).MinMax(posses));
+					minMax = Math.max(minMax,vectPlateau.elementAt(i).MinMax(possesAdv));
 				}
 				return minMax;
 			}
 			else{ // noeud Min
+//System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
+
+				
+				minMax=10000000;
 				for(int i=0; i<vectPlateau.size();i++){
-					minMax = Math.min(minMax,vectPlateau.elementAt(i).MinMax(posses));
+					minMax = Math.min(minMax,vectPlateau.elementAt(i).MinMax(possesAdv));
 				}
 				return minMax;
 			}
@@ -1346,21 +1364,26 @@ public int EvalPlateau(){
 	public PlateauMoulin meilleurCoup(int posses){
 		Vector<PlateauMoulin> vectPlat = this.plateauCoupSuivant(posses);
 
-		if(posses==1){ //L'ordi joue donc on passe à l'humain
-			posses=2;
-		}else{posses=1;}// C'était l'humain donc on passe à l'ordi
+		// On va utiliser la possession de l'adversaire pour le minMax des "sous plateaux"
+		int possesAdv = posses==1 ? 2 : 1; 
 	
 		int Max=0;
 		int maxIntermediaire=0;
 		int indice=0;
 
 		for(int i=0; i<vectPlat.size();i++){
-			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(posses));
+//System.out.println("\nAppel minmax n° "+i);
+
+			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv));
+//System.out.println("maxInter:"+maxIntermediaire);
 			if(maxIntermediaire > Max){
 				Max = maxIntermediaire;
 				indice = i;
 			}	
+		
+
 		}
+//System.out.println("max obtenu :"+Max);
 		PlateauMoulin aJouer = vectPlat.elementAt(indice);
 		return aJouer;
 	}
@@ -1647,56 +1670,63 @@ public int EvalPlateau(){
 	}		
 **/	
 	public int[] ControleurOrdi(){
+			
 		System.out.println("Tourdejeu modele "+TourDeJeu);
 		int Choix;
 		int[] Result = new int[6];
 		InitResult(Result); // init à-1
-		
-		//Possession a l'ordi
-		Result[1]=1;
-		
-		if(TourDeJeu<18 && (0==TourDeJeu%2)){
-			Choix=PlacementPrioritaire();
-			System.out.println("\nOrdi a joué à "+Choix);
 			
-		
-			if(CoupValide(Choix)){  
-				AjouterPiece(Choix);
-			}else{System.out.println("Mauvais choix ordi");}
-
-		}
-		else{ //Deplacement
-			if(0==TourDeJeu%2){	
+		if(0==TourDeJeu%2){	
+			//Possession a l'ordi
+			Result[1]=1;
 			
-				//Deplacement 
-				//Result[0]=2;
+			if(TourDeJeu<18){
+				Choix=PlacementPrioritaire();
+				System.out.println("\nOrdi a joué à "+Choix);
 				
-				PlateauMoulin bestCoup = meilleurCoup(1);
+			
+				if(CoupValide(Choix)){  
+					AjouterPiece(Choix);
+				}else{System.out.println("Mauvais choix ordi");}
 	
-				int[] coupAJ = coupAJouer(bestCoup);
-				int ChoixABouger = coupAJ[0];
-				//System.out.println("ChoixABouger"+ChoixABouger);
-				int ChoixAAtteindre = coupAJ[1];
-				//System.out.println("ChoixAAtteindre"+ChoixAAtteindre);
-	
-				Result[3]=ChoixABouger;
-				Result[4]=ChoixAAtteindre;
-				DeplacerPiece(ChoixABouger, ChoixAAtteindre,1);
-				System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
-			/*		
-				if(PresenceMoulin(ChoixAAtteindre)){
-					
-					Choix=CiblePrioritaire();
-					System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
-					RetirerPiece(Choix,1);
-					Result[0]=5;
-					Result[5]=Choix;
-				}
-				//ChangerJoueurActif();
-				//TourDeJeu++;			
-			*/
 			}
-		}
+			else{ //Deplacement
+				Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
+				if(piecesOrdi.size()>=3){ //Si l'ordi a au moins trois pièces
+				
+					//Deplacement 
+					//Result[0]=2;
+					
+					PlateauMoulin bestCoup = meilleurCoup(1);
+		
+					int[] coupAJ = coupAJouer(bestCoup);
+					int ChoixABouger = coupAJ[0];
+					//System.out.println("ChoixABouger"+ChoixABouger);
+					int ChoixAAtteindre = coupAJ[1];
+					//System.out.println("ChoixAAtteindre"+ChoixAAtteindre);
+		
+					Result[3]=ChoixABouger;
+					Result[4]=ChoixAAtteindre;
+					DeplacerPiece(ChoixABouger, ChoixAAtteindre,1);
+					System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
+				/*		
+					if(PresenceMoulin(ChoixAAtteindre)){
+						
+						Choix=CiblePrioritaire();
+						System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
+						RetirerPiece(Choix,1);
+						Result[0]=5;
+						Result[5]=Choix;
+					}
+					//ChangerJoueurActif();
+					//TourDeJeu++;			
+				*/
+				}
+				else{
+					Result[0]=6; // Fin de partie
+				}
+			}
+		}	
 		updateGrid (Result);
 		return Result;
 	}
