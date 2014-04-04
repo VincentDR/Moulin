@@ -1289,6 +1289,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					tourDeJeu = tourDeJeu==0 ? 1 : 0;
 				}
 				break;
+			case 6:
+				// Fin Jeu
+				System.out.println("Fin jeu, l'ordinateur a moins de trois pièces");
+				break;
 			default:
 				
 				break;
