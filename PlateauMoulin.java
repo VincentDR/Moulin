@@ -517,7 +517,7 @@ public class PlateauMoulin extends Plateau{
 			result[0]=1;
 			result[2]=PlaceAJouer;
 			getPieces().elementAt(PlaceAJouer).setProprietaire(getJoueurActif());
-			if(PresenceMoulin(PlaceAJouer)){
+			if(PresenceMoulin(PlaceAJouer,result)){
 				System.out.println("Moulin");
 				result[0]=4;
 				if(TourDeJeu<18 && (0==TourDeJeu%2)){
@@ -528,7 +528,7 @@ public class PlateauMoulin extends Plateau{
 					this.getPieces().elementAt(Choix).setProprietaire(new Joueur());
 
 					result[5]=Choix;
-				}				
+				}
 			}
 			TourDeJeu++;
 			ChangerJoueurActif();
@@ -551,7 +551,7 @@ public class PlateauMoulin extends Plateau{
 				result[0]=2; //Deplacement
 				result[3]=PlaceADeplacer;
 				result[4]=PlaceAJouer;
-				if(PresenceMoulin(PlaceAJouer)){
+				if(PresenceMoulin(PlaceAJouer,result)){
 					result[0]=5; //Deplacement Moulin
 					if(0==TourDeJeu%2){ // Ordi joue
 						int Choix=CiblePrioritaire();
@@ -618,12 +618,12 @@ public class PlateauMoulin extends Plateau{
 		int possess = getPieces().elementAt(PlaceAverifier).getPossession();
 		
 		
-		//Présence Horizontale d'un moulin
+		//Présence Horizontale d'un moulin, aussi on met dans result[3] et result[4] les voisins de la case qui fait le moulin
 		if(voisinHorizontalExiste(PlaceAverifier,0)){ //VH[0] existe ?
 			if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess ){
 				if(voisinHorizontalExiste(PlaceAverifier,1)){ // 
 					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess){
-					return true;
+						return true;
 					}
 				}	
 				else{ //VH[0] à nous et VH[1] n'existe pas
@@ -648,7 +648,7 @@ public class PlateauMoulin extends Plateau{
 			if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess ){
 				if(voisinVerticalExiste(PlaceAverifier,1)){ // 
 					if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess){
-					return true;
+						return true;
 					}
 				}	
 				else{ //VV[0] à nous et VV[1] n'existe pas
@@ -663,6 +663,98 @@ public class PlateauMoulin extends Plateau{
 			if(	getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess){
 				if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0]).getPossession() == possess 
 					&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][1]).getPossession() == possess){
+						return true;
+				}
+			}
+		}	
+			
+		//Aucun cas bon donc pas de moulin
+		return false; 
+	}
+	
+	// Vrai si nouveau moulin pour la case PlaceAverifier, 
+	// ajoute les voisins moulin de result [2] dans result[3] et result[4]
+	public boolean PresenceMoulin(int PlaceAverifier,int [] result){
+		int possess = getPieces().elementAt(PlaceAverifier).getPossession();
+		
+		
+		//Présence Horizontale d'un moulin, aussi on met dans result[3] et result[4] les voisins de la case qui fait le moulin
+		if(voisinHorizontalExiste(PlaceAverifier,0)){ //VH[0] existe ?
+			if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess ){
+				if(voisinHorizontalExiste(PlaceAverifier,1)){ // 
+					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess){
+						result[3]=VoisinsHorizontaux[PlaceAverifier][0];
+						result[4]=VoisinsHorizontaux[PlaceAverifier][1];
+						return true;
+					}
+				}	
+				else{ //VH[0] à nous et VH[1] n'existe pas
+					if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0]).getPossession() == possess 
+						&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1]).getPossession() == possess){
+							result[3]=VoisinsHorizontaux[PlaceAverifier][0];
+							if(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != result[2]){
+								result[4]=VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1];
+							}
+							else {
+								result[4]=VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0];
+							}
+							return true;
+					}
+				}
+			}
+		}
+		else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
+			if(	getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess){
+				if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][0]).getPossession() == possess 
+					&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1]).getPossession() == possess){
+						result[3]=VoisinsHorizontaux[PlaceAverifier][1];
+						if(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1] != result[2]){
+							result[4]=VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1];
+						}
+						else {
+							result[4]=VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][0];
+						}
+						return true;
+				}
+			}
+		}	
+			
+		//Présence Verticale d'un moulin
+		if(voisinVerticalExiste(PlaceAverifier,0)){ //VV[0] existe ?
+			if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess ){
+				if(voisinVerticalExiste(PlaceAverifier,1)){ // 
+					if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess){
+						result[3]=VoisinsVerticaux[PlaceAverifier][0];
+						result[4]=VoisinsVerticaux[PlaceAverifier][0];
+						return true;
+					}
+				}	
+				else{ //VV[0] à nous et VV[1] n'existe pas
+					if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0]).getPossession() == possess 
+						&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1]).getPossession() == possess){
+							result[3]=VoisinsVerticaux[PlaceAverifier][0];
+							if(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != result[2]){
+								result[4]=VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0];
+							}
+							else {
+								result[4]=VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1];
+							}
+							return true;
+					}
+				}
+			}
+		}
+		else{ // VV[0] n'existe pas,donc forcement VV[1] existe  if(VV[1] à nous)
+			if(	getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess){
+				if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0]).getPossession() == possess 
+					&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][1]).getPossession() == possess){
+						result[3]=VoisinsVerticaux[PlaceAverifier][1];
+						if(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0] != result[2]){
+							result[4]=VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0];
+						}
+						else {
+							result[4]=VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][1];
+						}
 						return true;
 				}
 			}
@@ -741,6 +833,7 @@ public class PlateauMoulin extends Plateau{
 			//Aucun cas bon donc pas de moulin
 			return false; 
 		}	
+
 	
 	/**
 	 * @return Pointe la pi�ce vide repr�sentant la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation d'un moulin adverse
@@ -1027,7 +1120,7 @@ public class PlateauMoulin extends Plateau{
 		int PrioriteDestructionMoulin=-100; //Detruire un moulin adverse permet à l'adversaire de le recréer dans la foulée
 		//Pieces possédées par le joueur
 		Vector<Integer> V = PiecesPossedeesPar(possessionAdv);
-		int[] Priorites = new int[V.size()] ;		
+		int[] Priorites = new int[V.size()];		
 		
 		for(int i=0;i<V.size();i++){
 			Priorites[i]=1;
@@ -1035,7 +1128,7 @@ public class PlateauMoulin extends Plateau{
 			if(PresenceMoulin(V.elementAt(i))){
 				Priorites[i]+=PrioriteDestructionMoulin;
 			}			
-			//Si la pièce possède deux voisins, on incrémnte sa priorité
+			//Si la pièce possède deux voisins, on incrémente sa priorité
 			if(VoisinsHorizontaux[V.elementAt(i)][1]!=42){
 				Priorites[i]++;
 				//Si la pièce possède un de ses deux voisins déjà établi, on incrémente sa priorité
@@ -1324,7 +1417,7 @@ public class PlateauMoulin extends Plateau{
 	public int MinMax(int posses){
 		if(this.EstFeuille()){ // Si le noeud est une feuille
 			int eval = this.EvalPlateau();
-System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
+//System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
 
 			return eval;
 		}
@@ -1342,19 +1435,19 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 				for(int i=0; i<vectPlateau.size();i++){
 					minMax = Math.max(minMax,vectPlateau.elementAt(i).MinMax(possesAdv));
 				}
-System.out.println("Result max:"+minMax);
+//System.out.println("Result max:"+minMax);
 				
 				return minMax;
 			}
 			else{ // noeud Min
-///System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
+//System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
 
 				
 				minMax=10000000;
 				for(int i=0; i<vectPlateau.size();i++){
 					minMax = Math.min(minMax,vectPlateau.elementAt(i).MinMax(possesAdv));
 				}
-System.out.println("Result min:"+minMax);
+//System.out.println("Result min:"+minMax);
 
 				return minMax;
 			}
