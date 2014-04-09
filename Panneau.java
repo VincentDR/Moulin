@@ -97,7 +97,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	//Image img = toolKit.Image("Images/caseF.png");
 	//Image imageViseur=tk.getImage(getClass().getResource("caseF.png"));
 	Image imageViseur=tk.getImage("Images/caseF.png");
-	Cursor curseurTir = tk.createCustomCursor(imageViseur, new Point(16, 16), "mon oeil");
+	Cursor curseurTir = tk.createCustomCursor(imageViseur, new Point(16, 16), "curseur");
 	
 	// tst
 	public int x=0;
@@ -502,7 +502,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	        	vaisseau[j][i] = new Vaisseau(j);
 	
 	        	vaisseau[j][i].setFocusPainted( false ); // enleve la bordure de l'image
-	    		vaisseau[j][i].setBorderPainted(false); // enleve la bordure du bouton
+	    		//vaisseau[j][i].setBorderPainted(false); // enleve la bordure du bouton
 	    		//vaisseau[i].setOpaque(false); // enleve la bordure du bouton
 	    		vaisseau[j][i].setContentAreaFilled(false);
 	        	vaisseau[j][i].setSize(animation[0].getIconWidth(), animation[0].getIconWidth()) ;
@@ -575,7 +575,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	  public void paintComponent(Graphics g)
 	  {
 
-			System.out.println("On repaint ! ");
+			//System.out.println("On repaint ! ");
 		/*  BufferedImage image;
 		try {
 
@@ -599,7 +599,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			}
 			else if(panelJeu.isVisible())
 			{
-				 System.out.println("on affiche le jeu");
+				 //System.out.println("on affiche le jeu");
 				g.drawImage(imageFond, 0, 0, null);
 			}
 		/*} catch (IOException e) {
@@ -654,6 +654,32 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		if(event.getSource() == btnAPropos && SwingUtilities.isLeftMouseButton(event) )
 		{
 			 cl.show(this, "APropos");
+
+		       // validate();
+		        //repaint();
+		        //panelMenu.revalidate();
+				
+				// s'en inspirer pour le panel jeu
+				/*btnAPropos.setLocation(btnAPropos.getX(), btnAPropos.getY()-60);
+				panelMenu.remove(btnRegles);
+				gbc.gridx = 0;
+		        gbc.gridy = 5;
+		        gbc.insets = new Insets(5, 420, 5, 10);
+		        panelMenu.add(btnAPropos, gbc);
+		       // panelMenu.remove
+
+			gbc.gridx = 0;
+	        gbc.gridy = 6;
+	        gbc.insets = new Insets(5, 420, 30, 10);
+	        panelMenu.add(btnQuitter, gbc);
+	        repaint();
+	        validate();*/
+			//btnAPropos.setIcon(null);
+		        /*panelMenu.remove(btnQuitter);
+				gbc.gridx = 0;
+		        gbc.gridy = 8;
+		        gbc.insets = new Insets(5, 420, 30, 10);
+		        panelMenu.add(btnQuitter, gbc);*/
 		}
 		// Clic sur "Quitter"
 		if(event.getSource() == btnQuitter && SwingUtilities.isLeftMouseButton(event) )
@@ -1145,7 +1171,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		phaseDeTir = false;
 
 		// On remet le curseur
-		this.setCursor(null);
+		this.setCursor(Cursor.getDefaultCursor());
 		// On change le tour de jeu
 		//tourDeJeu = tourDeJeu==0 ? 1 : 0;
 	}
@@ -1269,7 +1295,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				detruireVaisseau(tab[5]);
 				phaseDeTir=false;
 				// On remet le curseur
-				this.setCursor(curseurTir);
+				//this.setCursor(curseurTir);
 				// On change le tour de jeu
 				tourDeJeu = tourDeJeu==0 ? 1 : 0;
 				if(tourDeJeu==0)
@@ -1283,22 +1309,19 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				// test
 				plateau[tab[2]].setSelectionne(true);
 				// A metre bientot
-				//plateau[tab[6]].setSelectionne(true);
-				//plateau[tab[7]].setSelectionne(true);
 				//if(tourDeJeu==1){
-				//plateau[18].setSelectionne(true);
-				//plateau[19].setSelectionne(true);}
+				plateau[tab[6]].setSelectionne(true);
+				plateau[tab[7]].setSelectionne(true);
 				System.out.println("placement+moulin");
 				phaseDeTir=true;
 				// On change le curseur en mode tir
 				this.setCursor(curseurTir);
 				if(tourDeJeu==0)
 				{
-					System.out.println("Tab5  "+tab[5]);
 					detruireVaisseau(tab[5]);
 					phaseDeTir=false;
 					// On remet le curseur
-					this.setCursor(null);
+					this.setCursor(Cursor.getDefaultCursor());
 					// On change le tour de jeu
 					tourDeJeu = tourDeJeu==0 ? 1 : 0;
 				}
@@ -1309,9 +1332,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				System.out.println("deplacement+moulin");
 				deplacerVaisseau(tab[3],tab[4]);
 				plateau[tab[4]].setSelectionne(true);
-				// A metre bientot
-				//plateau[tab[6]].setSelectionne(true);
-				//plateau[tab[7]].setSelectionne(true);
+				plateau[tab[6]].setSelectionne(true);
+				plateau[tab[7]].setSelectionne(true);
 				phaseDeTir=true;
 				// On change le curseur
 				this.setCursor(curseurTir);
@@ -1320,7 +1342,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					detruireVaisseau(tab[5]);
 					phaseDeTir=false;
 					// On remet le curseur
-					this.setCursor(null);
+					this.setCursor(Cursor.getDefaultCursor());
 					// On change le tour de jeu
 					tourDeJeu = tourDeJeu==0 ? 1 : 0;
 				}
@@ -1359,10 +1381,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		 *  	Cinquieme case -> Le moulin
 		 * 			Result[5] =	-1 ->	Il ne s'agit pas d'un moulin
 		 *  					x ->	La case x ou la piece sera detruite*/
-	}
-
-	public JButton getBtnQuitter() {
-		return btnQuitter;
 	}
 	  
 }
