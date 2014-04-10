@@ -15,25 +15,29 @@ public  class Vaisseau extends JButton  implements Runnable
 
 	// Les images de l'explosion du vaisseau
     private BufferedImage [] imagesExplosion;
-	private ImageIcon imageOriginale;
-	// Equipe Ã  laquelle le bouton appartient
+	private ImageIcon imageOriginale, imageSelectionne;
+	// Equipe à laquelle le bouton appartient
 	//private int equipe;
 	 		 // 0 : equipe 1 | 1 : equipe 2
-	int etat = 0;
-			 // Aucun |Â Deplacement | Explosion
+	private int etat = 0;
+			 // Aucun | Deplacement | Explosion
 	private Direction direction = Direction.HAUT;
-	 // Aucun |Â Deplacement | Explosion
-	
-	// DÃ©placement du vaisseau (en pixel)
-	int deplacement;
-	// Rotation avant dÃ©placement (en degree)
-    int rotation;
-	// Boolean permettant de savoir si le bouton a Ã©tÃ© sÃ©lectionnÃ©
-    boolean selectionne;
-	// gyy
-    int nbr_anim;
-    // Angle du vaisseau par rapport Ã  l'axe vertical
-	double angle;
+	 // Aucun | Deplacement | Explosion
+
+	// Equipe du vaisseau : 0 : Rebelle | 1 : Imperiaux
+	private int equipe;
+	// Déplacement du vaisseau (en pixel)
+	private int deplacement;
+	// Rotation avant déplacement (en degree)
+	private int rotation;
+	// Boolean permettant de savoir si le bouton a été sélectionné
+	private boolean selectionne;
+	// permet de savoir si le vaisseau fait partie d'un moulin : 0-Rien 1-Moulin 2-Nouveau moulin
+	private int moulin;
+	//..
+	private int nbr_anim;
+    // Angle du vaisseau par rapport à l'axe vertical
+	private double angle;
 	// INITIALISATION DES FICHIERS IMAGE
     private File [] filesVaisseau;
 	//private File fileVaisseau = new File("Images/Animations/Explosions/Xplo1.png");
@@ -51,12 +55,14 @@ public  class Vaisseau extends JButton  implements Runnable
 		if(equipe==0)
 		{
 			imageOriginale = new ImageIcon("Images/Animations/Explosions/Xplo1.png");
+			imageSelectionne = new ImageIcon("Images/Animations/XwingSelect.png");
 			//filesVaisseau = new File("Images/Animations/Explosions/Xplo1.png");
 			nbr_anim = Constantes.NB_ANIMATIONS_W;
 		}
 		else
 		{
 			imageOriginale = new ImageIcon("Images/Animations/Explosions/Tplo1.png");
+			imageSelectionne = new ImageIcon("Images/Animations/TIEselect.png");
 			//filesVaisseau = new File("Images/Animations/Explosions/Tplo1.png");
 			nbr_anim = Constantes.NB_ANIMATIONS_T;
 		}
@@ -119,7 +125,7 @@ public  class Vaisseau extends JButton  implements Runnable
 	    	imagesExplosion[i-1] = new ImageIcon(chemin);
 	    }*/
 
-	    imageOriginale.setImage(rotatingImage);
+	    //imageOriginale.setImage(rotatingImage);
 	    
 	    // On initialise l'imageIcon
 		this.setIcon(imageOriginale);
@@ -145,7 +151,7 @@ public  class Vaisseau extends JButton  implements Runnable
 		super.addActionListener(l);
 	}
 	
-    // implÃ©mentation de la mÃ©thode run() de l'interface Runnable
+    // implémentation de la méthode run() de l'interface Runnable
     public  void run()
     {
 
@@ -169,7 +175,7 @@ public  class Vaisseau extends JButton  implements Runnable
 	        	 //this.setIcon(imagesExplosion[0]); 
 	        	 //this.setIcon(imageOriginale); 
 	        	 //explosionXwing[i].setImage(imageVaisseau); // L'ERREUR VIENT D'ICI
-	        	 // peut etre comparer les tailles des 2 images au dessus. Si elles sont differentes, Ã§a peut poser probleme et l'affichage peut se remetre a jour.. ceci est une supposition. Et aussi une longue phrase.
+	        	 // peut etre comparer les tailles des 2 images au dessus. Si elles sont differentes, ça peut poser probleme et l'affichage peut se remetre a jour.. ceci est une supposition. Et aussi une longue phrase.
 	        	 // Jusque la
 	        	 
 	        	 
@@ -257,6 +263,16 @@ public  class Vaisseau extends JButton  implements Runnable
     {
     	this.rotation = rotation;
     }
+  
+    public int getMoulin()
+    {
+    	return moulin;
+    }
+    
+    public void setMoulin(int moulin)
+    {
+    	this.moulin = moulin;
+    }
 
 	public boolean isSelectionne() {
 		return selectionne;
@@ -264,6 +280,14 @@ public  class Vaisseau extends JButton  implements Runnable
 
 	public void setSelectionne(boolean selectionne) {
 		this.selectionne = selectionne;
+		if(selectionne == true)
+		{
+			this.setIcon(imageSelectionne);
+		}
+		else
+		{
+			this.setIcon(imageOriginale);
+		}
 	}
 	
 	public void setAngle(double a, double b)
@@ -297,8 +321,11 @@ public  class Vaisseau extends JButton  implements Runnable
 		//this.setIcon(rotatingImage);
 		//setImage(rotatingImage);
 		rotatingImage.setAngleD(angle);
+		
+		//////((ImageIcon)this.getIcon()).setImage(rotatingImage);
 		imageOriginale.setImage(rotatingImage);
 		//this.setIcon(xWing);
+		repaint();
 	}
 
 	public void setEtat(int etat)
@@ -309,5 +336,15 @@ public  class Vaisseau extends JButton  implements Runnable
 	
 	public int getEtat() {
 		return etat;
+	}
+
+	public void setEquipe(int equipe)
+	{
+		this.equipe = equipe;
+	}
+	
+	
+	public int getEquipe() {
+		return equipe;
 	}
 }
