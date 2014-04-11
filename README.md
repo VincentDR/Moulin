@@ -19,8 +19,8 @@ mis à jour le 11/04/14.
 Fonctionnalitées changées : 
 
                             Positions initiales des vaisseaux en haut et en bas
-                            Cocarde allumé en fonction de celui qui joue
-                            Basculement Menu/Jeu et inversement sans problème
+                            Cocardes allumées en fonction de celui qui joue
+                            Reprendre Partie fonctionne
                             
                             
 A faire :
