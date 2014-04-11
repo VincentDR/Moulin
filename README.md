@@ -8,7 +8,7 @@ Jeu du Moulin
 
 Modification des classes Panneau, Vaisseau et Constantes.
 
-Pensez à aller chercher le dossier Image qui se trouve sur le drive (mit à la racine comme un gros porc)
+Pensez à aller chercher le dossier Images qui se trouve sur le drive (mit à la racine comme un gros porc)
 
 ////////////////////  
 INTERFACE GRAPHIQUES   
