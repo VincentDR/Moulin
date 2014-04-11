@@ -3,11 +3,14 @@ package moulin;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
@@ -127,6 +130,12 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private ImageIcon [] animation;
 	private ImageIcon gifAPropos;
 	private ImageIcon [] explosionXwing;
+	private ImageIcon [] imgCocardeEmpire;
+	private ImageIcon [] imgCocardeRebelle;
+
+	private JLabel cocardeEmpire;
+	private JLabel cocardeRebelle;
+	
 	// TEST
 	private ImageIcon cases;
 	// FIN TEST
@@ -343,7 +352,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		cmptVaiss[0] = 0;
 		cmptVaiss[1]= 0;
 		
-		// AUTRE
 		boutonMenu = new JButton("Menu");
 		//boutonMenu.addMouseListener(this);
 		plateau = new Vaisseau[24];
@@ -353,6 +361,19 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			plateau[c]=null;
 		}
 		
+		// initialisation des cocardes
+		imgCocardeEmpire = new ImageIcon[2];
+		imgCocardeRebelle = new ImageIcon[2];
+		for(int i=0;i<2;i++)
+		{
+			imgCocardeEmpire[i] = new ImageIcon("Images/"+"cocardeEmpire"+(i+1)+".png");
+			imgCocardeRebelle[i] = new ImageIcon("Images/"+"cocardeRebelle"+(i+1)+".png");
+		}
+		
+		cocardeEmpire = new JLabel(imgCocardeEmpire[0]);
+		cocardeRebelle = new JLabel(imgCocardeRebelle[0]);
+		
+		
 		// Choix des panneaux
 		cl = new CardLayout();
 		
@@ -360,30 +381,18 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		this.setLayout(cl);
 		//this.setLayout(new BorderLayout());
 	       
-		// On initialise les panneaux se situant le panneau du jeu
+		// On initialise les panneaux se situant en haut et en bas du panneau de jeu
 		panelJeu = new JPanel(new BorderLayout());
 		
 		panelPlateauJeu = new JPanel();
 		panelPlateauJeu.setLayout(null);
 		
-		panelPionsTop = new JPanel(new GridBagLayout());
+		//panelPionsTop = new JPanel(new GridLayout(1, 10, 0,0));
+		panelPionsTop = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
-		gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        //gbc.insets = new Insets(10, 10, 10, 10);
-        
-        //gbc.fill = GridBagConstraints.HORIZONTAL;
-        //gbc.anchor = GridBagConstraints.CENTER;
-        //gbc.anchor = GridBagConstraints.LINE_END;
-        //gbc.fill = GridBagConstraints.EAST;
-        // insets : marges : haut , gauche, bas, droite
-        gbc.insets = new Insets(0, 2, 0, 2);
-        
-        
-        
-        
-		panelPionsBot = new JPanel();
+		panelPionsBot = new JPanel(new FlowLayout());
+		panelPionsBot = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		panelPionsBot.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		
 		// Redimensionnement des panneaux
 		// test
@@ -399,9 +408,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		//this.setPreferredSize(new Dimension(1000,1000));
 		//this.setPreferredSize(new Dimension(1000,1000));
 		//this.setMaximumSize(new Dimension(this.get));
-		panelPionsTop.setPreferredSize(new Dimension(Constantes.FENETRE_LARGEUR, Constantes.HAUTEUR_PANEL_TOP_BOT));
+		//panelPionsTop.setPreferredSize(new Dimension(Constantes.FENETRE_LARGEUR, Constantes.HAUTEUR_PANEL_TOP_BOT));
 		//panelJeu.setPreferredSize(new Dimension(800, 500));
-		panelPionsBot.setPreferredSize(new Dimension(Constantes.FENETRE_LARGEUR, Constantes.HAUTEUR_PANEL_TOP_BOT));
+		//panelPionsBot.setPreferredSize(new Dimension(Constantes.FENETRE_LARGEUR, Constantes.HAUTEUR_PANEL_TOP_BOT));
 		
 		// Ajout des panneaux au panneau jeu
 		panelJeu.add(panelPionsTop, "North");
@@ -510,13 +519,16 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	    		if(j==0){
 	    			//panelPionsTop.add(vaisseau[j][i]);
 
-	    	        panelPionsTop.add(vaisseau[j][i], gbc);
-	    	        gbc.gridx++;
+	    	        panelPionsTop.add(vaisseau[j][i]);
+	    	        //gbc.gridx++;
 	    	        }
 	    		else{
 	    			panelPionsBot.add(vaisseau[j][i]);}
 	        }
         }
+        // On ajoute les cocardes
+        panelPionsTop.add(cocardeRebelle);
+        panelPionsBot.add(cocardeEmpire);
 
 		// Pour les cases vide initiales
         casesVide = new JButton[Constantes.NB_CASES];
@@ -771,7 +783,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 							else
 							{
 								// On change le tour de jeu
-								tourDeJeu = tourDeJeu==0 ? 1 : 0;
+								changerTourDeJeu();
 							}*/
 						System.out.println("On ajoute une piece");
 						controleur.AjouterPiece(i);
@@ -905,7 +917,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				//else if(event.getSource() == vaisseau[tourDeJeu][i])
 				//&& SwingUtilities.isRightMouseButton(event)
 				// Si on est dans la seconde phase
-				else if(phase == 2 && event.getSource() == vaisseau[tourDeJeu][i]  && SwingUtilities.isLeftMouseButton(event))
+				else if(phase == 2 && event.getSource() == vaisseau[tourDeJeu][i]  && SwingUtilities.isLeftMouseButton(event) && !phaseDeTir)
 				{ // Si on clique sur un de nos vaisseau, on le selectionne pour le deplacer
 					
 					// On test si le bouton a été sélectionné
@@ -1281,7 +1293,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Ceci est un test réussi !!!");
 		int tab [] = (int []) arg;
 		
 		
@@ -1293,22 +1304,14 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				ajouterVaisseau(tab[2]);
 
 				// On change le tour de jeu
-				tourDeJeu = tourDeJeu==0 ? 1 : 0;
+				changerTourDeJeu();
 				System.out.println("tourDejeu = " + tourDeJeu);
-				if(tourDeJeu==0)
-				{
-					controleur.ordi();
-				}
 				break;
 			// Deplacement
 			case 2:
 				deplacerVaisseau(tab[3], tab[4]);
 				// On change le tour de jeu
-				tourDeJeu = tourDeJeu==0 ? 1 : 0;
-				if(tourDeJeu==0)
-				{
-					controleur.ordi();
-				};
+				changerTourDeJeu();
 				break;
 			// Moulin
 			case 3:
@@ -1318,11 +1321,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				// On remet le curseur
 				//this.setCursor(curseurTir);
 				// On change le tour de jeu
-				tourDeJeu = tourDeJeu==0 ? 1 : 0;
-				if(tourDeJeu==0)
-				{
-					controleur.ordi();
-				}
+				changerTourDeJeu();
 				break;
 			// Placement+Moulin
 			case 4:
@@ -1334,6 +1333,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				plateau[tab[6]].setMoulin(2);
 				plateau[tab[7]].setMoulin(2);
 				System.out.println("placement+moulin");
+				System.out.println("Moulin position : " + tab[2] + " , " + tab[6] + " et " + tab[7]);
 				phaseDeTir=true;
 				// On change le curseur en mode tir
 				this.setCursor(curseurTir);
@@ -1344,13 +1344,14 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					// On remet le curseur
 					this.setCursor(Cursor.getDefaultCursor());
 					// On change le tour de jeu
-					tourDeJeu = tourDeJeu==0 ? 1 : 0;
+					changerTourDeJeu();
 				}
 				// On attend un prochain clic si joueur
 				break;
 			case 5:
 			// Deplacement+Moulin
 				System.out.println("deplacement+moulin");
+				System.out.println("Moulin position : " + tab[4] + " , " + tab[6] + " et " + tab[7]);
 				deplacerVaisseau(tab[3],tab[4]);
 				plateau[tab[4]].setMoulin(2);
 				plateau[tab[6]].setMoulin(2);
@@ -1365,7 +1366,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					// On remet le curseur
 					this.setCursor(Cursor.getDefaultCursor());
 					// On change le tour de jeu
-					tourDeJeu = tourDeJeu==0 ? 1 : 0;
+					changerTourDeJeu();
 				}
 				break;
 			default:
@@ -1403,5 +1404,29 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		 * 			Result[5] =	-1 ->	Il ne s'agit pas d'un moulin
 		 *  					x ->	La case x ou la piece sera detruite*/
 	}
-	  
+	public void changerTourDeJeu()
+	{
+
+		tourDeJeu = tourDeJeu==0 ? 1 : 0;
+		// Si c'est à l'ordi de jouer
+		if(tourDeJeu==0)
+		{
+			// On allume sa cocarde
+			cocardeRebelle.setIcon(imgCocardeRebelle[1]);
+			// On eteint l'autre
+			cocardeEmpire.setIcon(imgCocardeEmpire[0]);
+			
+			// A l'ordi de jouer
+			controleur.ordi(); 
+			
+		}
+		else
+		{
+			// On allume sa cocarde
+			cocardeRebelle.setIcon(imgCocardeRebelle[0]);
+			// On eteint l'autre
+			cocardeEmpire.setIcon(imgCocardeEmpire[1]);
+		}
+	}
 }
+
