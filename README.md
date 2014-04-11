@@ -10,11 +10,9 @@ Modification des classes Panneau, Vaisseau et Constantes.
 
 Pensez à aller chercher le dossier Image qui se trouve sur le drive (mit à la racine comme un gros porc)
 
-/////////////////////////
-
-// INTERFACE GRAPHIQUES //
-
-/////////////////////////
+////////////////////  
+INTERFACE GRAPHIQUES   
+////////////////////
 
 mis à jour le 11/04/14.
 
@@ -36,8 +34,6 @@ A faire :
           
 
 
-/////////////////////////////
-
-// FIN INTERFACE GRAPHIQUES//
-
-/////////////////////////////
+////////////////////////  
+FIN INTERFACE GRAPHIQUES  
+////////////////////////
