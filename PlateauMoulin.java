@@ -1450,6 +1450,17 @@ public class PlateauMoulin extends Plateau{
 	
 	// Renvoi le min ou le max en fonction de niveauHarbo
 	public int MinMax(int posses){
+		
+		
+		/*
+		//Test Profondeur max
+		int eval = this.EvalPlateau();
+		if(eval==0){
+System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
+			return eval;
+		}
+	*/	
+	
 		if(this.EstFeuille()){ // Si le noeud est une feuille
 			int eval = this.EvalPlateau();
 //System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
