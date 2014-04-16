@@ -23,6 +23,7 @@ import java.util.Vector;
  * 						3 ->	Moulin
  * 						4 ->	Placement+Moulin
  * 						5 ->	Deplacement+Moulin
+ * 						6 ->	Ordi a moins de 3 cases, fin de partie
  * 
  * 		Seconde case -> La possession (1 si action ordi, 2 si action joueur)
  * 			Result[1] =	1 ->	Ordi
@@ -43,14 +44,14 @@ import java.util.Vector;
  *  	Cinquieme case -> Le moulin
  * 			Result[5] =	-1 ->	Il ne s'agit pas d'un moulin
  *  					x ->	La case x ou la piece sera detruite
- * 
- * 	Sixieme case -> Un voisin de la case moulin
- * 			Result[6] =	-1 ->	Mauvaise case
- *  					x ->	La case x voisine de la case qui a fait un moulin
- * 
- * 	Septieme case -> Le moulin
- * 			Result[7] =	-1 ->	Mauvaise case
- *  					x ->	La deuxieme case x  voisine de la case qui a fait un moulin
+ *  
+ *  	Sixième case -> Le moulin
+ * 			Result[6] =	-1 ->	Pas de case voisine
+ *  					x ->	La case x est un des deux voisins de la case qui a fait un moulin
+ *  
+ *  	Septième case -> Le moulin
+ * 			Result[7] =	-1 ->	Pas de case voisine
+ *  					x ->	La case x est le deuxième voisin de la case qui a fait un moulin
  *  
  *  
  *  Resume:
@@ -525,7 +526,7 @@ public class PlateauMoulin extends Plateau{
 			result[0]=1;
 			result[2]=PlaceAJouer;
 			getPieces().elementAt(PlaceAJouer).setProprietaire(getJoueurActif());
-			if(PresenceMoulin(PlaceAJouer,result)){
+			if(PresenceMoulin(PlaceAJouer,result,2)){
 				System.out.println("Moulin");
 				result[0]=4;
 				if(TourDeJeu<18 && (0==TourDeJeu%2)){
@@ -559,7 +560,7 @@ public class PlateauMoulin extends Plateau{
 				result[0]=2; //Deplacement
 				result[3]=PlaceADeplacer;
 				result[4]=PlaceAJouer;
-				if(PresenceMoulin(PlaceAJouer,result)){
+				if(PresenceMoulin(PlaceAJouer,result,4)){
 					result[0]=5; //Deplacement Moulin
 					if(0==TourDeJeu%2){ // Ordi joue
 						int Choix=CiblePrioritaire();
@@ -594,16 +595,39 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	//Posse c'est la possession du joueur actif
+	//Posse est la possession du joueur actif
 	public void RetirerPiece(int PlaceARetirer, int posse){
 		int []result = new int [6];
 		InitResult(result);
-		if(this.getPieces().elementAt(PlaceARetirer).getPossession()!=posse || 
-				this.getPieces().elementAt(PlaceARetirer).getPossession()!=0	){
-			this.getPieces().elementAt(PlaceARetirer).setProprietaire(new Joueur());
-			result[0]=3;
-			result[5]=PlaceARetirer;	
-
+		// getPossession() renvoi 1 pour l'ordi et 2 pour l'humain
+		if(this.getPieces().elementAt(PlaceARetirer).getPossession()!=posse+1 && 
+				this.getPieces().elementAt(PlaceARetirer).getPossession()!=0){
+			// Si la case ne forme pas un moulin -> OK
+			if(!PresenceMoulin(PlaceARetirer)){
+				this.getPieces().elementAt(PlaceARetirer).setProprietaire(new Joueur());
+				result[0]=3;
+				result[5]=PlaceARetirer;
+			}
+			else{ // La case forme un moulin, on cherche une case sans moulin
+				// Si possession ==1, possession piece de l'adversaire est 1 sinon 2
+				int possesAdvPiece = posse == 1 ? 1 : 2;
+				Vector<Integer> V = PiecesPossedeesPar(possesAdvPiece); 
+				boolean trouveCase = false;
+				int compt = 0;
+				while(trouveCase == false && compt < V.size()){
+					//Si une pièce où pas de présence moulin, on ne fait rien
+					if(!PresenceMoulin(V.elementAt(compt))){
+						trouveCase=true;
+					}
+					compt++;
+				}
+				if(trouveCase==false){ // Tous les pions adverses sont dans un moulin
+					// On supprime la case sélectionnée au début
+					this.getPieces().elementAt(PlaceARetirer).setProprietaire(new Joueur());
+					result[0]=3;
+					result[5]=PlaceARetirer;
+				}
+			}
 		}		
 		updateGrid(result);
 	}
@@ -680,9 +704,11 @@ public class PlateauMoulin extends Plateau{
 		return false; 
 	}
 	
-	// Vrai si nouveau moulin pour la case PlaceAverifier, 
-	// ajoute les voisins moulin de result [2] dans result[3] et result[4]
-	public boolean PresenceMoulin(int PlaceAverifier,int [] result){
+	/* Vrai si nouveau moulin pour la case PlaceAverifier, 
+	* ajoute les voisins moulin de result [numCaseResult] dans result[3] et result[4]
+	*	numCaseResult =2 si ajouterPiece, numCaseResult=4 si DeplacerPiece
+	*/
+	public boolean PresenceMoulin(int PlaceAverifier,int [] result,int numCaseResult){
 		int possess = getPieces().elementAt(PlaceAverifier).getPossession();
 		
 		
@@ -700,7 +726,7 @@ public class PlateauMoulin extends Plateau{
 					if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0]).getPossession() == possess 
 						&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1]).getPossession() == possess){
 							result[6]=VoisinsHorizontaux[PlaceAverifier][0];
-							if(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != result[2]){
+							if(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != result[numCaseResult]){
 								result[7]=VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1];
 							}
 							else {
@@ -716,7 +742,7 @@ public class PlateauMoulin extends Plateau{
 				if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][0]).getPossession() == possess 
 					&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1]).getPossession() == possess){
 						result[6]=VoisinsHorizontaux[PlaceAverifier][1];
-						if(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1] != result[2]){
+						if(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1] != result[numCaseResult]){
 							result[7]=VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1];
 						}
 						else {
@@ -733,7 +759,7 @@ public class PlateauMoulin extends Plateau{
 				if(voisinVerticalExiste(PlaceAverifier,1)){ // 
 					if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess){
 						result[6]=VoisinsVerticaux[PlaceAverifier][0];
-						result[7]=VoisinsVerticaux[PlaceAverifier][0];
+						result[7]=VoisinsVerticaux[PlaceAverifier][1];
 						return true;
 					}
 				}	
@@ -741,7 +767,7 @@ public class PlateauMoulin extends Plateau{
 					if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0]).getPossession() == possess 
 						&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1]).getPossession() == possess){
 							result[6]=VoisinsVerticaux[PlaceAverifier][0];
-							if(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != result[2]){
+							if(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != result[numCaseResult]){
 								result[7]=VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0];
 							}
 							else {
@@ -757,7 +783,7 @@ public class PlateauMoulin extends Plateau{
 				if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0]).getPossession() == possess 
 					&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][1]).getPossession() == possess){
 						result[6]=VoisinsVerticaux[PlaceAverifier][1];
-						if(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0] != result[2]){
+						if(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0] != result[numCaseResult]){
 							result[7]=VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0];
 						}
 						else {
@@ -1125,6 +1151,7 @@ public class PlateauMoulin extends Plateau{
 	 */
 	public int CiblePrioritaire(){
 		int possessionAdv = TourDeJeu%2==0 ? 2 : 1;	//Si tour de jeu==0(ordi) possessionAdversaire=2, sinon 1
+		// On ne doit pas détruire de moulin adverse sauf si il ne reste que ça
 		int PrioriteDestructionMoulin=-100; //Detruire un moulin adverse permet à l'adversaire de le recréer dans la foulée
 		//Pieces possédées par le joueur
 		Vector<Integer> V = PiecesPossedeesPar(possessionAdv);
@@ -1134,7 +1161,7 @@ public class PlateauMoulin extends Plateau{
 			Priorites[i]=1;
 			
 			if(PresenceMoulin(V.elementAt(i))){
-				Priorites[i]+=PrioriteDestructionMoulin;
+				Priorites[i]=PrioriteDestructionMoulin;
 			}			
 			//Si la pièce possède deux voisins, on incrémente sa priorité
 			if(VoisinsHorizontaux[V.elementAt(i)][1]!=42){
@@ -1415,7 +1442,7 @@ public class PlateauMoulin extends Plateau{
 	
 	// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
 	public boolean EstFeuille(){
-		if(this.nivArbo==2){// On fait une profondeur de 2 pour l'instant
+		if(this.nivArbo==5){// On fait une profondeur de 2 pour l'instant
 			return true;
 		}
 		return false;
