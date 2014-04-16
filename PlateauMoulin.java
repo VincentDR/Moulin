@@ -1222,8 +1222,7 @@ public class PlateauMoulin extends Plateau{
 			
 			int UnVoisinAmi=15;
 					
-			int FuturMoulin=1000;
-			int MoulinEtabli=50;			
+			int MoulinEtabli=100;			
 			
 			int PossOrdi = 1;
 			int PossJoueur = 2;
@@ -1253,35 +1252,28 @@ public class PlateauMoulin extends Plateau{
 							IndiceOrdi+=UnVoisinAmi;
 						}					
 					}
-					//Si le prochain deplacement donne un moulin
-					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == 0){
-						if(PresenceMoulinD(PiecesOrdi.elementAt(i),VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1],PossOrdi)){
-							IndiceOrdi+=FuturMoulin;System.out.println("FuturMoulinOrdi");
-						}
-					}
 				}
 				else{
 						IndiceOrdi+=UnVoisin;
+						if(PresenceMoulin(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0])){
+							IndiceOrdi+=MoulinEtabli;
+						}
+						else{
 					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi)
 					{
 						IndiceOrdi+=UnVoisinAmi;
-					}
-					//Si le prochain deplacement donne un moulin
-					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == 0){
-						if(PresenceMoulinD(PiecesOrdi.elementAt(i),VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0],PossOrdi)){
-							IndiceOrdi+=FuturMoulin;System.out.println("FuturMoulinOrdi");
-						}				
-					}
+					}	
+						}
 				}
-				
+			
 				
 				
 				if(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]!=42){
 					IndiceOrdi+=DeuxVoisins;
 					
 					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi 
-							&& getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == PossOrdi )
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi
+							&& getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == PossOrdi)
 					{
 						IndiceOrdi+=MoulinEtabli;
 					}else{//Si la piece possede un seul voisin ami
@@ -1291,106 +1283,87 @@ public class PlateauMoulin extends Plateau{
 							IndiceOrdi+=UnVoisinAmi;
 						}					
 					}
-					//Si le prochain deplacement donne un moulin
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == 0){
-						if(PresenceMoulinD(PiecesOrdi.elementAt(i),VoisinsVerticaux[PiecesOrdi.elementAt(i)][1],PossOrdi)){
-							IndiceOrdi+=FuturMoulin;System.out.println("FuturMoulinOrdi");
-						}				
-					}
 				}
 				else{
-						IndiceOrdi+=UnVoisin;
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi)
-					{
-						IndiceOrdi+=UnVoisinAmi;
+					IndiceOrdi+=UnVoisin;
+					if(PresenceMoulin(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0])){
+						IndiceOrdi+=MoulinEtabli;
 					}
-					//Si le prochain deplacement donne un moulin
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == 0){
-						if(PresenceMoulinD(PiecesOrdi.elementAt(i),VoisinsVerticaux[PiecesOrdi.elementAt(i)][0],PossOrdi)){
-							IndiceOrdi+=FuturMoulin;System.out.println("FuturMoulinOrdi");
-						}			
+					else{
+				if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi)
+				{
+					IndiceOrdi+=UnVoisinAmi;
+				}	
 					}
-				}					
+			}
 			}
 			
-			
-			
-			//Indice Joueur
-			for(int i=0;i<PiecesJoueur.size();i++){
-	
-				//Si la piÃ¨ce possÃ¨de deux voisins
-				if(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]!=42){
-					IndiceJoueur+=DeuxVoisins;
-					
-					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
-							&& getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur)
-					{
-						IndiceJoueur+=MoulinEtabli;
-					}else{//Si la piece possede un seul voisin ami
+				
+				//Indice Joueur
+				for(int i=0;i<PiecesJoueur.size();i++){
+		
+					//Si la piÃ¨ce possÃ¨de deux voisins
+					if(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]!=42){
+						IndiceJoueur+=DeuxVoisins;
+						
+						//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
 						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
-							|| getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur )
+								&& getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur)
 						{
-							IndiceJoueur+=UnVoisinAmi;
-						}					
+							IndiceJoueur+=MoulinEtabli;
+						}else{//Si la piece possede un seul voisin ami
+							if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
+								|| getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur )
+							{
+								IndiceJoueur+=UnVoisinAmi;
+							}					
+						}
 					}
-					//Si le prochain deplacement donne un moulin
-					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == 0){
-						if(PresenceMoulinD(PiecesJoueur.elementAt(i),VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1],PossJoueur)){
-							IndiceJoueur+=FuturMoulin;System.out.println("FuturMoulinJoueur");
-						}				
-					}
-				}
-				else{
-					IndiceJoueur+=UnVoisin;
+					else{
+						IndiceJoueur+=UnVoisin;
+						if(PresenceMoulin(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0])){
+							IndiceJoueur+=MoulinEtabli;
+						}
+						else{
 					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur)
 					{
 						IndiceJoueur+=UnVoisinAmi;
-					}
-					//Si le prochain deplacement donne un moulin
-					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == 0){
-						if(PresenceMoulinD(PiecesJoueur.elementAt(i),VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0],PossJoueur)){
-							IndiceJoueur+=FuturMoulin;System.out.println("FuturMoulinJoueur");
-						}						
-					}
+					}	
+						}
 				}
+				
+					
+					
+					if(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]!=42){
+						IndiceJoueur+=DeuxVoisins;
 						
-						
-						
-				if(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]!=42){
-					IndiceJoueur+=DeuxVoisins;
-								
-					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() ==PossJoueur 
-						&& getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur){
+						//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
+						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
+								&& getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur)
+						{
 							IndiceJoueur+=MoulinEtabli;
-					}else{//Si la piece possede un seul voisin ami
-						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur 
-							|| getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur){
+						}else{//Si la piece possede un seul voisin ami
+							if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
+								|| getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur )
+							{
 								IndiceJoueur+=UnVoisinAmi;
-						}					
+							}					
+						}
 					}
-					//Si le prochain deplacement donne un moulin
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == 0){
-						if(PresenceMoulinD(PiecesJoueur.elementAt(i),VoisinsVerticaux[PiecesJoueur.elementAt(i)][1],PossJoueur)){
-							IndiceJoueur+=FuturMoulin;System.out.println("FuturMoulinJoueur");
-						}						
-					}
-				}
-				else{
-					IndiceJoueur+=UnVoisin;
+					else{
+						IndiceJoueur+=UnVoisin;
+						if(PresenceMoulin(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0])){
+							IndiceJoueur+=MoulinEtabli;
+						}
+						else{
 					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur)
 					{
 						IndiceJoueur+=UnVoisinAmi;
-					}
-					//Si le prochain deplacement donne un moulin
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == 0){
-						if(PresenceMoulinD(PiecesJoueur.elementAt(i),VoisinsVerticaux[PiecesJoueur.elementAt(i)][0],PossJoueur)){
-							IndiceJoueur+=FuturMoulin;System.out.println("FuturMoulinJoueur");
-						}					
-					}
-				}					
-			}
+					}	
+						}
+				}
+				}
+				
 			
 			return IndiceOrdi-IndiceJoueur;		
 		}//fin test (!fin de partie ?)
@@ -1514,9 +1487,11 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 
 		for(int i=0; i<vectPlat.size();i++){
 //System.out.println("\nAppel minmax n° "+i);
+			System.out.println("Max avant :"+Max);
 			vectPlat.elementAt(i).affichage();
+			System.out.println("Eval du plateau :"+vectPlat.elementAt(i).MinMax(possesAdv));
 			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv));
-//System.out.println("maxInter:"+maxIntermediaire);
+			System.out.println("maxInter:"+maxIntermediaire +" \n");
 			if(maxIntermediaire > Max){
 				Max = maxIntermediaire;
 				indice = i;
@@ -1803,7 +1778,6 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 				return Result;	
 			}
 			
-			
 			ChangerJoueurActif();
 			TourDeJeu++;
 		}	
@@ -1890,3 +1864,4 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 	}
 
 }
+
