@@ -1217,20 +1217,20 @@ public class PlateauMoulin extends Plateau{
 		
 		//On est pas en fin de jeu, sinon return 0;	
 		if(piecesOrdi.size()>=3 && piecesJoueur.size()>=3){ 
-			int UnVoisin=1;
-			int DeuxVoisins=5;
+			int UnVoisin=5;
+			int DeuxVoisins=10;
 			
-			int UnVoisinAmi=15;
+			int UnVoisinAmi=50;
 					
-			int MoulinEtabli=100;			
+			int MoulinEtabli=10000;			
 			
 			int PossOrdi = 1;
 			int PossJoueur = 2;
 			Vector<Integer> PiecesOrdi = PiecesPossedeesPar(PossOrdi);
 			Vector<Integer> PiecesJoueur = PiecesPossedeesPar(PossJoueur);
 			
-			int IndiceOrdi =  PiecesOrdi.size();
-			int IndiceJoueur = PiecesJoueur.size();
+			int IndiceOrdi =  PiecesOrdi.size()*10;
+			int IndiceJoueur = PiecesJoueur.size()*10;
 			
 			
 			//Indice Ordi
@@ -1481,17 +1481,24 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 		// On va utiliser la possession de l'adversaire pour le minMax des "sous plateaux"
 		int possesAdv = posses==1 ? 2 : 1; 
 	
-		int Max=0;
-		int maxIntermediaire=0;
+		int Max=-10000;
+		int maxIntermediaire=-10000;
 		int indice=0;
 
 		for(int i=0; i<vectPlat.size();i++){
-//System.out.println("\nAppel minmax n° "+i);
+			//System.out.println("\nAppel minmax n° "+i);
 			System.out.println("Max avant :"+Max);
 			vectPlat.elementAt(i).affichage();
 			System.out.println("Eval du plateau :"+vectPlat.elementAt(i).MinMax(possesAdv));
 			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv));
 			System.out.println("maxInter:"+maxIntermediaire +" \n");
+			
+			//Bricolage pour lancer directement un moulin
+			if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],1)){
+				//System.out.println("TestPresenceMoulin dans MeilleurCoup");
+				Max=1000000000;
+				indice=i;
+			}
 			if(maxIntermediaire > Max){
 				Max = maxIntermediaire;
 				indice = i;
@@ -1499,7 +1506,7 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 		
 
 		}
-//System.out.println("max obtenu :"+Max);
+		//System.out.println("max obtenu :"+Max);
 		PlateauMoulin aJouer = vectPlat.elementAt(indice);
 		System.out.println("\n Plateau bon :");
 		aJouer.affichage();
@@ -1524,207 +1531,7 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 		}
 		return caj;
 	}
-/*
-	public void Jouer(){
 
-		
-		sc = new Scanner(System.in);
-		int Choix = 0,i=0;
-		String QuiJoue;
-		//Première partie, Positionnement des 9 pions de chaque joueur
-		while(i<18){
-			
-
-			QuiJoue = getJoueurActif().getClass().getName();
-			switch(QuiJoue){
-			
-			case "moulin.NonHumain" :
-				Choix=PlacementPrioritaire();
-				System.out.println("\nOrdi a joué à "+Choix);
-				
-				if(CoupValide(Choix)){  //Répétition de CoupValide
-					AjouterPiece(Choix);					
-				}else{System.out.println("Mauvais choix");break;}
-				
-				
-				if(PresenceMoulin(Choix)){
-					Vector<Integer> V = PiecesPossedeesPar(2);
-					for(int j=0;j<V.size();j++)
-					{	
-						System.out.println(" - "+V.elementAt(j));
-					}
-					Choix=CiblePrioritaire();
-					System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
-					RetirerPiece(Choix);
-
-				}
-								
-				
-				affichage();
-
-				ChangerJoueurActif();
-				i++; // Nb de coups pour la pose des pions
-				break;
-				
-				
-			case "moulin.Humain" :
-				
-				
-				System.out.println("\nHumain: Choisissez une case : ");
-				Choix = sc.nextInt();
-				if(CoupValide(Choix) && Choix<24 && Choix>=0){
-					AjouterPiece(Choix);
-				}else{
-					boolean choixOK = false;
-					while(!choixOK){
-						System.out.println("\nMauvais choix, resaississez une case");
-						Choix = sc.nextInt();
-						if(CoupValide(Choix) && Choix<24 && Choix>=0){
-							choixOK = true;
-							AjouterPiece(Choix);
-						}
-					}
-				}
-				
-				
-				
-				if(PresenceMoulin(Choix)){
-					System.out.println("\nHumain: Choisissez une pièce à supprimer parmi : ");
-					Vector<Integer> V = PiecesPossedeesPar(1);
-					for(int j=0;j<V.size();j++)
-					{	
-						System.out.println("\n"+V.elementAt(j));
-					}
-					boolean BonChoix = true;
-					while(BonChoix){
-						System.out.println("\nChoisissez bien");
-						Choix = sc.nextInt();
-						for(int j=0;j<V.size();j++)
-						{	
-							if(Choix == V.elementAt(j)){
-								BonChoix=false;
-							}
-						}
-					}
-					RetirerPiece(Choix);
-				}
-				
-				affichage();
-
-				ChangerJoueurActif();
-				i++;
-				break;
-
-				
-			 default :
-				i=18;
-				break;
-
-
-		}
-	}
-		
-		//Seconde partie, déplacement
-		int ChoixABouger,ChoixAAtteindre;
-		System.out.println("\nDebut déplacement !\n");
-		while(PiecesPossedeesPar(1).size()>3 && PiecesPossedeesPar(2).size()>3 
-				&& PiecesPossedeesPar(1).size()<10 && PiecesPossedeesPar(2).size()<10){
-			QuiJoue = getJoueurActif().getClass().getName();
-			
-			switch(QuiJoue){
-			
-			
-			case "moulin.NonHumain" :
-
-				PlateauMoulin bestCoup = this.meilleurCoup(1);
-
-				int[] coupAJ = coupAJouer(bestCoup);
-				ChoixABouger = coupAJ[0];
-				ChoixAAtteindre = coupAJ[1];
-
-				if((DeplacerPiece(ChoixABouger, ChoixAAtteindre,1))==1){ // Mouvement possible
-					System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
-
-				}
-				else{
-					System.out.println("Ordi: soucis de déplacement ...");
-				}
-				if(PresenceMoulin(ChoixAAtteindre)){
-					Vector<Integer> V = PiecesPossedeesPar(2);
-					for(int j=0;j<V.size();j++)
-					{	
-						System.out.println(" - "+V.elementAt(j));
-					}
-					Choix=CiblePrioritaire();
-					System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
-					RetirerPiece(Choix);
-
-				}
-				
-				//affichage();
-
-				ChangerJoueurActif();
-				break;
-				
-				
-			case "moulin.Humain" :
-
-				System.out.println("\nHumain: Choisissez une case à déplacer : ");
-				ChoixABouger = sc.nextInt();
-				System.out.println("\nHumain: Choisissez une case à atteindre : ");
-				ChoixAAtteindre = sc.nextInt();
-				
-				//Vérification de la possibilité du coup
-				int depPossible = DeplacerPiece(ChoixABouger, ChoixAAtteindre,2);
-				while(depPossible==0){ //Pas bon coup
-					System.out.println("\n Vous ne pouvez pas jouer ce déplacement, recommencez ");
-					affichage();
-					System.out.println("\nHumain: Choisissez une case à déplacer : ");
-					ChoixABouger = sc.nextInt();
-					System.out.println("\nHumain: Choisissez une case à atteindre : ");
-					ChoixAAtteindre = sc.nextInt();
-					boolean saisieOK = (ChoixABouger<24 && ChoixAAtteindre<24);
-					while(!saisieOK){
-						System.out.println("\nChoix incorrect\n Humain: Rechoisissez une case à déplacer :");
-						ChoixABouger = sc.nextInt();
-						System.out.println("\nHumain: Rechoisissez une case à atteindre :");
-						ChoixAAtteindre = sc.nextInt();
-						saisieOK = (ChoixABouger<24 && ChoixAAtteindre<24);
-					}
-					DeplacerPiece(ChoixABouger, ChoixAAtteindre,2);
-
-				}
-				
-				if(PresenceMoulin(ChoixAAtteindre)){
-					System.out.println("\nHumain: Choisissez une pièce à supprimer parmi : \n");
-					Vector<Integer> V = PiecesPossedeesPar(1);
-					for(int j=0;j<V.size();j++)
-					{	
-						System.out.println(" - "+V.elementAt(j));
-					}
-					boolean BonChoix = false;
-					while(!BonChoix){
-						System.out.println("\nChoisissez bien");
-						Choix = sc.nextInt();
-						for(int j=0;j<V.size();j++)
-						{	
-							if(Choix == V.elementAt(j)){
-								BonChoix=true;
-							}
-						}
-					}
-					RetirerPiece(Choix);
-				}
-				
-				
-				affichage();
-				ChangerJoueurActif();			
-				break;
-			}
-		}
-		System.out.println("Un des deux joueurs a moins de trois pièces ou plus de 9...");
-	}
-	*/
 /***	
 	/**Controleurs*
 	public int[] ControleurHumain(int[] Proposition){
