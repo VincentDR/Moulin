@@ -1493,12 +1493,23 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv));
 			System.out.println("maxInter:"+maxIntermediaire +" \n");
 			
+			
+			
+			//Cas particulier dont la priorité doit être augmentée
 			//Bricolage pour lancer directement un moulin
 			if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],1)){
 				//System.out.println("TestPresenceMoulin dans MeilleurCoup");
 				Max=1000000000;
 				indice=i;
 			}
+			//Possibilité de faire bloquer la création d'un moulin 
+			
+			//Possibilité de multi-moulin (en H, a chaque déplacement du pion central 
+			//on va créer un moulin, une fois à droite, une fois à gauche
+			
+			
+			
+			
 			if(maxIntermediaire > Max){
 				Max = maxIntermediaire;
 				indice = i;
@@ -1531,6 +1542,50 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 		}
 		return caj;
 	}
+	
+	
+	/*
+	
+	public int[] bloquerMoulin(int posses){
+		int[]res = new int[2];
+		int possesAdv = posses==1 ? 2 : 1;
+		for(int i=0;i<24;i++){
+			//On chercher tous les futurs moulins adverses possibles
+			if(this.getPieces().elementAt(i).getPossession() == possesAdv){
+				if(VoisinsHorizontaux[i][1] !=42){
+					if(this.getPieces().elementAt(VoisinsHorizontaux[i][0]).getPossession() == possesAdv){
+						if(this.getPieces().elementAt(VoisinsHorizontaux[i][1]).getPossession() == 0
+							&& this.getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[i][1]][0]).getPossession() == posses){
+							//Il y a un futur moulin et on peut le bloquer
+							res[0]=VoisinsHorizontaux[VoisinsHorizontaux[i][1]][0];
+							res[1]=VoisinsHorizontaux[i][1];
+						}
+					
+					}else{
+						if(this.getPieces().elementAt(VoisinsHorizontaux[i][1]).getPossession() == possesAdv){
+							if(this.getPieces().elementAt(VoisinsHorizontaux[i][0]).getPossession() == 0
+									&& this.getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[i][0]][0]).getPossession() == posses){
+									//Il y a un futur moulin et on peut le bloquer
+									res[0]=VoisinsHorizontaux[VoisinsHorizontaux[i][0]][0];
+									res[1]=VoisinsHorizontaux[i][0];
+							}
+						}
+					}
+				}else{
+					if(this.getPieces().elementAt(VoisinsHorizontaux[i][0]).getPossession() == possesAdv 
+						&& ((this.getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[i][0]][0]).getPossession() == 0)
+						&& (i != VoisinsHorizontaux[VoisinsHorizontaux[i][0]][0])
+						||	(this.getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[i][0]][1]).getPossession() == 0)
+						&& (i != VoisinsHorizontaux[VoisinsHorizontaux[i][0]][1])
+						)){
+						if()
+					}
+
+					
+				}
+			}
+		}
+	}*/
 
 /***	
 	/**Controleurs*
