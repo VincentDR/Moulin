@@ -9,10 +9,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 
 public  class Vaisseau extends JButton  implements Runnable
 {
-
+	private Panneau monPanneau;
 	// Les images de l'explosion du vaisseau
     private BufferedImage [] imagesExplosion;
 	private ImageIcon imageOriginale, imageSelectionne;
@@ -21,13 +22,17 @@ public  class Vaisseau extends JButton  implements Runnable
 	 		 // 0 : equipe 1 | 1 : equipe 2
 	private int etat = 0;
 			 // Aucun | Deplacement | Explosion
-	private Direction direction = Direction.HAUT;
+	//private Direction direction = Direction.HAUT;
 	 // Aucun | Deplacement | Explosion
 
 	// Equipe du vaisseau : 0 : Rebelle | 1 : Imperiaux
 	private int equipe;
-	// Déplacement du vaisseau (en pixel)
-	private int deplacement;
+	// Ecart entre le vaisseau et la position finale : 1, 2 ou 3
+	private int ecart;
+	private int direction;
+	 		// 0 : Haut | 1 : Bas | Gauche | Droite
+	// Déplacement du vaisseau verticalement (en pixel)
+	//private int deplacementY;
 	// Rotation avant déplacement (en degree)
 	private int rotation;
 	// Boolean permettant de savoir si le bouton a été sélectionné
@@ -47,11 +52,10 @@ public  class Vaisseau extends JButton  implements Runnable
     // L'image rotative
     private RotatingImage rotatingImage;
 	
-	public Vaisseau(int equipe)
+	public Vaisseau(int equipe, Panneau monPanneau)
 	{
+		 this.monPanneau = monPanneau;
 
-
-		
 		if(equipe==0)
 		{
 			imageOriginale = new ImageIcon("Images/Animations/Explosions/Xplo1.png");
@@ -132,7 +136,8 @@ public  class Vaisseau extends JButton  implements Runnable
 		
 		
 		// test
-	    deplacement = 0;
+	    //deplacement = 0;
+	    direction = 0;
 	    rotation = 0;
 	    selectionne = false;
 	    
@@ -154,39 +159,31 @@ public  class Vaisseau extends JButton  implements Runnable
     // implémentation de la méthode run() de l'interface Runnable
     public  void run()
     {
-
+    	
 		System.out.println("Debut fonction run(), x = "+getX());
       if(etat == 1) // etat = deplacement
       {
 	       int i =  0 ; 
-	       rotation = 20;
+	       int deplacementX = 0, deplacementY = 0;
+	       
 	       while (i <  rotation) {
 	       try{
-				  double oldAngle=0;
+				double oldAngle=0;
 				if(rotatingImage!=null)
 					oldAngle=rotatingImage.getAngleD();
-					
-				rotatingImage = new RotatingImage(imageVaisseau);
-				System.out.println(oldAngle);
-					
-				rotatingImage.setAngleD(5 + oldAngle);
-
-				imageOriginale.setImage(rotatingImage);
-	        	 //this.setIcon(imagesExplosion[0]); 
-	        	 //this.setIcon(imageOriginale); 
-	        	 //explosionXwing[i].setImage(imageVaisseau); // L'ERREUR VIENT D'ICI
-	        	 // peut etre comparer les tailles des 2 images au dessus. Si elles sont differentes, ça peut poser probleme et l'affichage peut se remetre a jour.. ceci est une supposition. Et aussi une longue phrase.
-	        	 // Jusque la
-	        	 
-	        	 
-			//	animation[1].setImage(rotatingImage);
-				//this.validate();
-			//	boutonVaisseau.repaint();
-				//repaint();
-				//	repaint(this.getVisibleRect());
+				
+				if(direction==Constantes.DIR_GAUCHE)
+				{
+					setAngle(oldAngle-Constantes.NBR_TIKS_ROT);
+				}
+				else
+				{
+					setAngle(oldAngle+Constantes.NBR_TIKS_ROT);
+				}
+				
 				repaint();
 				System.out.println("On tourne");
-				Thread.sleep(30);//sleep for 20 ms
+				Thread.sleep(Constantes.VITESSE_ROT);//sleep for 20 ms
 			}
 			catch(InterruptedException ie){
 				ie.printStackTrace();
@@ -195,21 +192,63 @@ public  class Vaisseau extends JButton  implements Runnable
 	       }
 	       
 	       i=0;
-	       //while (n++ <  100) {
-	       while (i <  deplacement) {
+	       
+	       // On deplace
+	       while (i < ecart*(Constantes.ECART/Constantes.NBR_TIKS_DEP)) {
 	          try {
 	        	  //setLocation(getX()+4, getY());
 	        	 //this.setIcon(explosionXwing[i]);
-	        	 setLocation(getX()+5,getY()+2);
-	        	 repaint();
-	        	//repaint(getX(), getY(), getWidth()+20, getHeight()+20);
-	            Thread.sleep(90) ;
-	         }  catch (InterruptedException e) {
+	        	 //setLocation(getX()+deplacementX,getY()+deplacementY);
+					if(direction==Constantes.DIR_GAUCHE){
+						deplacementX = -Constantes.NBR_TIKS_DEP;}
+					else if(direction==Constantes.DIR_DROITE){
+						deplacementX = Constantes.NBR_TIKS_DEP;}
+					else if(direction==Constantes.DIR_HAUT){
+						deplacementY = -Constantes.NBR_TIKS_DEP;}
+					else if(direction==Constantes.DIR_BAS){
+						deplacementY = Constantes.NBR_TIKS_DEP;}
+					
+					setLocation(getX()+deplacementX,getY()+deplacementY);
+					
+					repaint();
+					//repaint(getX(), getY(), getWidth()+20, getHeight()+20);
+					Thread.sleep(Constantes.VITESSE_DEP) ;
+	          	}  catch (InterruptedException e) {
 	         
 	             // gestion de l'erreur
 	         }
+				System.out.println("On se déplace");
 	          i++;
 	       }
+	       
+	       i=0;
+	       // On remet droit le vaisseau
+	       while (i <  rotation) {
+		       try{
+					double oldAngle=0;
+					if(rotatingImage!=null)
+						oldAngle=rotatingImage.getAngleD();
+					
+					if(direction==Constantes.DIR_GAUCHE)
+					{
+						setAngle(oldAngle+Constantes.NBR_TIKS_ROT);
+					}
+					else
+					{
+						setAngle(oldAngle-Constantes.NBR_TIKS_ROT);
+					}
+					
+					repaint();
+					System.out.println("On retourne");
+					Thread.sleep(Constantes.VITESSE_ROT);
+				}
+				catch(InterruptedException ie){
+					ie.printStackTrace();
+				}
+		       	i++;
+		       }
+	       etat =  Constantes.ET_NULL;
+	       this.monPanneau.threadDeplacementTermine();
       }
       else if(etat == 2)  // etat = explosion
       {
@@ -225,10 +264,8 @@ public  class Vaisseau extends JButton  implements Runnable
 	        	  //  imageOriginale = imagesExplosion[i]; 
 				   imageOriginale.setImage(imagesExplosion[i]);
 		     	   repaint();
-
 		     	//repaint(getX(), getY(), getWidth()+20, getHeight()+20);
 	            Thread.sleep(70) ;
-		     	  
 	         }  catch (InterruptedException e) {
 	         
 	             // gestion de l'erreur
@@ -238,13 +275,14 @@ public  class Vaisseau extends JButton  implements Runnable
 
 	       // On fait disparaitre le vaisseau ? Comment ?
 	       this.setLocation(1200,1200);
+	       this.monPanneau.threadExplosionTermine();
       }
 
 			System.out.println("Fin fonction run(), x = "+getX());
    }
     
   
-    public int getDeplacement()
+    /*public int getDeplacement()
     {
     	return deplacement;
     }
@@ -252,7 +290,7 @@ public  class Vaisseau extends JButton  implements Runnable
     public void setDeplacement(int deplacement)
     {
     	this.deplacement = deplacement;
-    }
+    }*/
   
     public int getRotation()
     {
@@ -346,5 +384,38 @@ public  class Vaisseau extends JButton  implements Runnable
 	
 	public int getEquipe() {
 		return equipe;
+	}
+	
+	public void calculerRotation(int caseX, int caseY)
+	{
+		//caseDestination
+		// Si le deplacement est à gauche
+		if(getX() > caseX)
+		{
+			direction = Constantes.DIR_GAUCHE;
+			ecart = (getX()-caseX)/Constantes.ECART;
+			rotation = 90/Constantes.NBR_TIKS_ROT;
+		}
+			// Si le deplacement est à droite
+		else if(getX() < caseX)
+		{
+			direction = Constantes.DIR_DROITE;
+			ecart = (caseX-getX())/Constantes.ECART;
+			rotation = 90/Constantes.NBR_TIKS_ROT;
+		}
+			// Si le deplacement est en haut
+		else if(getY() > caseY)
+		{
+			direction = Constantes.DIR_HAUT;
+			ecart = (getY()-caseY)/Constantes.ECART;
+			rotation = 0;
+		}
+			// Si le deplacement est en bas
+		else if(getY() < caseY)
+		{
+			direction = Constantes.DIR_BAS;
+			ecart = (caseY-getY())/Constantes.ECART;
+			rotation = 180/Constantes.NBR_TIKS_ROT;
+		}
 	}
 }
