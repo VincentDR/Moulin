@@ -3,33 +3,29 @@ Moulin
 
 Jeu du Moulin
 
-(J'ai modifié Programme en fenetre)
 
 
 Modification des classes Panneau, Vaisseau et Constantes.
 
-Pensez à aller chercher le dossier Images qui se trouve sur le drive (mit à la racine comme un gros porc)
+Pensez à aller chercher le dossier Images qui se trouve sur le drive (mit à la racine encore comme un gros porc)
 
 ////////////////////  
 INTERFACE GRAPHIQUES   
 ////////////////////
 
-mis à jour le 11/04/14.
+mis à jour le 23/04/14.
 
 Fonctionnalitées changées : 
 
-                            Positions initiales des vaisseaux en haut et en bas
-                            Cocardes allumées en fonction de celui qui joue
-                            Reprendre Partie fonctionne
+                            Tiens, maintenant, ça bouge... c'est beau... mais c'est lent !
                             
                             
 A faire :
 
-                            Gerer la temporisation pendant les animations
+                            Pofiner la temporisation pendant les animations
                             Creer l'interface de "Nouvelle Partie", "Regles" et "Options".
                             Ameliorer le menu
                             Creer un espace au top de la page pour afficher les pseudos
-                            Finir d'implementer l'animation du deplacement/rotation et l'inclure
                             Creer l'animation du tir / lasers
           
 
