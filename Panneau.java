@@ -24,6 +24,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -42,15 +43,12 @@ import javax.swing.SwingUtilities;
 public class Panneau extends JPanel implements MouseListener, MouseMotionListener, Observer{
 	
 	
-	//////////////////////
-	//// DEBUT TEST //////
-	//////////////////////
-	// NORMALEMENT : ALLER CHERCHER LES VRAIES VALEURS
-	
 	private int [] cmptVaiss = new int[2];
+	private int numCasePostDepl;
+	private int positionDuVaissVise;
 	//cmptVaiss[0] = 0;
 	private int phase = 1;
-	private boolean phaseDeTir = false;
+	private int phase2 = Constantes.PHASE_DE_JEU;
 	private int tourDeJeu = 0;
 	
 	private Thread thread;
@@ -499,7 +497,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	        for(int i=0;i<Constantes.NB_VAISSEAUX/2;i++)
 	        {
 	        	//vaisseau[i] = new JButton(animation[1]);
-	        	vaisseau[j][i] = new Vaisseau(j);
+	        	vaisseau[j][i] = new Vaisseau(j, this);
 	
 	        	vaisseau[j][i].setFocusPainted( false ); // enleve la bordure de l'image
 	    		vaisseau[j][i].setBorderPainted(false); // enleve la bordure du bouton
@@ -760,7 +758,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			
 			// Si on a cliqué sur une case vide (postion i)
-			if(event.getSource() == casesVide[i])
+			if(event.getSource() == casesVide[i] && (phase2==Constantes.PHASE_DE_JEU))
 			{
 				  System.out.println("clique sur caseVide num " + i);
 				  
@@ -848,49 +846,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				} // Fin condition phase 2
 			} // Fin de la selection de la cases cliquée
 			
-			///// TEST ELODIE
-			//////
 			
-			// PROVOQUE QUELQUES ERREURS D'ACCES AU TABLEAU
-			/*else{ //on clique su un vaisseau car case non vide
-				if((event.getSource()==plateau[i]) && plateau[i]!=null){
-					System.out.println("selection de cette case non vide "+i);;
-
-					if(phaseDeTir)
-					{
-						controleur.RetirerPiece(i, 2);
-					} 
-					else{ //phase == 2
-						
-						if(phaseDeTir){ // Deplacement moulin
-							System.out.println("destruc case  "+i);
-							controleur.RetirerPiece(i, 2);
-						}
-						else if(phase==2)
-						{ // Case à deplacer
-							// On test si le bouton a été sélectionné
-							if(vaisseau[tourDeJeu][i].isSelectionne())
-							{
-								vaisseau[tourDeJeu][i].setSelectionne(false);
-							}
-							else
-							{
-								// On deselectionne les autres vaisseaux
-								for(int j=0;j<cmptVaiss[tourDeJeu];j++)
-								{
-									if(vaisseau[tourDeJeu][j].isSelectionne())
-										vaisseau[tourDeJeu][j].setSelectionne(false);
-								}
-								vaisseau[tourDeJeu][i].setSelectionne(true);//vaisseau[i].setDeplacement(20);
-							}
-						}
-					}
-				}	
-
-		} //end elsse case non vide*/
-			
-			
-			/// FIN TEST ELODIE
 			/////////////:
 		} // Fin de parcours des cases
 			
@@ -905,7 +861,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				
 				// ==> Si on a fait un moulin et qu'on doit detruire un vaisseau ennemi
 				//if(event.getSource() == vaisseau[tourDeJeu][i] && SwingUtilities.isLeftMouseButton(event))
-				if(phaseDeTir && event.getSource() == vaisseau[tourAutreJoueur][i])
+				if(phase2==Constantes.PHASE_DE_TIR && event.getSource() == vaisseau[tourAutreJoueur][i])
 				{
 					// Explosion
 					for(int c=0;c<Constantes.NB_CASES;c++)
@@ -917,7 +873,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				//else if(event.getSource() == vaisseau[tourDeJeu][i])
 				//&& SwingUtilities.isRightMouseButton(event)
 				// Si on est dans la seconde phase
-				else if(phase == 2 && event.getSource() == vaisseau[tourDeJeu][i]  && SwingUtilities.isLeftMouseButton(event) && !phaseDeTir)
+				else if(phase == 2 && event.getSource() == vaisseau[tourDeJeu][i] 
+						&& SwingUtilities.isLeftMouseButton(event) && phase2==Constantes.PHASE_DE_JEU)
 				{ // Si on clique sur un de nos vaisseau, on le selectionne pour le deplacer
 					
 					// On test si le bouton a été sélectionné
@@ -1051,7 +1008,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	@Override
 	public void mouseMoved(MouseEvent event) {
 		// TODO Auto-generated method stub
-		if(phaseDeTir)
+		if(phase2==Constantes.PHASE_DE_TIR)
 		{
 			System.out.println("phase de tir activé !");
 			for(int i=0;i<Constantes.NB_VAISSEAUX/2;i++)
@@ -1091,18 +1048,30 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				{
 					//plateau[positionDebut]
 					// On deplace le vaisseau
-					Point p = casesVide[positionFin].getLocation();
+					/*Point p = casesVide[positionFin].getLocation();
 					// On supprime la case vide et la remet au dernier plan
 					panelPlateauJeu.remove(casesVide[positionFin]);
 					panelPlateauJeu.add(casesVide[positionFin]);
 					casesVide[positionFin].setLocation(p);
 					
-					// On met à jour le plateau
-					plateau[positionDebut] = null;
 					vaisseau[j][i].setLocation(p);
 					plateau[positionFin] = vaisseau[j][i];
-					vaisseau[j][i].setSelectionne(false);
+					vaisseau[j][i].setSelectionne(false);*/
 					
+					
+					// On garde en memoire la case sur lequel le vaisseau va
+					numCasePostDepl = positionFin;
+					
+					vaisseau[j][i].setEtat(Constantes.ET_DEPL);
+					vaisseau[j][i].calculerRotation(casesVide[positionFin].getX(), casesVide[positionFin].getY());
+					thread =  new Thread(vaisseau[j][i]) ;
+			    	 // lancement de ce thread par appel à sa méthode start()
+					thread.start() ;
+					
+					vaisseau[j][i].setSelectionne(false);
+					// On met à jour le plateau
+					plateau[positionDebut] = null;
+					plateau[positionFin] = vaisseau[j][i];
 
 					// On remet droit le vaisseau
 					//vaisseau[j][i].setAngle(0);
@@ -1127,7 +1096,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	public void detruireVaisseau(int position)
 	{
-		System.out.println("position = " + position);
 		// On parcourt les vaisseaux des 2 joueurs
 		for(int j=0;j<2;j++)
 		{
@@ -1137,12 +1105,16 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				if(plateau[position] == vaisseau[j][i])
 				{
 					vaisseau[j][i].setEtat(Constantes.ET_EXPL);
-					//detruireVaisseau(position);
+					
+					//vaisseau[j][i].setEtat(1);
+					//vaisseau[j][i].setRotation(20);
 					
 					// construction d'un Thread
 					thread =  new Thread(vaisseau[j][i]) ;
 			    	 // lancement de ce thread par appel à sa méthode start()
 					thread.start() ;
+					
+					
 			    	 // cette méthode rend immédiatement la main
 					/*try {
 						thread.join();
@@ -1186,12 +1158,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				}
 			}
 		}
-		phaseDeTir = false;
 
 		// On remet le curseur
 		this.setCursor(Cursor.getDefaultCursor());
-		// On change le tour de jeu
-		//tourDeJeu = tourDeJeu==0 ? 1 : 0;
 	}
 	
 	public void ajouterVaisseau(int position)
@@ -1230,7 +1199,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	public void initialisation()
 	{
 		// Initialisations des positions
-        int ecart=80; //70 correct
+        int ecart=Constantes.ECART; //70 correct
         int positionPlateauX=250;//event.getX(); // 280 pour ecart = 70
         int positionPlateauY=120-Constantes.HAUTEUR_PANEL_TOP_BOT;//event.getY(); // 140 pour ecart = 70
         int x=0, y=0;
@@ -1309,19 +1278,20 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				break;
 			// Deplacement
 			case 2:
+				phase2=Constantes.PHASE_DE_DEPLACEMENT;
 				deplacerVaisseau(tab[3], tab[4]);
 				// On change le tour de jeu
-				changerTourDeJeu();
+				//changerTourDeJeu();
 				break;
 			// Moulin
 			case 3:
 				System.out.println("Moulin : destruction du vaisseau");
+				phase2=Constantes.PHASE_D_EXPLOSION;
 				detruireVaisseau(tab[5]);
-				phaseDeTir=false;
 				// On remet le curseur
 				//this.setCursor(curseurTir);
 				// On change le tour de jeu
-				changerTourDeJeu();
+				///////////changerTourDeJeu();
 				break;
 			// Placement+Moulin
 			case 4:
@@ -1333,46 +1303,51 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				plateau[tab[6]].setMoulin(2);
 				plateau[tab[7]].setMoulin(2);
 				System.out.println("placement+moulin");
-				System.out.println("Moulin position : " + tab[2] + " , " + tab[6] + " et " + tab[7]);
-				phaseDeTir=true;
+				phase2=Constantes.PHASE_DE_TIR;
 				// On change le curseur en mode tir
 				this.setCursor(curseurTir);
 				if(tourDeJeu==0)
 				{
+					phase2=Constantes.PHASE_D_EXPLOSION;
 					detruireVaisseau(tab[5]);
-					phaseDeTir=false;
 					// On remet le curseur
 					this.setCursor(Cursor.getDefaultCursor());
 					// On change le tour de jeu
-					changerTourDeJeu();
+					////////////////changerTourDeJeu();
 				}
 				// On attend un prochain clic si joueur
 				break;
 			case 5:
 			// Deplacement+Moulin
+				phase2=Constantes.PHASE_DE_DEPLACEMENT;
 				System.out.println("deplacement+moulin");
 				System.out.println("Moulin position : " + tab[4] + " , " + tab[6] + " et " + tab[7]);
 				deplacerVaisseau(tab[3],tab[4]);
 				plateau[tab[4]].setMoulin(2);
 				plateau[tab[6]].setMoulin(2);
 				plateau[tab[7]].setMoulin(2);
-				phaseDeTir=true;
+				//phase2=Constantes.PHASE_DE_TIR;
 				// On change le curseur
 				this.setCursor(curseurTir);
 				if(tourDeJeu==0)
 				{
-					detruireVaisseau(tab[5]);
-					phaseDeTir=false;
+					//detruireVaisseau(tab[5]);
+					positionDuVaissVise = tab[5];
 					// On remet le curseur
 					this.setCursor(Cursor.getDefaultCursor());
 					// On change le tour de jeu
-					changerTourDeJeu();
+					///////////changerTourDeJeu();
 				}
+				break;
+			case 6:
+				// Fin de partie
 				break;
 			default:
 				
 				break;
 		}
+		
+
 		
 		/* 
 		* 		ENVOI PAR LE MODELE
@@ -1383,6 +1358,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		 * 				3 ->	Moulin
 		 * 				4 ->	Placement+Moulin
 		 * 				5 ->	Deplacement+Moulin
+		 * 				6 -> 	Ordi a moind de 3 pièces
 		 * 
 		 * 		Seconde case -> La possession (1 si action ordi, 2 si action joueur)
 		 * 			Result[1] =	1 ->	Ordi
@@ -1391,7 +1367,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		 *		Troisieme case -> Le placement
 		 * 			Result[2] =	-1 ->	Il ne s'agit pas d'un placement
 		 *  					x ->	La case x ou la piece sera posee
-
 		 * 		Quatrieme case -> Le deplacement, case depart
 		 * 			Result[3] =	-1 ->	Il ne s'agit pas d'un deplacement
 		 *  					x ->	La case x d'ou la piece sera retiree
@@ -1402,7 +1377,16 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		 *  
 		 *  	Cinquieme case -> Le moulin
 		 * 			Result[5] =	-1 ->	Il ne s'agit pas d'un moulin
-		 *  					x ->	La case x ou la piece sera detruite*/
+		 *  					x ->	La case x ou la piece sera detruite
+		 *  
+		 *		Sixième case -> Voisin pièce moulin
+		 * 			Result[6] =	-1 ->	Pas de case voisine
+		 *  					x ->	La case x est un des deux voisins de la case qui a fait un moulin
+		 *  
+		 *		Septième case -> Voisin pièce moulin
+		 * 			Result[7] =	-1 ->	Pas de case voisine
+		 *  					x ->	La case x est le deuxième voisin de la case qui a fait un moulin*/
+		
 	}
 	public void changerTourDeJeu()
 	{
@@ -1417,7 +1401,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			cocardeEmpire.setIcon(imgCocardeEmpire[0]);
 			
 			// A l'ordi de jouer
-			controleur.ordi(); 
+			if(true)
+			{
+				controleur.ordi(); 
+			}
 			
 		}
 		else
@@ -1427,6 +1414,46 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			// On eteint l'autre
 			cocardeEmpire.setIcon(imgCocardeEmpire[1]);
 		}
+	}
+	public void threadDeplacementTermine()
+	{
+
+		Point p = casesVide[numCasePostDepl].getLocation();
+		// On supprime la case vide et la remet au dernier plan
+		panelPlateauJeu.remove(casesVide[numCasePostDepl]);
+		panelPlateauJeu.add(casesVide[numCasePostDepl]);
+		casesVide[numCasePostDepl].setLocation(p);
+		
+		// On modifie la phase
+		if(plateau[numCasePostDepl].getMoulin() == 2)
+		{
+
+			phase2=Constantes.PHASE_DE_TIR;
+		}
+		else
+		{
+			phase2 = Constantes.PHASE_DE_JEU;
+		}
+		
+		if(phase2 != Constantes.PHASE_DE_TIR)
+		{
+			changerTourDeJeu();
+		}
+		else
+		{
+			// Si l'ordi est en phase de Tir et que mode JvsIA activé
+			if(tourDeJeu==0 && true) // true en atendant
+			{
+				phase2 = Constantes.PHASE_D_EXPLOSION;
+				detruireVaisseau(positionDuVaissVise);
+			}
+		}
+	}
+	
+	public void threadExplosionTermine()
+	{
+		phase2 = Constantes.PHASE_DE_JEU;
+		changerTourDeJeu();
 	}
 }
 
