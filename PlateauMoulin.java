@@ -1212,11 +1212,8 @@ public class PlateauMoulin extends Plateau{
 	 * @return Renvoi un indice représentant l'intérêt d'un plateau, plus il sera haut, plus l'ordi sera en position de force
 	 */
 	public int EvalPlateau(){
-		Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
-		Vector<Integer> piecesJoueur = PiecesPossedeesPar(2);
-		
 		//On est pas en fin de jeu, sinon return 0;	
-		if(piecesOrdi.size()>=3 && piecesJoueur.size()>=3){ 
+		
 			int UnVoisin=5;
 			int DeuxVoisins=10;
 			
@@ -1366,10 +1363,12 @@ public class PlateauMoulin extends Plateau{
 				
 			
 			return IndiceOrdi-IndiceJoueur;		
-		}//fin test (!fin de partie ?)
+	/*	}//fin test (!fin de partie ?)
 		else{
-			return 0;
+			return null;
 		}
+		
+		*/
 	}
 	// Renvoi un tableau contenant les plateaux fils de pm, ceux qui contiennent un coup suivant. Appelé seulement par ordi
 	public Vector<PlateauMoulin> plateauCoupSuivant(int possession){
@@ -1383,7 +1382,7 @@ public class PlateauMoulin extends Plateau{
 					
 					if(CoupValide(VoisinsHorizontaux[i][j])){
 						PlateauMoulin pmDepH = new PlateauMoulin(this); // Plateau pour le deplacement
-						pmDepH.nivArbo = nivArbre;
+						pmDepH.setNivHarbo(nivArbre);
 						if(pmDepH.DepPiecePlateauSuiv(i, VoisinsHorizontaux[i][j], possession)==1){
 							//Deplacement valide donc on ajoute ce nouveau plateau au vect
 							ensFils.addElement(pmDepH);
@@ -1393,7 +1392,7 @@ public class PlateauMoulin extends Plateau{
 
 					if(CoupValide(VoisinsVerticaux[i][j])){
 						PlateauMoulin pmDepV = new PlateauMoulin(this); // Plateau pour le deplacement
-						pmDepV.nivArbo = nivArbre;
+						pmDepV.setNivHarbo(nivArbre);
 						if(pmDepV.DepPiecePlateauSuiv(i, VoisinsVerticaux[i][j], possession)==1){
 							//Deplacement valide donc on ajoute ce nouveau plateau au vect
 							ensFils.addElement(pmDepV);
@@ -1415,60 +1414,60 @@ public class PlateauMoulin extends Plateau{
 	
 	// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
 	public boolean EstFeuille(){
-		if(this.nivArbo==5){// On fait une profondeur de 2 pour l'instant
+		if(this.nivArbo==3){// On fait une profondeur de 2 pour l'instant
 			return true;
 		}
 		return false;
 	}
 	
 	// Renvoi le min ou le max en fonction de niveauHarbo
-	public int MinMax(int posses){
+	public int MinMax(int posses,int alpha, int beta){
 		
-		
-		/*
-		//Test Profondeur max
-		int eval = this.EvalPlateau();
-		if(eval==0){
-System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
-			return eval;
+		//TEST fin de partie
+		Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
+		Vector<Integer> piecesJoueur = PiecesPossedeesPar(2);
+		if(piecesOrdi.size()<=3 && piecesJoueur.size()<=3 && TourDeJeu >=18){ 
+System.out.println("Dans minMax est feuille terminale + nivharbo :"+this.nivArbo);
+			return (10000000);
 		}
-	*/	
-	
+
+		
+		
+		
 		if(this.EstFeuille()){ // Si le noeud est une feuille
 			int eval = this.EvalPlateau();
-//System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
-
+System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
 			return eval;
 		}
 		else{
 			Vector<PlateauMoulin> vectPlateau = this.plateauCoupSuivant(posses);
+System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArbo);			
 			// On va utiliser la possession de l'adversaire pour le minMax des "sous plateaux"
 			int possesAdv = posses==1 ? 2 : 1;
 			
-			int minMax;
 			if(this.noeudMax(posses)){ // posses ==1
 //System.out.println("Dans minMax noeud max + nivharbo :"+this.nivArbo);
 
-				
-				minMax=-10000;
 				for(int i=0; i<vectPlateau.size();i++){
-					minMax = Math.max(minMax,vectPlateau.elementAt(i).MinMax(possesAdv));
+					alpha = Math.max(alpha,vectPlateau.elementAt(i).MinMax(possesAdv,alpha,beta));
+					if(alpha>=beta){
+						return beta;
+					}
 				}
 //System.out.println("Result max:"+minMax);
-				
-				return minMax;
+				return alpha;
 			}
 			else{ // noeud Min
 //System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
 
-				
-				minMax=10000000;
 				for(int i=0; i<vectPlateau.size();i++){
-					minMax = Math.min(minMax,vectPlateau.elementAt(i).MinMax(possesAdv));
+					beta = Math.min(beta,vectPlateau.elementAt(i).MinMax(possesAdv,alpha,beta));
+					if(alpha>=beta){
+						return alpha;
+					}
 				}
 //System.out.println("Result min:"+minMax);
-
-				return minMax;
+				return beta;
 			}
 		}
 	}
@@ -1476,22 +1475,23 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 	
 	// Renvoi la meilleur configuration de plateau à jouer
 	public PlateauMoulin meilleurCoup(int posses){
+		this.setNivHarbo(0);
 		Vector<PlateauMoulin> vectPlat = this.plateauCoupSuivant(posses);
 
 		// On va utiliser la possession de l'adversaire pour le minMax des "sous plateaux"
 		int possesAdv = posses==1 ? 2 : 1; 
 	
-		int Max=-10000;
-		int maxIntermediaire=-10000;
+		int Max=-1000000;
+		int maxIntermediaire=-1000000;
 		int indice=0;
 
 		for(int i=0; i<vectPlat.size();i++){
 			//System.out.println("\nAppel minmax n° "+i);
-			System.out.println("Max avant :"+Max);
-			vectPlat.elementAt(i).affichage();
-			System.out.println("Eval du plateau :"+vectPlat.elementAt(i).MinMax(possesAdv));
-			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv));
-			System.out.println("maxInter:"+maxIntermediaire +" \n");
+//System.out.println("Max avant :"+Max);
+//vectPlat.elementAt(i).affichage();
+//System.out.println("Eval du plateau :"+vectPlat.elementAt(i).MinMax(possesAdv));
+			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv,-10000, 100000));
+//System.out.println("maxInter:"+maxIntermediaire +" \n");
 			
 			
 			
@@ -1726,4 +1726,5 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 	}
 
 }
+
 
