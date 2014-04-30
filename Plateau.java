@@ -5,7 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 
-public class Plateau extends Observable {
+public class Plateau extends Observable{
 		
 	/***************/
 	/***ATTRIBUTS***/
@@ -13,7 +13,7 @@ public class Plateau extends Observable {
 	private Vector<Piece> Pieces;
 	private Joueur JoueurActif;
 	private Joueur JoueurNActif;
-	
+
 	
 	/*****************/
 	/***ACCESSEURS****/
@@ -80,7 +80,12 @@ public class Plateau extends Observable {
 	public void RetirerPiece(){
 		
 	}
-
+	
+	public boolean isJoueur(Joueur j){
+		
+		return JoueurActif == j;
+	}
+	
 	
 	/* --------- Implementation Observable --------- */
 	
