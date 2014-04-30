@@ -1,18 +1,33 @@
 package moulin;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class Controleur {
 	private Fenetre fenetre;
 	private PlateauMoulin plateau;
+	private Save save;
 	
 	public Controleur()
 	{
 		fenetre = new Fenetre(this);
-		
-
 		Humain H = new Humain("AVLEET");
 		NonHumain NH = new NonHumain(1);
 		plateau = new PlateauMoulin(NH,H);
-		plateau.addObserver(vue.getPanneau());
+		plateau.addObserver(fenetre.getPanneau());
+		
+		try {
+			this.save = Save.getInstance ();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -35,6 +50,12 @@ public class Controleur {
 	
 	public void ordi()
 	{
+		plateau.ControleurOrdi();
+	}
+	
+	public void save()
+	{
+		
 		plateau.ControleurOrdi();
 	}
 }
