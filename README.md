@@ -13,7 +13,7 @@ Pensez à aller chercher le dossier Images qui se trouve sur le drive (mit à la
 INTERFACE GRAPHIQUES   
 ////////////////////
 
-mis à jour le 23/04/14.
+mis à jour le 30/04/14.
 
 Fonctionnalitées changées : 
 
