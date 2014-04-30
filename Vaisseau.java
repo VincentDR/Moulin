@@ -16,17 +16,20 @@ public  class Vaisseau extends JButton  implements Runnable
 	private Panneau monPanneau;
 	// Les images de l'explosion du vaisseau
     private BufferedImage [] imagesExplosion;
+	// Les images du placement du vaisseau
+    private BufferedImage [] imagesPlacement;
 	private ImageIcon imageOriginale, imageSelectionne;
 	// Equipe à laquelle le bouton appartient
 	//private int equipe;
 	 		 // 0 : equipe 1 | 1 : equipe 2
-	private int etat = 0;
+	private int etat = Constantes.ET_NULL;
 			 // Aucun | Deplacement | Explosion
 	//private Direction direction = Direction.HAUT;
 	 // Aucun | Deplacement | Explosion
 
 	// Equipe du vaisseau : 0 : Rebelle | 1 : Imperiaux
 	private int equipe;
+	private int numero;
 	// Ecart entre le vaisseau et la position finale : 1, 2 ou 3
 	private int ecart;
 	private int direction;
@@ -40,11 +43,12 @@ public  class Vaisseau extends JButton  implements Runnable
 	// permet de savoir si le vaisseau fait partie d'un moulin : 0-Rien 1-Moulin 2-Nouveau moulin
 	private int moulin;
 	//..
-	private int nbr_anim;
+	private int nbrAnimExplosion, nbrAnimPlacement;
     // Angle du vaisseau par rapport à l'axe vertical
 	private double angle;
 	// INITIALISATION DES FICHIERS IMAGE
-    private File [] filesVaisseau;
+    private File [] filesVaisseauExpl;
+    private File [] filesVaisseauPlac;
 	//private File fileVaisseau = new File("Images/Animations/Explosions/Xplo1.png");
 
 	// Les images du vaisseau
@@ -52,30 +56,37 @@ public  class Vaisseau extends JButton  implements Runnable
     // L'image rotative
     private RotatingImage rotatingImage;
 	
-	public Vaisseau(int equipe, Panneau monPanneau)
+	public Vaisseau(Panneau monPanneau, int equipe, int numero)
 	{
 		 this.monPanneau = monPanneau;
-
+		 this.equipe = equipe;
+		 this.numero = numero;
+		 
 		if(equipe==0)
 		{
 			imageOriginale = new ImageIcon("Images/Animations/Explosions/Xplo1.png");
 			imageSelectionne = new ImageIcon("Images/Animations/XwingSelect.png");
 			//filesVaisseau = new File("Images/Animations/Explosions/Xplo1.png");
-			nbr_anim = Constantes.NB_ANIMATIONS_W;
+			nbrAnimExplosion = Constantes.NB_ANIMATIONS_EXPL_W;
+			nbrAnimPlacement = Constantes.NB_ANIMATIONS_PLAC_W;
 		}
 		else
 		{
 			imageOriginale = new ImageIcon("Images/Animations/Explosions/Tplo1.png");
 			imageSelectionne = new ImageIcon("Images/Animations/TIEselect.png");
 			//filesVaisseau = new File("Images/Animations/Explosions/Tplo1.png");
-			nbr_anim = Constantes.NB_ANIMATIONS_T;
+			nbrAnimExplosion = Constantes.NB_ANIMATIONS_EXPL_T;
+			nbrAnimPlacement = Constantes.NB_ANIMATIONS_PLAC_T;
 		}
 		
 		// Initialisation des fichiers et des images
-		filesVaisseau = new File[nbr_anim];
-		imagesExplosion = new BufferedImage[nbr_anim];
+		filesVaisseauExpl = new File[nbrAnimExplosion];
+		filesVaisseauPlac = new File[nbrAnimPlacement];
+		imagesExplosion = new BufferedImage[nbrAnimExplosion];
+		imagesPlacement = new BufferedImage[nbrAnimPlacement];
+		
 		// Initialisation de l'animation explosion
-		for(int i=0;i<nbr_anim;i++)
+		for(int i=0;i<nbrAnimExplosion;i++)
 		{
 			String chemin="";
 			if(equipe==0)
@@ -83,11 +94,32 @@ public  class Vaisseau extends JButton  implements Runnable
 			else
 			    chemin = "Images/Animations/Explosions/Tplo"+(i+1)+".png";
 			    //explosionXwing[i-1] = new ImageIcon(rotatingImage);
-			filesVaisseau[i] = new File(chemin);
+			filesVaisseauExpl[i] = new File(chemin);
 			    	
 			try {
 
-			    imagesExplosion[i] = ImageIO.read(filesVaisseau[i]);
+			    imagesExplosion[i] = ImageIO.read(filesVaisseauExpl[i]);
+			} 
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		// Initialisation de l'animation placement
+		for(int i=0;i<nbrAnimPlacement;i++)
+		{
+			String chemin="";
+			if(equipe==0)
+			    chemin = "Images/Animations/Explosions/Xplo"+(i+1)+".png";
+			else
+			    chemin = "Images/Animations/Explosions/Tplo"+(i+1)+".png";
+			
+			filesVaisseauPlac[i] = new File(chemin);
+			    	
+			try {
+
+			    imagesPlacement[i] = ImageIO.read(filesVaisseauExpl[i]);
 			} 
 			catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -103,7 +135,7 @@ public  class Vaisseau extends JButton  implements Runnable
 		// Initialisation de l'image rotative
 		try {
 
-			imageVaisseau = ImageIO.read(filesVaisseau[0]);
+			imageVaisseau = ImageIO.read(filesVaisseauExpl[0]);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,20 +147,6 @@ public  class Vaisseau extends JButton  implements Runnable
 				//setImage(rotatingImage);
 		rotatingImage.setAngleD(angle);
 				
-			
-		// Initialisation de l'animation explosion
-		/*imagesExplosion = new ImageIcon[nbr_anim];
-	    for(int i=1;i<nbr_anim;i++)
-	    {
-	    	String chemin="";
-	    	if(equipe==0)
-	    		chemin = "Images/Animations/Explosions/Xplo"+i+".png";
-	    	else
-	    		chemin = "Images/Animations/Explosions/Tplo"+i+".png";
-	    	//explosionXwing[i-1] = new ImageIcon(rotatingImage);
-	    	imagesExplosion[i-1] = new ImageIcon(chemin);
-	    }*/
-
 	    //imageOriginale.setImage(rotatingImage);
 	    
 	    // On initialise l'imageIcon
@@ -160,41 +178,69 @@ public  class Vaisseau extends JButton  implements Runnable
     public  void run()
     {
     	
+    	
 		System.out.println("Debut fonction run(), x = "+getX());
-      if(etat == 1) // etat = deplacement
-      {
-	       int i =  0 ; 
-	       int deplacementX = 0, deplacementY = 0;
+		if(etat == Constantes.ET_PLAC) // etat = placement
+	    {
+			int i = nbrAnimPlacement-1 ;
+			System.out.println("nbrAnimPlacement = " + nbrAnimPlacement);
+			while (i >= 0)
+		       {
+				System.out.println("i = " + i);
+		          try {
+		        	  	
+		        	  
+			        	imageOriginale.setImage(imagesPlacement[i]);
+				     	repaint();
+			            Thread.sleep(70) ;
+		          	}  
+		          	catch (InterruptedException e) {
+		         
+		             // gestion de l'erreur
+		          	}
+					i--;
+		       }
+		       this.monPanneau.threadPlacementTermine(/*numero*/);
+			
+	    }
+		else if(etat == Constantes.ET_DEPL) // etat = deplacement
+		{
+ 
+    	  
+			int i =  0 ; 
+			int deplacementX = 0, deplacementY = 0;
 	       
-	       while (i <  rotation) {
-	       try{
-				double oldAngle=0;
-				if(rotatingImage!=null)
-					oldAngle=rotatingImage.getAngleD();
-				
-				if(direction==Constantes.DIR_GAUCHE)
-				{
-					setAngle(oldAngle-Constantes.NBR_TIKS_ROT);
+			while (i <  rotation) 
+			{
+				try{
+					double oldAngle=0;
+					if(rotatingImage!=null)
+						oldAngle=rotatingImage.getAngleD();
+					
+					if(direction==Constantes.DIR_GAUCHE)
+					{
+						setAngle(oldAngle-Constantes.NBR_TIKS_ROT);
+					}
+					else
+					{
+						setAngle(oldAngle+Constantes.NBR_TIKS_ROT);
+					}
+					
+					repaint();
+					System.out.println("On tourne");
+					Thread.sleep(Constantes.VITESSE_ROT);//sleep for 20 ms
 				}
-				else
-				{
-					setAngle(oldAngle+Constantes.NBR_TIKS_ROT);
+				catch(InterruptedException ie){
+					ie.printStackTrace();
 				}
-				
-				repaint();
-				System.out.println("On tourne");
-				Thread.sleep(Constantes.VITESSE_ROT);//sleep for 20 ms
-			}
-			catch(InterruptedException ie){
-				ie.printStackTrace();
-			}
-	       	i++;
+		       	i++;
 	       }
 	       
 	       i=0;
 	       
 	       // On deplace
-	       while (i < ecart*(Constantes.ECART/Constantes.NBR_TIKS_DEP)) {
+	       while (i < ecart*(Constantes.ECART/Constantes.NBR_TIKS_DEP))
+	       {
 	          try {
 	        	  //setLocation(getX()+4, getY());
 	        	 //this.setIcon(explosionXwing[i]);
@@ -213,17 +259,19 @@ public  class Vaisseau extends JButton  implements Runnable
 					repaint();
 					//repaint(getX(), getY(), getWidth()+20, getHeight()+20);
 					Thread.sleep(Constantes.VITESSE_DEP) ;
-	          	}  catch (InterruptedException e) {
+	          	}  
+	          	catch (InterruptedException e) {
 	         
 	             // gestion de l'erreur
-	         }
+	          	}
 				System.out.println("On se déplace");
-	          i++;
+				i++;
 	       }
 	       
 	       i=0;
 	       // On remet droit le vaisseau
-	       while (i <  rotation) {
+	       while (i <  rotation)
+	       {
 		       try{
 					double oldAngle=0;
 					if(rotatingImage!=null)
@@ -246,16 +294,17 @@ public  class Vaisseau extends JButton  implements Runnable
 					ie.printStackTrace();
 				}
 		       	i++;
-		       }
+		   }
+	       
 	       etat =  Constantes.ET_NULL;
 	       this.monPanneau.threadDeplacementTermine();
       }
-      else if(etat == 2)  // etat = explosion
+      else if(etat == Constantes.ET_EXPL)  // etat = explosion
       {
     	  
     	  int i =  0 ; 
 	       //while (n++ <  100) {
-	       while (i < nbr_anim) {
+	       while (i < nbrAnimExplosion) {
 	          try {
 	        	  //ImageIcon imageTest = new ImageIcon("Images/Animations/blanc.png");
 	        	  // test
@@ -275,7 +324,8 @@ public  class Vaisseau extends JButton  implements Runnable
 
 	       // On fait disparaitre le vaisseau ? Comment ?
 	       this.setLocation(1200,1200);
-	       this.monPanneau.threadExplosionTermine();
+	       // simplement en envoyant son numero ici
+	       this.monPanneau.threadExplosionTermine(/*numero*/);
       }
 
 			System.out.println("Fin fonction run(), x = "+getX());
