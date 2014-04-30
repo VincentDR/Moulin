@@ -53,10 +53,9 @@ public class Controleur {
 		plateau.ControleurOrdi();
 	}
 	
-	public void save()
+	public void save(String nomPartie)
 	{
-		
-		plateau.ControleurOrdi();
+		this.save.sauvegarder(nomPartie);
 	}
 }
 
