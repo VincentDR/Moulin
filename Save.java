@@ -13,19 +13,19 @@ import java.util.Vector;
 
 public class Save implements Serializable
 {
-	private Vector<Plateau> plateaux;
+	private Vector<Tuple> plateaux;
 	private  static  final  long serialVersionUID =  1351993981346723535L;
 	
 	/** Constructeur privé */
 	private Save()
 	{
-		this.plateaux = new Vector <Plateau> ();
+		this.plateaux = new Vector <Tuple> ();
 	}
  
  	public static Save getInstance () throws FileNotFoundException, IOException, ClassNotFoundException
  	{
- 		File f = new File("savegarde.ser");
-		if(f.exists() && !f.isDirectory())
+ 		File f = new File("sauvegarde.ser");
+		if(f.length() > 0)//f.exists() && !f.isDirectory())
 		{
 			ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(f)) ;
 			return (Save)ois.readObject() ;
@@ -38,48 +38,64 @@ public class Save implements Serializable
  	
 	/** Point d'accès pour l'instance unique du singleton */
 	
-	public boolean sauvegarder (Plateau plateau)
+	public boolean sauvegarder (String str)
 	{
-		if (!in_save (plateau))
+		if (!in_save (str))
 		{
-			this.plateaux.addElement (plateau);
+		//	this.plateaux.addElement (str);
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean in_save (Joueur j)
+	public boolean in_save (String str)
 	{
-		for (Plateau pla : this.plateaux)
+		for (Tuple pla : this.plateaux)
 		{
-			if (pla.isJoueur (j))
+			if (pla.getNom() == str)
 				return true;
 		}
 		return false;
 	}
 	
-	public Plateau getSave(Joueur joueur)
+	public Plateau getSave(String nomPartie)
 	{
-		for (Plateau pla : this.plateaux)
+		for (Tuple pla : this.plateaux)
 		{
-			if (pla.isJoueur (joueur))
+			if (pla.getNom() == nomPartie)
 			{
 				this.plateaux.remove (pla);
-				return pla;
+				return pla.getPlateau();
 			}
 		}
 		return null;
 		
 	}
 	
+	public Plateau getPlateau(String nomPartie){
+		int i = 0; //Parcours du vecteur de plateau
+		boolean trouve =false;
+		while(trouve == false && i<plateaux.size()){
+			if(plateaux.elementAt(i).getNom() == nomPartie){
+				trouve = true;
+			}
+			i++;
+		}
+		Plateau plateau = new Plateau();
+		if(trouve == true){
+			plateau = plateaux.elementAt(i).getPlateau();
+		}
+		return plateau;
+	}
+	
 	public void finalize()
     {
-       File fichier =  new File("savegarde.ser");
+       File fichier =  new File("sauvegarde.ser");
 
 		 // ouverture d'un flux sur un fichier
 		ObjectOutputStream oos;
 		try {
-			oos = new ObjectOutputStream(new FileOutputStream(fichier));
+			oos = new ObjectOutputStream(new FileOutputStream(fichier, false));
 			try {
 				oos.writeObject(this);
 			} catch (IOException e) {
