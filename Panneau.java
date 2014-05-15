@@ -1083,6 +1083,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		for(int i=0;i<Constantes.NB_CASES;i++)
 		{
 			
+			System.out.println("phase2==Constantes.PHASE_DE_JEU = "+phase2);
 			// Si on a cliqué sur une case vide (postion i)
 			if(event.getSource() == casesVide[i] && (phase2==Constantes.PHASE_DE_JEU))
 			{
@@ -1111,14 +1112,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 							}*/
 						System.out.println("On ajoute une piece");
 						controleur.AjouterPiece(i);
-					}
-					
-					// On change de phase si tout le monde a joué
-					if(cmptVaiss[0] + cmptVaiss[1] == Constantes.NB_VAISSEAUX)
-					{
-						phase = 2;
-						cmptVaiss[0]=Constantes.NB_VAISSEAUX/2;
-						cmptVaiss[1]=Constantes.NB_VAISSEAUX/2;
 					}
 					
 				} // Fin de la condition phase 1
@@ -1210,7 +1203,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					
 					
 					
-					
+					// On recherche le numero de la case
 					for(int c=0;c<Constantes.NB_CASES;c++)
 					{
 						if(plateau[c]==vaisseau[tourAutreJoueur][i])
@@ -1220,10 +1213,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						}
 					}
 					
-					phase2 = Constantes.PHASE_DE_TIR;
-					this.setCursor(Cursor.getDefaultCursor());
-					viserCible();
-					tirerLasers();
+					controleur.RetirerPiece(positionDuVaissVise, tourAutreJoueur+1);
+					
+					
 					
 					
 				} 
@@ -1453,6 +1445,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	public void detruireVaisseau(int position)
 	{
+		
 		// On parcourt les vaisseaux des 2 joueurs
 		for(int j=0;j<2;j++)
 		{
@@ -1515,45 +1508,20 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	public void ajouterVaisseau(int position)
 	{
+		// On met à jour le plateau
+		plateau[position] = vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]];
 		// On stock la position
 		positionCaseVisee = position;
 		
-		// On enleve le vaisseau de son panel d'origine
-		if(tourDeJeu==0) // Tour de l'adversaire
-		{
-			panelPionsTop.remove(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
-			//panelPionsTop.validate();
-		}
-		else // Tour du joueur
-		{
-			panelPionsBot.remove(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
-			//panelPionsTop.repaint();
-		}
-		
 		// On met à jour l'état du vaisseau
-		vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]].setEtat(Constantes.ET_PLAC);
-
-		
-		
-		// On l'ajoute dans le jeu
-		panelPlateauJeu.add(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
-		Point p = casesVide[position].getLocation();
-		panelPlateauJeu.remove(casesVide[position]);
-		panelPlateauJeu.add(casesVide[position]);
-		casesVide[position].setLocation(p);
-		
-		// On positionne le vaisseau à l'endroit de la case
-		vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]].setLocation(p);//vaisseau[i].setDeplacement(20);
-		// On met à jour le plateau
-		plateau[position] = vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]];
+		vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]].setEtat(Constantes.ET_PLAC_1);
 		
 		// On lance le thread
 		thread =  new Thread(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]) ;
     	 // lancement de ce thread par appel à sa méthode start()
 		thread.start() ;
-
-		// On ajoute 1 au compteur de vaisseau en fonction du joueur
-		cmptVaiss[tourDeJeu]++;
+		
+		
 		
 		panelJeu.repaint();
 		panelJeu.validate();
@@ -1620,7 +1588,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		}
 
 		
-		
+
 		phase2=Constantes.PHASE_DE_TIR;
 		// On deplace les lasers
 		for(int l=0;l<3;l++)
@@ -1705,6 +1673,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		 	// Placement
 			case 1:
 				//tourDeJeu=tab[1]-1;
+				phase2=Constantes.PHASE_DE_PLACEMENT;
 				ajouterVaisseau(tab[2]);
 				
 				System.out.println("tourDejeu = " + tourDeJeu);
@@ -1718,9 +1687,12 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				break;
 			// Moulin
 			case 3:
-				System.out.println("Moulin : destruction du vaisseau");
-				phase2=Constantes.PHASE_D_EXPLOSION;
-				detruireVaisseau(tab[5]);
+				// Non obligatoire
+				positionDuVaissVise = tab[5];
+				phase2 = Constantes.PHASE_DE_TIR;
+				this.setCursor(Cursor.getDefaultCursor());
+				viserCible();
+				tirerLasers();
 				// On remet le curseur
 				//this.setCursor(curseurTir);
 				// On change le tour de jeu
@@ -1728,6 +1700,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				break;
 			// Placement+Moulin
 			case 4:
+				phase2=Constantes.PHASE_DE_PLACEMENT;
 				ajouterVaisseau(tab[2]);
 				// test
 				plateau[tab[2]].setMoulin(2);
@@ -1878,9 +1851,59 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		
 	}
 
-	
-	public void threadPlacementTermine()
+	public void threadPlacementPhase1Termine()
 	{
+
+		System.out.println("phase fin thread : " + phase2);
+		// On enleve le vaisseau de son panel d'origine
+		if(tourDeJeu==0) // Tour de l'adversaire
+		{
+			panelPionsTop.remove(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
+			//panelPionsTop.validate();
+		}
+		else // Tour du joueur
+		{
+			panelPionsBot.remove(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
+			//panelPionsTop.repaint();
+		}
+		
+
+		// On met à jour l'état du vaisseau
+		vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]].setEtat(Constantes.ET_PLAC_2);
+		
+		
+		// On l'ajoute dans le jeu
+		panelPlateauJeu.add(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
+		Point p = casesVide[positionCaseVisee].getLocation();
+		panelPlateauJeu.remove(casesVide[positionCaseVisee]);
+		panelPlateauJeu.add(casesVide[positionCaseVisee]);
+		casesVide[positionCaseVisee].setLocation(p);
+		
+		
+		// On positionne le vaisseau à l'endroit de la case
+		vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]].setLocation(p);//vaisseau[i].setDeplacement(20);
+		
+		// On lance le thread
+		thread =  new Thread(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]) ;
+    	 // lancement de ce thread par appel à sa méthode start()
+		thread.start() ;
+		
+		// On ajoute 1 au compteur de vaisseau en fonction du joueur
+		cmptVaiss[tourDeJeu]++;
+		// On change de phase si tout le monde a joué
+		if(cmptVaiss[0] + cmptVaiss[1] == Constantes.NB_VAISSEAUX)
+		{
+			phase = 2;
+			cmptVaiss[0]=Constantes.NB_VAISSEAUX/2;
+			cmptVaiss[1]=Constantes.NB_VAISSEAUX/2;
+		}
+				
+		
+	}
+	
+	public void threadPlacement2Termine()
+	{
+		System.out.println("Placement terminé");
 		// Si moulin
 		if(plateau[positionCaseVisee].getMoulin() == 2)
 		{
@@ -1904,9 +1927,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		}
 		else
 		{
+			phase2 = Constantes.PHASE_DE_JEU;
 			// On change le tour de jeu
 			changerTourDeJeu();
-			phase2 = Constantes.PHASE_DE_JEU;
 		}
 		
 		
@@ -1994,13 +2017,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		if(phase2==Constantes.PHASE_DE_TIR)
 		{
 			phase2=Constantes.PHASE_D_EXPLOSION;
-			if(tourDeJeu==1){ // Si c'est le tour du joueur
-				controleur.RetirerPiece(positionDuVaissVise, tourAutreJoueur+1);
-			}
-			else // tour de l'ordi
-			{
-				detruireVaisseau(positionDuVaissVise);
-			}
+			System.out.println("Moulin : destruction du vaisseau");
+			detruireVaisseau(positionDuVaissVise);
+			//if(tourDeJeu==1){ // Si c'est le tour du joueur
+				//controleur.RetirerPiece(positionDuVaissVise, tourAutreJoueur+1);
+			//}
+			//else // tour de l'ordi
+			//{
+				//detruireVaisseau(positionDuVaissVise);
+			//}
 		}
 	}
 }
