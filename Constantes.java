@@ -14,9 +14,10 @@ public class Constantes {
 	public static final int NB_CASES = 24;
 	public static final int TAILLE_CASE = 70;
 	public static final int ET_NULL = 0;
-	public static final int ET_PLAC = 1;
-	public static final int ET_DEPL = 2;
-	public static final int ET_EXPL = 3;
+	public static final int ET_PLAC_1 = 1;
+	public static final int ET_PLAC_2 = 2;
+	public static final int ET_DEPL = 3;
+	public static final int ET_EXPL = 4;
 	public static final int NBR_TIKS_ROT = 6; // 5,6,9 ou 10
 	public static final int NBR_TIKS_DEP = 8; // 5 , 8 ou 10
 	public static final int NBR_TIKS_DEP_LASER = 40;
@@ -26,10 +27,11 @@ public class Constantes {
 	public static final int DIR_DROITE = 3;
 
 	public static final int PHASE_DE_JEU = 1;
-	public static final int PHASE_DE_DEPLACEMENT = 2;
-	public static final int PHASE_D_EXPLOSION = 3;
-	public static final int PHASE_DE_CHOIX_CIBLE = 4;
-	public static final int PHASE_DE_TIR = 5;
+	public static final int PHASE_DE_PLACEMENT= 2;
+	public static final int PHASE_DE_DEPLACEMENT = 3;
+	public static final int PHASE_D_EXPLOSION = 4;
+	public static final int PHASE_DE_CHOIX_CIBLE = 5;
+	public static final int PHASE_DE_TIR = 6;
 	
 	
 	// A metre en variable
