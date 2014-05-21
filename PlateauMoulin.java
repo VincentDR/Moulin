@@ -75,7 +75,8 @@ public class PlateauMoulin extends Plateau{
 	//De 0 a 17 -> Pair l'ordi pose une piece, impair le joueur pose une piece
 	//Superieur a 17, Pair l'ordi bouge, impair le joueur bouge
 	private int TourDeJeu;
-	private boolean ordiDansJeu; // =false si deux joueurs, =true si au moins un ordi
+	private boolean ordiVsJoueur; // =false si deux joueurs ou deux ordis, =true si Ordi Vs Joueur
+	private boolean ordiVsOrdi; // =false si deux joueurs ou OrdiVsJoueur, =true si Ordi Vs Ordi
 	
 	/*****************/
 	/***ACCESSEURS****/
@@ -104,7 +105,6 @@ public class PlateauMoulin extends Plateau{
 		nivArbo = niveau;
 	}
 	
-
 	public int getTourDeJeu() {
 		return TourDeJeu;
 	}
@@ -113,12 +113,20 @@ public class PlateauMoulin extends Plateau{
 		TourDeJeu = tourDeJeu;
 	}
 	
-	public boolean ordiDansJeu() {
-		return ordiDansJeu;
+	public boolean getordiVsJoueur() {
+		return ordiVsJoueur;
 	}
 
-	public void ordiDansJeu(boolean ordi) {
-		ordiDansJeu = ordi;
+	public void setordiVsJoueur(boolean ordiVsJ) {
+		ordiVsJoueur = ordiVsJ;
+	}
+	
+	public boolean getOrdiVsOrdi() {
+		return ordiVsOrdi;
+	}
+
+	public void setOrdiVsOrdi(boolean ordiVsO) {
+		this.ordiVsOrdi = ordiVsO;
 	}
 	
 	/*******************/
@@ -130,7 +138,8 @@ public class PlateauMoulin extends Plateau{
 
 		nivArbo=0;
 		TourDeJeu=0;
-		ordiDansJeu = true;
+		ordiVsJoueur = true;
+		ordiVsOrdi = false;
 		VoisinsHorizontaux = new int[24][2];
 		VoisinsVerticaux = new int[24][2];
 		
@@ -149,7 +158,8 @@ public class PlateauMoulin extends Plateau{
 
 		nivArbo=0;
 		TourDeJeu=0;
-		ordiDansJeu = false;
+		ordiVsJoueur = false;
+		ordiVsOrdi = false;
 		VoisinsHorizontaux = new int[24][2];
 		VoisinsVerticaux = new int[24][2];
 		
@@ -168,7 +178,8 @@ public class PlateauMoulin extends Plateau{
 
 		nivArbo=0;
 		TourDeJeu=0;
-		ordiDansJeu = false;
+		ordiVsJoueur = false;
+		ordiVsOrdi = true;
 		VoisinsHorizontaux = new int[24][2];
 		VoisinsVerticaux = new int[24][2];
 		
@@ -574,7 +585,7 @@ public class PlateauMoulin extends Plateau{
 			if(PresenceMoulin(PlaceAJouer,result,2)){
 				System.out.println("Moulin");
 				result[0]=4;
-				if( (0==TourDeJeu%2 && ordiDansJeu) || ordiDansJeu){ // 
+				if( (0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){ // 
 				// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
 					
 					int Choix=CiblePrioritaire();
@@ -608,7 +619,7 @@ public class PlateauMoulin extends Plateau{
 				result[4]=PlaceAJouer;
 				if(PresenceMoulin(PlaceAJouer,result,4)){
 					result[0]=5; //Deplacement Moulin
-					if((0==TourDeJeu%2 && ordiDansJeu) || ordiDansJeu){
+					if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi ){
 					// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
 
 						int Choix=CiblePrioritaire();
@@ -847,85 +858,86 @@ public class PlateauMoulin extends Plateau{
 	}		
 	
 	// Vrai si nouveau moulin pour la case PlaceAverifier
-		public boolean PresenceMoulinD(int PlaceAIgnorer,int PlaceAverifier, int possess){		
+	public boolean PresenceMoulinD(int PlaceAIgnorer,int PlaceAverifier, int possess){		
 			
-			//Présence Horizontale d'un moulin
-			if(voisinHorizontalExiste(PlaceAverifier,0)){ //VH[0] existe ?
-				if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 
-					&& VoisinsHorizontaux[PlaceAverifier][0] != PlaceAIgnorer  ){
-					if(voisinHorizontalExiste(PlaceAverifier,1)){ // 
-						if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess 
-						&& VoisinsHorizontaux[PlaceAverifier][1] != PlaceAIgnorer){
-						return true;
-						}
-					}	
-					else{ //VH[0] à nous et VH[1] n'existe pas
-						if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0]).getPossession() == possess 
-							&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1]).getPossession() == possess
-							&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAIgnorer
-							&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
-								return true;
-						}
+		//Présence Horizontale d'un moulin
+		if(voisinHorizontalExiste(PlaceAverifier,0)){ //VH[0] existe ?
+			if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 
+				&& VoisinsHorizontaux[PlaceAverifier][0] != PlaceAIgnorer  ){
+				if(voisinHorizontalExiste(PlaceAverifier,1)){ // 
+					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess 
+					&& VoisinsHorizontaux[PlaceAverifier][1] != PlaceAIgnorer){
+					return true;
 					}
-				}
-			}
-			else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
-				if(	getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess 
-						&& VoisinsHorizontaux[PlaceAverifier][1] != PlaceAIgnorer){
-					if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][0]).getPossession() == possess 
-						&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1]).getPossession() == possess
+				}	
+				else{ //VH[0] à nous et VH[1] n'existe pas
+					if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0]).getPossession() == possess 
+						&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1]).getPossession() == possess
 						&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAIgnorer
 						&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
 							return true;
 					}
 				}
-			}	
-				
-			//Présence Verticale d'un moulin
-			if(voisinVerticalExiste(PlaceAverifier,0)){ //VH[0] existe ?
-				if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 
-					&& VoisinsVerticaux[PlaceAverifier][0] != PlaceAIgnorer  ){
-					if(voisinVerticalExiste(PlaceAverifier,1)){ // 
-						if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess 
-						&& VoisinsVerticaux[PlaceAverifier][1] != PlaceAIgnorer){
+			}
+		}
+		else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
+			if(	getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess 
+					&& VoisinsHorizontaux[PlaceAverifier][1] != PlaceAIgnorer){
+				if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][0]).getPossession() == possess 
+					&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1]).getPossession() == possess
+					&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAIgnorer
+					&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
 						return true;
-						}
-					}	
-					else{ //VH[0] à nous et VH[1] n'existe pas
-						if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0]).getPossession() == possess 
-							&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1]).getPossession() == possess
-							&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAIgnorer
-							&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
-								return true;
-						}
-					}
 				}
 			}
-			else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
-				if(	getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess 
-						&& VoisinsVerticaux[PlaceAverifier][1] != PlaceAIgnorer){
-					if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0]).getPossession() == possess 
-						&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][1]).getPossession() == possess
+		}	
+				
+		//Présence Verticale d'un moulin
+		if(voisinVerticalExiste(PlaceAverifier,0)){ //VH[0] existe ?
+			if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 
+				&& VoisinsVerticaux[PlaceAverifier][0] != PlaceAIgnorer  ){
+				if(voisinVerticalExiste(PlaceAverifier,1)){ // 
+					if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess 
+					&& VoisinsVerticaux[PlaceAverifier][1] != PlaceAIgnorer){
+					return true;
+					}
+				}	
+				else{ //VH[0] à nous et VH[1] n'existe pas
+					if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0]).getPossession() == possess 
+						&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1]).getPossession() == possess
 						&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAIgnorer
 						&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
 							return true;
 					}
 				}
 			}
-			//Aucun cas bon donc pas de moulin
-			return false; 
-		}	
+		}
+		else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
+			if(	getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess 
+					&& VoisinsVerticaux[PlaceAverifier][1] != PlaceAIgnorer){
+				if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0]).getPossession() == possess 
+					&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][1]).getPossession() == possess
+					&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAIgnorer
+					&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
+						return true;
+				}
+			}
+		}
+		//Aucun cas bon donc pas de moulin
+		return false; 
+	}	
 
+	// OvsJ avec difficulté == 1 (facile)
 	public int PlacementRandom(){
 		int random=0;
-			boolean trouve = true;
-			while(trouve){
-				random = (int)(Math.random() * (0-24)) + 24;
-				if(getPieces().elementAt(random).getPossession()==0){
-					trouve=false;			
-				}
-			}			
-			return random;
+		boolean trouve = true;
+		while(trouve){
+			random = (int)(Math.random() * (0-24)) + 24;
+			if(getPieces().elementAt(random).getPossession()==0){
+				trouve=false;			
+			}
+		}			
+		return random;
 	}
 	
 	/**
@@ -1148,54 +1160,6 @@ public class PlateauMoulin extends Plateau{
 		//System.out.println("\n"+maxi+" "+max);
 		return maxi;
 		
-	}
-	
-	
-	public int[] DeplacementRandom(){
-		Vector<Integer> V = PiecesPossedeesPar(1);
-		int[][] Deplacement = new int[V.size()][4];
-		for(int i=0;i<V.size();i++){
-			for(int j=0;j<4;j++){
-				Deplacement[i][j]=-1;
-			}
-		}
-		
-		int j=0;
-		for(int i=0;i< V.size();i++){
-			j=0;
-			
-			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][0];
-				j++;
-			}
-			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][1];
-				j++;
-			}
-			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][0];
-				j++;
-			}
-			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][1];
-				j++;
-			}			
-		}
-		
-		int [] res = new int [2];
-		
-		boolean trouve = true;
-		while(trouve){
-		int random = (int)(Math.random() * (0-V.size())) + V.size();
-		int random2 = (int)(Math.random() * (0-4)) + 4;			
-			if(Deplacement[random][random2] !=-1){
-				res[0]=random;
-				res[1]= Deplacement[random][random2];
-				trouve=false;			
-			}
-		}		
-		
-		return res;
 	}
 	
 	/**
@@ -1752,6 +1716,8 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		return Result;		
 	}		
 **/	
+	
+	// Méthode appelée par la vue, quand c'est au tour d'un ordi de jouer
 	public int[] ControleurOrdi(){
 			
 		System.out.println("Tourdejeu modele "+TourDeJeu);
@@ -1759,21 +1725,26 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		int[] Result = new int[6];
 		InitResult(Result); // init à-1
 			
-		if((0==TourDeJeu%2 && ordiDansJeu) || ordiDansJeu){	
+		if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){	
 			//Possession a l'ordi
 			Result[1]=1;
 			
 			if(TourDeJeu<18){
-				Choix=PlacementPrioritaire();
+				if(getJoueurActif().getNiveau() == 1){
+					Choix = PlacementRandom();
+				}
+				else{
+					Choix=PlacementPrioritaire();
+				}
 				System.out.println("\nOrdi a joué à "+Choix);
 				
-			
 				if(CoupValide(Choix)){  
 					AjouterPiece(Choix);
 				}else{System.out.println("Mauvais choix ordi");}
 	
 			}
 			else{ //Deplacement
+// !!!! A modifier par getJoueurActif !!!!
 				Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
 				if(piecesOrdi.size()>=3){ //Si l'ordi a au moins trois pièces
 				
