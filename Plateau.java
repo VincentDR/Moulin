@@ -100,6 +100,15 @@ public class Plateau extends Observable{
 		return JoueurActif == j;
 	}
 	
+	public int[] load(){
+		int[] Result = new int[29];
+		
+		Result[0] = 7;
+
+		
+		return Result;		
+	}
+	
 	
 	/* --------- Implementation Observable --------- */
 	
