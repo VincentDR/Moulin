@@ -11,10 +11,38 @@ public class Controleur {
 	public Controleur()
 	{
 		fenetre = new Fenetre(this);
-		Humain H = new Humain("AVLEET");
-		NonHumain NH = new NonHumain(1);
+	}	
+	
+	// Nouvelle partie Joueur contre Joueur
+	public void newPartieJJ(String nomJ1, String nomJ2){
+		Humain H1 = new Humain(nomJ1);
+		Humain H2 = new Humain(nomJ2);
+
+		plateau = new PlateauMoulin(H1,H2);
+		plateau.addObserver(fenetre.getPanneau());
+	}
+	
+	// Nouvelle partie Joueur contre Ordi
+	public void newPartieJO(String nomJ,int difficulte){
+		Humain H = new Humain(nomJ);
+		NonHumain NH = new NonHumain(difficulte);
+		
 		plateau = new PlateauMoulin(NH,H);
 		plateau.addObserver(fenetre.getPanneau());
+	}
+	
+	// Nouvelle partie Ordi contre Ordi
+	public void newPartieJJ(){
+		NonHumain NH1 = new NonHumain(0);
+		NonHumain NH2 = new NonHumain(0);
+		
+		plateau = new PlateauMoulin(NH1,NH2);
+		plateau.addObserver(fenetre.getPanneau());
+	}
+	
+	
+	
+	/*	
 		
 		try {
 			this.save = Save.getInstance ();
@@ -28,8 +56,7 @@ public class Controleur {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
+		*/
 	
 	//Ajoute une piÃ¨ce sur PlaceAJouer du joueur actif
 	public void AjouterPiece(int placeAJouer)
@@ -55,7 +82,7 @@ public class Controleur {
 	
 	public void save(String nomPartie)
 	{
-		this.save.sauvegarder(nomPartie);
+		//this.save.sauvegarder(nomPartie);
 	}
 }
 
