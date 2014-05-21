@@ -1760,6 +1760,33 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		return Result;
 	}
 	
+	public int[] charger(){
+		int[] Result = new int[29];
+		Result = super.charger();		
+		
+		Result[1] = this.getTourDeJeu();
+		
+		if(Result[1]<18){
+			Result[2] = 1;
+		}else{
+			Result[2] = 2;
+		}		
+		
+		if(getJoueurActif().getClass().getName()=="moulin.NonHumain"){
+			Result[3] = getJoueurActif().getNiveau();
+		}else{if(getJoueurNActif().getClass().getName()=="moulin.NonHumain"){
+			Result[3] = getJoueurNActif().getNiveau();
+		}else{Result[3] = -1;}
+		}
+		
+		for(int i=0;i<24;i++){
+			Result[5 + i] = this.getPieces().elementAt(i).getPossession();
+		}
+		
+		updateGrid(Result);
+		return Result;
+	}
+	
 	/* --------- Implementation Observable --------- */
 	
 	public void updateGrid (int[] Tab)
