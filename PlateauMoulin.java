@@ -57,7 +57,7 @@ import java.util.Vector;
  *  	Chargement 
  *  		Result[1] -> Tour de Jeu
  *  		Result[2] -> Placement/Déplacement (1 Placement/2 Déplacement)
- *  		Result[3] -> 
+ *  		Result[3] -> Difficulte
  *  		Result[4] ->
  *  		Result[5] 
  *  		à
@@ -1739,9 +1739,9 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 	
 	
 	
-	public int[] load(){
+	public int[] charger(){
 		int[] Result = new int[29];
-		Result = super.load();		
+		Result = super.charger();		
 		
 		Result[1] = this.getTourDeJeu();
 		
@@ -1751,10 +1751,12 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			Result[2] = 2;
 		}		
 		
+		
 		for(int i=0;i<24;i++){
 			Result[5 + i] = this.getPieces().elementAt(i).getPossession();
 		}
 		
+		updateGrid(Result);
 		return Result;
 	}
 	
