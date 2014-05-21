@@ -1150,6 +1150,54 @@ public class PlateauMoulin extends Plateau{
 		
 	}
 	
+	
+	public int[] DeplacementRandom(){
+		Vector<Integer> V = PiecesPossedeesPar(1);
+		int[][] Deplacement = new int[V.size()][4];
+		for(int i=0;i<V.size();i++){
+			for(int j=0;j<4;j++){
+				Deplacement[i][j]=-1;
+			}
+		}
+		
+		int j=0;
+		for(int i=0;i< V.size();i++){
+			j=0;
+			
+			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][0];
+				j++;
+			}
+			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][1];
+				j++;
+			}
+			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][0];
+				j++;
+			}
+			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][1];
+				j++;
+			}			
+		}
+		
+		int [] res = new int [2];
+		
+		boolean trouve = true;
+		while(trouve){
+		int random = (int)(Math.random() * (0-V.size())) + V.size();
+		int random2 = (int)(Math.random() * (0-4)) + 4;			
+			if(Deplacement[random][random2] !=-1){
+				res[0]=random;
+				res[1]= Deplacement[random][random2];
+				trouve=false;			
+			}
+		}		
+		
+		return res;
+	}
+	
 	/**
 	 * @return Pointe un couple d'entier, la pièce à bouger et la pièce vide représentant la plus grande possibilité 
 	 * de créer un moulin ou empêchant la création d'un moulin adverse et atteignable grâce aux pions déjà posés
