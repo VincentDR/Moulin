@@ -32,6 +32,10 @@ public class Constantes {
 	public static final int PHASE_D_EXPLOSION = 4;
 	public static final int PHASE_DE_CHOIX_CIBLE = 5;
 	public static final int PHASE_DE_TIR = 6;
+
+	public static final int MODE_JVSJ = 0;
+	public static final int MODE_JVSO = 1;
+	public static final int MODE_OVSO = 2;
 	
 	
 	// A metre en variable
