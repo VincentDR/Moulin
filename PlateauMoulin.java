@@ -915,17 +915,18 @@ public class PlateauMoulin extends Plateau{
 			//Aucun cas bon donc pas de moulin
 			return false; 
 		}	
+
 	public int PlacementRandom(){
-			int random=0;
-				boolean trouve = true;
-				while(trouve){
-					random = (int)(Math.random() * (0-24)) + 24;
-					if(getPieces().elementAt(random).getPossession()==0){
-						trouve=false;			
-					}
-				}			
-				return random;
-		}
+		int random=0;
+			boolean trouve = true;
+			while(trouve){
+				random = (int)(Math.random() * (0-24)) + 24;
+				if(getPieces().elementAt(random).getPossession()==0){
+					trouve=false;			
+				}
+			}			
+			return random;
+	}
 	
 	/**
 	 * @return Pointe la pi�ce vide repr�sentant la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation d'un moulin adverse
@@ -1710,7 +1711,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		int[] Result = new int[6];
 		InitResult(Result); // init à-1
 			
-		if(0==TourDeJeu%2){	
+		if((0==TourDeJeu%2 && ordiDansJeu) || ordiDansJeu){	
 			//Possession a l'ordi
 			Result[1]=1;
 			
