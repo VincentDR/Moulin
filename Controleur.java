@@ -14,8 +14,8 @@ public class Controleur {
 	
 	// Nouvelle partie Joueur contre Joueur
 	public void newPartieJJ(String nomJ1, String nomJ2){
-		Humain H1 = new Humain(nomJ1);
-		Humain H2 = new Humain(nomJ2);
+		Humain H1 = new Humain(nomJ1,1);
+		Humain H2 = new Humain(nomJ2,2);
 
 		plateau = new PlateauMoulin(H1,H2);
 		plateau.addObserver(fenetre.getPanneau());
@@ -23,8 +23,8 @@ public class Controleur {
 	
 	// Nouvelle partie Joueur contre Ordi
 	public void newPartieJO(String nomJ,int difficulte){
-		Humain H = new Humain(nomJ);
-		NonHumain NH = new NonHumain(difficulte);
+		Humain H = new Humain(nomJ,2);
+		NonHumain NH = new NonHumain(difficulte,1);
 		
 		plateau = new PlateauMoulin(NH,H);
 		plateau.addObserver(fenetre.getPanneau());
@@ -32,8 +32,8 @@ public class Controleur {
 	
 	// Nouvelle partie Ordi contre Ordi
 	public void newPartieOO(){
-		NonHumain NH1 = new NonHumain(0);
-		NonHumain NH2 = new NonHumain(0);
+		NonHumain NH1 = new NonHumain(0,1);
+		NonHumain NH2 = new NonHumain(0,2);
 		
 		plateau = new PlateauMoulin(NH1,NH2);
 		plateau.addObserver(fenetre.getPanneau());
