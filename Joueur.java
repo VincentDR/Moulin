@@ -1,6 +1,8 @@
 package moulin;
 
-public class Joueur {
+import java.io.Serializable;
+
+public class Joueur implements Serializable{
 
 	/***************/
 	/***ATTRIBUTS***/
@@ -15,12 +17,28 @@ public class Joueur {
 	
 	
 	
+	/**
+	 * 
+	 */
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2788360831910322017L;
+
 	/*******************/
 	/***CONSTRUCTEURS***/
 	/*******************/
 	public Joueur() {		
 	
-	}	
+	}
+
+	public int getNiveau() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 	/**************/
 	/***METHODES***/
