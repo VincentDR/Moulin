@@ -599,7 +599,6 @@ public class PlateauMoulin extends Plateau{
 			TourDeJeu++;
 			ChangerJoueurActif();
 		}
-		
 		updateGrid(result);		
 	}
 	
@@ -633,7 +632,6 @@ public class PlateauMoulin extends Plateau{
 				TourDeJeu++;
 				ChangerJoueurActif();
 			}
-			
 		}
 		updateGrid(result);
 	
@@ -1744,14 +1742,13 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 	
 			}
 			else{ //Deplacement
-// !!!! A modifier par getJoueurActif !!!!
-				Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
-				if(piecesOrdi.size()>=3){ //Si l'ordi a au moins trois pièces
 				
-					//Deplacement 
-					//Result[0]=2;
-					
-					PlateauMoulin bestCoup = meilleurCoup(1);
+// !!!! A modifier par getJoueurActif !!!!
+				
+				Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
+				if(piecesOrdi.size()>=3){ //Si l'ordi actif a au moins trois pièces
+
+					PlateauMoulin bestCoup = meilleurCoup(1); // posses joueurActif
 		
 					int[] coupAJ = coupAJouer(bestCoup);
 					int ChoixABouger = coupAJ[0];
