@@ -1,12 +1,24 @@
 package moulin;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Vector;
 import java.util.Observable;
 import java.util.Observer;
 
 
-public class Plateau extends Observable{
+public class Plateau extends Observable implements Serializable{
 		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/***************/
 	/***ATTRIBUTS***/
 	/***************/
@@ -55,6 +67,45 @@ public class Plateau extends Observable{
 		}
 	
 	}
+	
+	public static Plateau getSave (String s) throws FileNotFoundException, IOException, ClassNotFoundException
+	{
+		File f = new File(s);
+		if(f.length() > 0)//f.exists() && !f.isDirectory())
+		{
+			ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(f)) ;
+			return (Plateau)ois.readObject() ;
+			
+		}
+		return null;
+	}
+	
+	public void sauvegarder(String s)
+    {
+       File fichier =  new File(s);
+
+		 // ouverture d'un flux sur un fichier
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(fichier, false));
+			try {
+				oos.writeObject(this);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		 // sérialization de l'objet
+		
+    }
+	
 	public Plateau(){
 		Pieces = new Vector <Piece> (24);
 		for(int i=0;i<24;i++){
@@ -100,7 +151,7 @@ public class Plateau extends Observable{
 		return JoueurActif == j;
 	}
 	
-	public int[] load(){
+	public int[] charger(){
 		int[] Result = new int[29];
 		
 		Result[0] = 7;
