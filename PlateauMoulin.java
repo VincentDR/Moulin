@@ -915,7 +915,17 @@ public class PlateauMoulin extends Plateau{
 			//Aucun cas bon donc pas de moulin
 			return false; 
 		}	
-
+	public int PlacementRandom(){
+			int random=0;
+				boolean trouve = true;
+				while(trouve){
+					random = (int)(Math.random() * (0-24)) + 24;
+					if(getPieces().elementAt(random).getPossession()==0){
+						trouve=false;			
+					}
+				}			
+				return random;
+		}
 	
 	/**
 	 * @return Pointe la pi�ce vide repr�sentant la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation d'un moulin adverse
