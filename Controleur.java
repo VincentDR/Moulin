@@ -32,7 +32,7 @@ public class Controleur {
 	}
 	
 	// Nouvelle partie Ordi contre Ordi
-	public void newPartieJJ(){
+	public void newPartieOO(){
 		NonHumain NH1 = new NonHumain(0);
 		NonHumain NH2 = new NonHumain(0);
 		
