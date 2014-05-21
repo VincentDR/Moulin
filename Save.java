@@ -81,11 +81,13 @@ public class Save implements Serializable
 			}
 			i++;
 		}
-		Plateau plateau = new Plateau();
+		
 		if(trouve == true){
-			plateau = plateaux.elementAt(i).getPlateau();
-		}
-		return plateau;
+			Plateau plateau = plateaux.elementAt(i).getPlateau();
+				return plateau;
+		}else{Plateau plateau = new Plateau();return plateau;}
+		
+		
 	}
 	
 	public void finalize()
