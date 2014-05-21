@@ -1295,6 +1295,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			if(pseudo1.getText().length() != 0 && pseudo2.getText().length() != 0)
 			{
 				cl.show(this, "Jeu");
+				
+			 
+				controleur.newPartieJJ(pseudo1.getText(), pseudo2.getText());
 			}
 		}
 		else if(event.getSource() == pseudo1 && SwingUtilities.isLeftMouseButton(event) )
@@ -1330,7 +1333,17 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			if(pseudo.getText().length() != 0)
 			{
+				int difficulte=0;
+				if(btnOrdiFacile.isSelected()){
+					difficulte = 1;}
+				else if(btnOrdiDifficile.isSelected()){
+					difficulte = 3;}
+				else{
+					difficulte = 2;}
 				cl.show(this, "Jeu");
+				
+			 
+				controleur.newPartieJO(pseudo.getText(), difficulte);
 			}
 		}
 		else if(event.getSource() == pseudo && SwingUtilities.isLeftMouseButton(event) )
@@ -2254,7 +2267,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
 			
 			// Mode ordi vs ordi
-			if(modeDeJeu == Constantes.MODE_OVSO) // true en atendant
+			if(modeDeJeu == Constantes.MODE_OVSO)
 			{
 				//phase2 = Constantes.PHASE_D_EXPLOSION;
 				phase2 = Constantes.PHASE_DE_TIR;
@@ -2366,6 +2379,56 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void raz()
+	{
+		// On enleve tous les vaisseaux du top, bot et jeu
+		panelPionsTop.removeAll();
+		panelPionsBot.removeAll();
+		panelPlateauJeu.removeAll();
+		
+		// On place le bouon start
+		panelPlateauJeu.add(boutonCommencerPartie);
+		boutonCommencerPartie.setLocation(Constantes.ECART*2+250 + Constantes.TAILLE_CASE -22
+				, Constantes.ECART*2+120-Constantes.HAUTEUR_PANEL_TOP_BOT+Constantes.TAILLE_CASE+10);
+		
+		for(int j=0;j<2;j++)
+        {
+	        for(int i=0;i<Constantes.NB_VAISSEAUX/2;i++)
+	        {
+	        	//vaisseau[i] = new JButton(animation[1]);
+	        	
+	        	int a= j==0?1:0;
+	        	a= j==0?0:1;
+	        	
+	        	vaisseau[j][i] = new Vaisseau(this, a, i);
+	
+	        	/*vaisseau[j][i].setFocusPainted( false ); // enleve la bordure de l'image
+	    		vaisseau[j][i].setBorderPainted(false); // enleve la bordure du bouton
+	    		//vaisseau[i].setOpaque(false); // enleve la bordure du bouton
+	    		vaisseau[j][i].setContentAreaFilled(false);
+	        	//vaisseau[j][i].setSize(Constantes.TAILLE_CASE, Constantes.TAILLE_CASE) ;*/
+	    		//vaisseau[j][i].setPreferredSize(new Dimension(Constantes.TAILLE_CASE, Constantes.TAILLE_CASE));
+	        	
+	    		
+	    		// On les ajoute au panneau top / bot
+	    		if(j==0){
+	    			//panelPionsTop.add(vaisseau[j][i]);
+
+	    	        panelPionsTop.add(vaisseau[j][i]);
+	    	        //gbc.gridx++;
+	    	        }
+	    		else{
+	    			panelPionsBot.add(vaisseau[j][i]);}
+	        }
+        }
+        // On ajoute les cocardes
+        panelPionsTop.add(cocardeRebelle);
+        panelPionsBot.add(cocardeEmpire);
+
+		
+		//panelPlateauJeu.
 	}
 }
 
