@@ -24,6 +24,7 @@ import java.util.Vector;
  * 						4 ->	Placement+Moulin
  * 						5 ->	Deplacement+Moulin
  * 						6 ->	Ordi a moins de 3 cases, fin de partie
+ * 						7 ->	Chargement
  * 
  * 		Seconde case -> La possession (1 si action ordi, 2 si action joueur)
  * 			Result[1] =	1 ->	Ordi
@@ -53,6 +54,15 @@ import java.util.Vector;
  * 			Result[7] =	-1 ->	Pas de case voisine
  *  					x ->	La case x est le deuxième voisin de la case qui a fait un moulin
  *  
+ *  	Chargement 
+ *  		Result[1] -> Tour de Jeu
+ *  		Result[2] -> Placement/Déplacement (1 Placement/2 Déplacement)
+ *  		Result[3] -> 
+ *  		Result[4] ->
+ *  		Result[5] 
+ *  		à
+ *  		Result[29] -> Les pièces
+ *  					
  *  
  *  Resume:
  * 			La vue envoie un tableau de 3 entiers, le modele lui repond par un tableau de 6 entiers
@@ -1086,8 +1096,25 @@ public class PlateauMoulin extends Plateau{
 				maxi=V.elementAt(i);
 			}			
 		}
+		int Maxis[] = new int[10];
+		for(int i=0;i<10;i++){
+			Maxis[i]=-1;
+		}
+		int j=0;
+	
+		for(int i=0;i<V.size();i++){
+			if(Priorites[i]==max){				
+				Maxis[j] = V.elementAt(i);
+				j++;
+			}			
+		}
+		int lower = 0;
+		int higher = j;
+
+		int random = (int)(Math.random() * (higher-lower)) + lower;
 		//System.out.println("\n"+maxi+" "+max);
-		return maxi;
+		System.out.println("\n TA GRANDPAIRE "+j+" "+random);
+		return Maxis[random];
 		
 	}
 	
@@ -1710,6 +1737,26 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		return Result;
 	}
 	
+	
+	
+	public int[] load(){
+		int[] Result = new int[29];
+		Result = super.load();		
+		
+		Result[1] = this.getTourDeJeu();
+		
+		if(Result[1]<18){
+			Result[2] = 1;
+		}else{
+			Result[2] = 2;
+		}		
+		
+		for(int i=0;i<24;i++){
+			Result[5 + i] = this.getPieces().elementAt(i).getPossession();
+		}
+		
+		return Result;
+	}
 	
 	/* --------- Implementation Observable --------- */
 	
