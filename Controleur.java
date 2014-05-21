@@ -6,7 +6,6 @@ import java.io.IOException;
 public class Controleur {
 	private Fenetre fenetre;
 	private PlateauMoulin plateau;
-	private Save save;
 	
 	public Controleur()
 	{
@@ -80,10 +79,22 @@ public class Controleur {
 		plateau.ControleurOrdi();
 	}
 	
-	public void save(String nomPartie)
+	public void sauvegarder(String nomPartie)
 	{
-		//this.save.sauvegarder(nomPartie);
+		plateau.sauvegarder(nomPartie);
 	}
+	
+	public void charger(String nomPartie)
+	{
+		try {
+			this.plateau = (PlateauMoulin) Plateau.getSave(nomPartie);
+			this.plateau.charger();
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }
 
 
