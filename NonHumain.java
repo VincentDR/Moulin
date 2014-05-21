@@ -7,8 +7,7 @@ public class NonHumain extends Joueur{
 	/***************/
 	private int Niveau;
 
-	
-	
+
 	/*****************/
 	/***ACCESSEURS****/
 	/*****************/
@@ -29,13 +28,11 @@ public class NonHumain extends Joueur{
 		Niveau=1;
 	}
 	
-	public NonHumain(int n){
-		super();
-		Niveau=n;
+	public NonHumain(int nivo,int numOrdi){
+		super(numOrdi);
+		Niveau=nivo;
 	}
 
-
-	
 	
 	/**************/
 	/***METHODES***/
