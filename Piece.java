@@ -1,6 +1,12 @@
 package moulin;
 
-public class Piece {
+import java.io.Serializable;
+
+public class Piece implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5990060319590476877L;
 	/***************/
 	/***ATTRIBUTS***/
 	/***************/
