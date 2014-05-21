@@ -24,7 +24,6 @@ import java.util.Vector;
  * 						4 ->	Placement+Moulin
  * 						5 ->	Deplacement+Moulin
  * 						6 ->	Ordi a moins de 3 cases, fin de partie
- * 						7 ->	Chargement
  * 
  * 		Seconde case -> La possession (1 si action ordi, 2 si action joueur)
  * 			Result[1] =	1 ->	Ordi
@@ -54,15 +53,6 @@ import java.util.Vector;
  * 			Result[7] =	-1 ->	Pas de case voisine
  *  					x ->	La case x est le deuxième voisin de la case qui a fait un moulin
  *  
- *  	Chargement 
- *  		Result[1] -> Tour de Jeu
- *  		Result[2] -> Placement/Déplacement (1 Placement/2 Déplacement)
- *  		Result[3] -> Difficulte
- *  		Result[4] ->
- *  		Result[5] 
- *  		à
- *  		Result[29] -> Les pièces
- *  					
  *  
  *  Resume:
  * 			La vue envoie un tableau de 3 entiers, le modele lui repond par un tableau de 6 entiers
@@ -81,11 +71,11 @@ public class PlateauMoulin extends Plateau{
 	/***************/
 	private int[][] VoisinsHorizontaux;
 	private int[][] VoisinsVerticaux;
-	private Scanner sc;
 	private int nivArbo;
 	//De 0 a 17 -> Pair l'ordi pose une piece, impair le joueur pose une piece
 	//Superieur a 17, Pair l'ordi bouge, impair le joueur bouge
 	private int TourDeJeu;
+	private boolean ordiDansJeu; // =false si deux joueurs, =true si au moins un ordi
 	
 	/*****************/
 	/***ACCESSEURS****/
@@ -122,15 +112,25 @@ public class PlateauMoulin extends Plateau{
 	public void setTourDeJeu(int tourDeJeu) {
 		TourDeJeu = tourDeJeu;
 	}
+	
+	public boolean ordiDansJeu() {
+		return ordiDansJeu;
+	}
+
+	public void ordiDansJeu(boolean ordi) {
+		ordiDansJeu = ordi;
+	}
+	
 	/*******************/
 	/***CONSTRUCTEURS***/
 	/*******************/
 
-	public PlateauMoulin(Joueur ja,Joueur jna) {		
+	public PlateauMoulin(NonHumain ja,Humain jna) {		
 		super(ja,jna);
 
 		nivArbo=0;
 		TourDeJeu=0;
+		ordiDansJeu = true;
 		VoisinsHorizontaux = new int[24][2];
 		VoisinsVerticaux = new int[24][2];
 		
@@ -141,10 +141,50 @@ public class PlateauMoulin extends Plateau{
 			}
 			
 		}
+		initialiserVoisinsCercle();
+	}
+	
+	public PlateauMoulin(Humain ja,Humain jna) {		
+		super(ja,jna);
+
+		nivArbo=0;
+		TourDeJeu=0;
+		ordiDansJeu = false;
+		VoisinsHorizontaux = new int[24][2];
+		VoisinsVerticaux = new int[24][2];
 		
+		for(int i=0;i<24;i++){
+			for(int y=0;y<2;y++){
+				VoisinsHorizontaux[i][y] = 42;
+				VoisinsVerticaux[i][y] = 42;
+			}
+			
+		}
+		initialiserVoisinsCercle();
+	}
+	
+	public PlateauMoulin(NonHumain ja,NonHumain jna) {		
+		super(ja,jna);
+
+		nivArbo=0;
+		TourDeJeu=0;
+		ordiDansJeu = false;
+		VoisinsHorizontaux = new int[24][2];
+		VoisinsVerticaux = new int[24][2];
 		
+		for(int i=0;i<24;i++){
+			for(int y=0;y<2;y++){
+				VoisinsHorizontaux[i][y] = 42;
+				VoisinsVerticaux[i][y] = 42;
+			}
+			
+		}
+		initialiserVoisinsCercle();
+	}
+	
+	/*public void initialiserVoisinsLigne() {
 		//Par Ligne
-		/*
+		
 		VoisinsHorizontaux[0][0] = 1;
 		VoisinsVerticaux[0][0] = 9;
 		
@@ -155,8 +195,6 @@ public class PlateauMoulin extends Plateau{
 		VoisinsHorizontaux[2][0] = 1;	
 		VoisinsVerticaux[2][0] = 14;
 		
-		
-		//LIGNE 2	
 		VoisinsHorizontaux[3][0] = 4;
 		VoisinsVerticaux[3][0] = 10;
 		
@@ -168,7 +206,6 @@ public class PlateauMoulin extends Plateau{
 		VoisinsHorizontaux[5][0] = 4;
 		VoisinsVerticaux[5][0] = 13;
 		
-		//LIGNE 3	
 		VoisinsHorizontaux[6][0] = 7;
 		VoisinsVerticaux[6][0] = 11;
 		
@@ -179,7 +216,6 @@ public class PlateauMoulin extends Plateau{
 		VoisinsHorizontaux[8][0] = 7;
 		VoisinsVerticaux[8][0] = 12;
 			
-		//LIGNE 4			
 		VoisinsHorizontaux[9][0] = 10;
 		VoisinsVerticaux[9][0] = 0;
 		VoisinsVerticaux[9][1] = 21;
@@ -192,7 +228,6 @@ public class PlateauMoulin extends Plateau{
 		VoisinsHorizontaux[11][0] = 10;
 		VoisinsVerticaux[11][0] = 6;
 		VoisinsVerticaux[11][1] = 15;
-		
 		
 		VoisinsHorizontaux[12][0] = 13;
 		VoisinsVerticaux[12][0] = 8;
@@ -207,8 +242,6 @@ public class PlateauMoulin extends Plateau{
 		VoisinsVerticaux[14][0] = 2;
 		VoisinsVerticaux[14][1] = 23;
 		
-		
-		//LIGNE 5
 		VoisinsHorizontaux[15][0] = 16;
 		VoisinsVerticaux[15][0] = 11;
 		
@@ -219,8 +252,6 @@ public class PlateauMoulin extends Plateau{
 		VoisinsHorizontaux[17][0] = 16;
 		VoisinsVerticaux[17][0] = 12;
 		
-		
-		//LIGNE 6
 		VoisinsHorizontaux[18][0] = 19;
 		VoisinsVerticaux[18][0] = 10;
 		
@@ -232,8 +263,6 @@ public class PlateauMoulin extends Plateau{
 		VoisinsHorizontaux[20][0] = 19;
 		VoisinsVerticaux[20][0] = 13;
 		
-		
-		//LIGNE 7	
 		VoisinsHorizontaux[21][0] = 22;
 		VoisinsVerticaux[21][0] = 9;
 		
@@ -243,9 +272,11 @@ public class PlateauMoulin extends Plateau{
 		
 		VoisinsHorizontaux[23][0] = 22;	
 		VoisinsVerticaux[23][0] = 14;
-		*/
+	}*/
 		
-		//Par cercle
+	// Cré les cases vosines entre elles en faisant un cercle
+	public void initialiserVoisinsCercle(){
+		
 		VoisinsHorizontaux[0][0] = 1;
 		VoisinsVerticaux[0][0] = 7;
 		
@@ -333,7 +364,7 @@ public class PlateauMoulin extends Plateau{
 		VoisinsHorizontaux[23][0] = 15;	
 		VoisinsVerticaux[23][0] = 16;
 		VoisinsVerticaux[23][1] = 22;
-	}
+	}	
 
 	public PlateauMoulin(PlateauMoulin pm) {	
 		super(pm.getJoueurActif(),pm.getJoueurNActif());
@@ -350,6 +381,8 @@ public class PlateauMoulin extends Plateau{
 			getPieces().elementAt(i).setProprietaire(pm.getPieces().elementAt(i).getProprietaire());
 		}
 	}
+	
+
 	
 	/**************/
 	/***METHODES***/
@@ -490,6 +523,8 @@ public class PlateauMoulin extends Plateau{
 				res+=getPieces().elementAt(4).getPossession();		
 				System.out.println(res);
 	}
+	
+	// Initialise le tableau envoyé à la vue pour update
 	public void InitResult(int [] r){
 		for (int i=0;i<6;i++){
 			r[i]=-1;
@@ -539,7 +574,8 @@ public class PlateauMoulin extends Plateau{
 			if(PresenceMoulin(PlaceAJouer,result,2)){
 				System.out.println("Moulin");
 				result[0]=4;
-				if(TourDeJeu<18 && (0==TourDeJeu%2)){
+				if( (0==TourDeJeu%2 && ordiDansJeu) || ordiDansJeu){ // 
+				// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
 					
 					int Choix=CiblePrioritaire();
 					System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
@@ -572,7 +608,9 @@ public class PlateauMoulin extends Plateau{
 				result[4]=PlaceAJouer;
 				if(PresenceMoulin(PlaceAJouer,result,4)){
 					result[0]=5; //Deplacement Moulin
-					if(0==TourDeJeu%2){ // Ordi joue
+					if((0==TourDeJeu%2 && ordiDansJeu) || ordiDansJeu){
+					// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
+
 						int Choix=CiblePrioritaire();
 						System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
 						//Placement + Moulin a la case Choix
@@ -591,17 +629,17 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	// Méthode utilisée pour les plateaux fils de la méthode plateauCoupSuivant
-	public int DepPiecePlateauSuiv(int PlaceADeplacer, int PlaceAJouer, int posses)
+	public boolean DepPiecePlateauSuiv(int PlaceADeplacer, int PlaceAJouer, int posses)
 	{
 		if(this.getPieces().elementAt(PlaceADeplacer).getPossession()==posses)
 		{
 			if(CoupValide(PlaceAJouer) && estVoisin(PlaceADeplacer,PlaceAJouer)){
 				getPieces().elementAt(PlaceADeplacer).setProprietaire(new Joueur());
 				getPieces().elementAt(PlaceAJouer).setProprietaire(getJoueurActif());
-				return 1;
+				return true;
 			}
 		}
-		return 0;
+		return false;
 	}
 	
 	
@@ -620,7 +658,7 @@ public class PlateauMoulin extends Plateau{
 			}
 			else{ // La case forme un moulin, on cherche une case sans moulin
 				// Si possession ==1, possession piece de l'adversaire est 1 sinon 2
-				int possesAdvPiece = posse == 1 ? 1 : 2;
+				int possesAdvPiece = posse == 1 ? 2 : 1;
 				Vector<Integer> V = PiecesPossedeesPar(possesAdvPiece); 
 				boolean trouveCase = false;
 				int compt = 0;
@@ -1096,25 +1134,8 @@ public class PlateauMoulin extends Plateau{
 				maxi=V.elementAt(i);
 			}			
 		}
-		int Maxis[] = new int[10];
-		for(int i=0;i<10;i++){
-			Maxis[i]=-1;
-		}
-		int j=0;
-	
-		for(int i=0;i<V.size();i++){
-			if(Priorites[i]==max){				
-				Maxis[j] = V.elementAt(i);
-				j++;
-			}			
-		}
-		int lower = 0;
-		int higher = j;
-
-		int random = (int)(Math.random() * (higher-lower)) + lower;
 		//System.out.println("\n"+maxi+" "+max);
-		System.out.println("\n TA GRANDPAIRE "+j+" "+random);
-		return Maxis[random];
+		return maxi;
 		
 	}
 	
@@ -1177,7 +1198,7 @@ public class PlateauMoulin extends Plateau{
 	 * @return Pointe la pi�ce adverse repr�sentant le  plus de danger, la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation dans de nos moulins
 	 */
 	public int CiblePrioritaire(){
-		int possessionAdv = TourDeJeu%2==0 ? 2 : 1;	//Si tour de jeu==0(ordi) possessionAdversaire=2, sinon 1
+		int possessionAdv = TourDeJeu%2==0 ? 2 : 1;	//Si tour de jeu==0 (joueur 1) possessionAdversaire=2, sinon 1
 		// On ne doit pas détruire de moulin adverse sauf si il ne reste que ça
 		int PrioriteDestructionMoulin=-100; //Detruire un moulin adverse permet à l'adversaire de le recréer dans la foulée
 		//Pieces possédées par le joueur
@@ -1248,10 +1269,10 @@ public class PlateauMoulin extends Plateau{
 					
 			int MoulinEtabli=10000;			
 			
-			int PossOrdi = 1;
-			int PossJoueur = 2;
-			Vector<Integer> PiecesOrdi = PiecesPossedeesPar(PossOrdi);
-			Vector<Integer> PiecesJoueur = PiecesPossedeesPar(PossJoueur);
+			int possJoueur1 = 1;
+			int possJoueur2 = 2;
+			Vector<Integer> PiecesOrdi = PiecesPossedeesPar(possJoueur1);
+			Vector<Integer> PiecesJoueur = PiecesPossedeesPar(possJoueur2);
 			
 			int IndiceOrdi =  PiecesOrdi.size()*10;
 			int IndiceJoueur = PiecesJoueur.size()*10;
@@ -1265,13 +1286,13 @@ public class PlateauMoulin extends Plateau{
 					IndiceOrdi+=DeuxVoisins;
 					
 					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi
-							&& getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == PossOrdi)
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == possJoueur1
+							&& getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == possJoueur1)
 					{
 						IndiceOrdi+=MoulinEtabli;
 					}else{//Si la piece possede un seul voisin ami
-						if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi
-							|| getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == PossOrdi )
+						if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == possJoueur1
+							|| getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][1]).getPossession() == possJoueur1 )
 						{
 							IndiceOrdi+=UnVoisinAmi;
 						}					
@@ -1283,7 +1304,7 @@ public class PlateauMoulin extends Plateau{
 							IndiceOrdi+=MoulinEtabli;
 						}
 						else{
-					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi)
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesOrdi.elementAt(i)][0]).getPossession() == possJoueur1)
 					{
 						IndiceOrdi+=UnVoisinAmi;
 					}	
@@ -1296,13 +1317,13 @@ public class PlateauMoulin extends Plateau{
 					IndiceOrdi+=DeuxVoisins;
 					
 					//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi
-							&& getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == PossOrdi)
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == possJoueur1
+							&& getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == possJoueur1)
 					{
 						IndiceOrdi+=MoulinEtabli;
 					}else{//Si la piece possede un seul voisin ami
-						if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi
-							|| getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == PossOrdi )
+						if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == possJoueur1
+							|| getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][1]).getPossession() == possJoueur1 )
 						{
 							IndiceOrdi+=UnVoisinAmi;
 						}					
@@ -1314,7 +1335,7 @@ public class PlateauMoulin extends Plateau{
 						IndiceOrdi+=MoulinEtabli;
 					}
 					else{
-				if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == PossOrdi)
+				if(getPieces().elementAt(VoisinsVerticaux[PiecesOrdi.elementAt(i)][0]).getPossession() == possJoueur1)
 				{
 					IndiceOrdi+=UnVoisinAmi;
 				}	
@@ -1331,13 +1352,13 @@ public class PlateauMoulin extends Plateau{
 						IndiceJoueur+=DeuxVoisins;
 						
 						//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
-								&& getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur)
+						if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == possJoueur2
+								&& getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == possJoueur2)
 						{
 							IndiceJoueur+=MoulinEtabli;
 						}else{//Si la piece possede un seul voisin ami
-							if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
-								|| getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur )
+							if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == possJoueur2
+								|| getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][1]).getPossession() == possJoueur2 )
 							{
 								IndiceJoueur+=UnVoisinAmi;
 							}					
@@ -1349,7 +1370,7 @@ public class PlateauMoulin extends Plateau{
 							IndiceJoueur+=MoulinEtabli;
 						}
 						else{
-					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur)
+					if(getPieces().elementAt(VoisinsHorizontaux[PiecesJoueur.elementAt(i)][0]).getPossession() == possJoueur2)
 					{
 						IndiceJoueur+=UnVoisinAmi;
 					}	
@@ -1362,13 +1383,13 @@ public class PlateauMoulin extends Plateau{
 						IndiceJoueur+=DeuxVoisins;
 						
 						//Si la piÃ¨ce possÃ¨de ses deux voisins dÃ©jÃ  Ã©tabli
-						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
-								&& getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur)
+						if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == possJoueur2
+								&& getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == possJoueur2)
 						{
 							IndiceJoueur+=MoulinEtabli;
 						}else{//Si la piece possede un seul voisin ami
-							if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur
-								|| getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == PossJoueur )
+							if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == possJoueur2
+								|| getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][1]).getPossession() == possJoueur2 )
 							{
 								IndiceJoueur+=UnVoisinAmi;
 							}					
@@ -1380,7 +1401,7 @@ public class PlateauMoulin extends Plateau{
 							IndiceJoueur+=MoulinEtabli;
 						}
 						else{
-					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == PossJoueur)
+					if(getPieces().elementAt(VoisinsVerticaux[PiecesJoueur.elementAt(i)][0]).getPossession() == possJoueur2)
 					{
 						IndiceJoueur+=UnVoisinAmi;
 					}	
@@ -1410,7 +1431,7 @@ public class PlateauMoulin extends Plateau{
 					if(CoupValide(VoisinsHorizontaux[i][j])){
 						PlateauMoulin pmDepH = new PlateauMoulin(this); // Plateau pour le deplacement
 						pmDepH.setNivHarbo(nivArbre);
-						if(pmDepH.DepPiecePlateauSuiv(i, VoisinsHorizontaux[i][j], possession)==1){
+						if(pmDepH.DepPiecePlateauSuiv(i, VoisinsHorizontaux[i][j], possession)){
 							//Deplacement valide donc on ajoute ce nouveau plateau au vect
 							ensFils.addElement(pmDepH);
 							pmDepH.ChangerJoueurActif();
@@ -1420,7 +1441,7 @@ public class PlateauMoulin extends Plateau{
 					if(CoupValide(VoisinsVerticaux[i][j])){
 						PlateauMoulin pmDepV = new PlateauMoulin(this); // Plateau pour le deplacement
 						pmDepV.setNivHarbo(nivArbre);
-						if(pmDepV.DepPiecePlateauSuiv(i, VoisinsVerticaux[i][j], possession)==1){
+						if(pmDepV.DepPiecePlateauSuiv(i, VoisinsVerticaux[i][j], possession)){
 							//Deplacement valide donc on ajoute ce nouveau plateau au vect
 							ensFils.addElement(pmDepV);
 							pmDepV.ChangerJoueurActif();
@@ -1431,9 +1452,9 @@ public class PlateauMoulin extends Plateau{
 		}
 		return ensFils;
 	}
-	// true si posses =1 c'est un coup pour l'ordi
+	// true si posses = posses du joueur actif
 	public boolean noeudMax(int posses){
-		if(posses==1){
+		if(posses== getJoueurActif().getNumJoueur()){
 			return true;
 		}
 		return false;
@@ -1441,7 +1462,7 @@ public class PlateauMoulin extends Plateau{
 	
 	// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
 	public boolean EstFeuille(){
-		if(this.nivArbo==3){// On fait une profondeur de 2 pour l'instant
+		if(this.nivArbo==3){
 			return true;
 		}
 		return false;
@@ -1451,13 +1472,12 @@ public class PlateauMoulin extends Plateau{
 	public int MinMax(int posses,int alpha, int beta){
 		
 		//TEST fin de partie
-		Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
-		Vector<Integer> piecesJoueur = PiecesPossedeesPar(2);
-		if(piecesOrdi.size()<=3 && piecesJoueur.size()<=3 && TourDeJeu >=18){ 
+		Vector<Integer> piecesJ1 = PiecesPossedeesPar(1);
+		Vector<Integer> piecesJ2 = PiecesPossedeesPar(2);
+		if(piecesJ1.size()<=3 && piecesJ2.size()<=3 && TourDeJeu >=18){ 
 System.out.println("Dans minMax est feuille terminale + nivharbo :"+this.nivArbo);
 			return (10000000);
 		}
-
 		
 		
 		
@@ -1533,8 +1553,6 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			
 			//Possibilité de multi-moulin (en H, a chaque déplacement du pion central 
 			//on va créer un moulin, une fois à droite, une fois à gauche
-			
-			
 			
 			
 			if(maxIntermediaire > Max){
@@ -1738,7 +1756,6 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 	}
 	
 	
-	
 	public int[] charger(){
 		int[] Result = new int[29];
 		Result = super.charger();		
@@ -1750,35 +1767,15 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		}else{
 			Result[2] = 2;
 		}		
-		
-		
-		for(int i=0;i<24;i++){
-			Result[5 + i] = this.getPieces().elementAt(i).getPossession();
-		}
-		
-		updateGrid(Result);
-		return Result;
-	}
-	
-	public int[] charger(){
-		int[] Result = new int[29];
-		Result = super.charger();		
-		
-		Result[1] = this.getTourDeJeu();
-		
-		if(Result[1]<18){
-			Result[2] = 1;
-		}else{
-			Result[2] = 2;
-		}		
-		
+	/*	
 		if(getJoueurActif().getClass().getName()=="moulin.NonHumain"){
 			Result[3] = getJoueurActif().getNiveau();
-		}else{if(getJoueurNActif().getClass().getName()=="moulin.NonHumain"){
-			Result[3] = getJoueurNActif().getNiveau();
-		}else{Result[3] = -1;}
+		}else{
+			if(getJoueurNActif().getClass().getName()=="moulin.NonHumain"){
+				Result[3] = getJoueurNActif().getNiveau();
+			}else{Result[3] = -1;}
 		}
-		
+	*/	
 		for(int i=0;i<24;i++){
 			Result[5 + i] = this.getPieces().elementAt(i).getPossession();
 		}
@@ -1786,6 +1783,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		updateGrid(Result);
 		return Result;
 	}
+	
 	
 	/* --------- Implementation Observable --------- */
 	
