@@ -29,7 +29,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
 import java.util.Observer;
@@ -42,6 +46,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -68,6 +73,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	// 0 : Rebelle commence ,  1 : Empire commence
 	// Le mode de jeu choisi avec : MODE_JVSJ , MODE_JVSO, MODE_OVSO
 	private int modeDeJeu = Constantes.MODE_JVSO;
+	
+
+	// GESTION E/S FICHIER
+	JFileChooser fc;
 	
 	private Thread thread;
 	//////////////////////
@@ -211,7 +220,11 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		
 		// couleur jaune : 255 , 241, 31
 		// couleur orange : 255 , 177, 9
-		
+
+		// GESTION FICHIER
+		//Create a file chooser
+		fc = new JFileChooser();
+		fc.setCurrentDirectory(new File("Sauvegardes"));
 		
 		//policeStarWars = new Font("Starjhol.ttf", Font.TRUETYPE_FONT, 30);
 		////
@@ -1202,6 +1215,18 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			 cl.show(this, "NouvellePartie");
 		}
+		// Clic sur "Charger Partie"
+		else if(event.getSource() == btnChargerPartie && SwingUtilities.isLeftMouseButton(event) )
+		{
+			 //cl.show(this, "NouvellePartie");
+			charger();
+		}
+		// Clic sur "Sauvegarder Partie"
+		else if(event.getSource() == btnSauvPartie && SwingUtilities.isLeftMouseButton(event) )
+		{
+			//controleur.save(nomPartie)
+			sauvegarder();
+		}
 		// Clic sur "Options"
 		else if(event.getSource() == btnOptions && SwingUtilities.isLeftMouseButton(event) )
 		{
@@ -1295,9 +1320,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			if(pseudo1.getText().length() != 0 && pseudo2.getText().length() != 0)
 			{
 				cl.show(this, "Jeu");
-				
-			 
-				controleur.newPartieJJ(pseudo1.getText(), pseudo2.getText());
 			}
 		}
 		else if(event.getSource() == pseudo1 && SwingUtilities.isLeftMouseButton(event) )
@@ -1333,6 +1355,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			if(pseudo.getText().length() != 0)
 			{
+				cl.show(this, "Jeu");
 				int difficulte=0;
 				if(btnOrdiFacile.isSelected()){
 					difficulte = 1;}
@@ -1340,7 +1363,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					difficulte = 3;}
 				else{
 					difficulte = 2;}
-				cl.show(this, "Jeu");
 				
 			 
 				controleur.newPartieJO(pseudo.getText(), difficulte);
@@ -2430,5 +2452,60 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		
 		//panelPlateauJeu.
 	}
+	
+	public void sauvegarder()
+	{
+				String adresseDuFichier ="";
+				
+	            int returnVal = fc.showSaveDialog(Panneau.this);
+	            if (returnVal == JFileChooser.APPROVE_OPTION) {
+	                File file = fc.getSelectedFile();
+
+	                adresseDuFichier = file.getPath();
+	                if((file.getPath().indexOf(".moulin"))==-1)
+	                	adresseDuFichier = file.getPath()+".moulin";
+	                
+	                
+	                // SERIALISE L'OBJET
+		            controleur.save(adresseDuFichier);
+		            
+	            } 
+	            else 
+	            {
+	                System.out.println("Sauvegarde annulée par l'utilisateur");
+	            }
+	       
+	}
+	
+	public void charger()
+	{
+		
+			// GESTION FICHIER
+	        //Handle open button action.
+	            int returnVal = fc.showOpenDialog(Panneau.this);
+	            String adresseDuFichier="";
+	            
+	            if (returnVal == JFileChooser.APPROVE_OPTION) 
+	            {
+	                File file = fc.getSelectedFile();
+	                adresseDuFichier = file.getPath();
+
+	                if((file.getPath().indexOf(".moulin"))!=-1)
+	                {
+						
+	                }
+	                else
+	                {
+		                System.out.println("Fichier incorrect");
+	                }
+	                	
+				
+	            } 
+	            else 
+	            {
+	                System.out.println("Ouverture annulée par l'utilisateur");
+	            }
+	            
+		}
 }
 
