@@ -18,7 +18,11 @@ public class Plateau extends Observable implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4215081519258187885L;
 	/***************/
 	/***ATTRIBUTS***/
 	/***************/
