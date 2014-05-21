@@ -55,6 +55,20 @@ public class Plateau extends Observable{
 		}
 	
 	}
+	public Plateau(){
+		Pieces = new Vector <Piece> (24);
+		for(int i=0;i<24;i++){
+			Pieces.addElement(new Piece());			
+		}
+	}
+	public Plateau(Plateau p){
+		this.JoueurActif = p.getJoueurActif();
+		this.JoueurNActif = p.getJoueurNActif();
+		Pieces = new Vector <Piece> (24);
+		for(int i=0;i<24;i++){
+			Pieces.addElement(p.getPieces().elementAt(i));			
+		}
+	}
 
 	
 	/**************/
