@@ -29,8 +29,8 @@ public class Humain extends Joueur {
 		Pseudo="";
 	}
 
-	public Humain(String s){
-		super();
+	public Humain(String s,int numJ){
+		super(numJ);
 		Pseudo=s;
 	}	
 	
