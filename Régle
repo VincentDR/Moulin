@@ -1,0 +1,14 @@
+Le jeu du moulin.
+
+Le jeu se déroule en deux temps : la pose puis le mouvement.
+
+La pose 
+    Chaque joueur place à tour de rôle un pion sur une place libre jusqu'à l'épuisement de ces 9 pions
+Le mouvement 
+    Lorsqu'il n'a plus de pion à poser, chaque joueur fait glisser l'un de ses pions vers une intersection voisine libre en
+    suivant un chemin prévu.
+
+À tout moment du jeu, celui qui réalise un moulin, c'est-à-dire l'alignement de trois de ses pions, peut capturer un pion 
+adverse quelconque parmi ceux n'appartenant pas à un moulin.
+
+Le jeu s'achève quand un joueur n'a plus que deux pions ou ne peut plus jouer, il est alors le perdant. 
