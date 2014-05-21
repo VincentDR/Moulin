@@ -2467,7 +2467,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	                
 	                
 	                // SERIALISE L'OBJET
-		            controleur.save(adresseDuFichier);
+		            controleur.sauvegarder(adresseDuFichier);
 		            
 	            } 
 	            else 
