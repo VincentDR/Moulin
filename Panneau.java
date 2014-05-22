@@ -69,15 +69,17 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private int phase2 = Constantes.PHASE_DE_JEU;
 	private int tourDeJeu = 0;
 	private int tourOrdi = 0;
+	private int [] faction = new int[2];
 	//private int tourCommencement = 0;
 	// 0 : Rebelle commence ,  1 : Empire commence
 	// Le mode de jeu choisi avec : MODE_JVSJ , MODE_JVSO, MODE_OVSO
 	private int modeDeJeu = Constantes.MODE_JVSO;
 	
 	private boolean retourPartie = false;
-	private boolean modePoney = false;
+	private int modePoney = 0;
 	private boolean m = false, l = false;
 	private boolean reprendrePartieCliquable = false;
+	
 	
 
 	// GESTION E/S FICHIER
@@ -171,8 +173,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	// DECLARATION DES FICHIERS IMAGE
 	private File fileFond = new File("Images/Fond/fond.png");
 	private File fileFondPoney = new File("Images/Fond/fond4.png");
+	private File fileFondPoney2 = new File("Images/Fond/fond5.png");
 	private File fileFondMenu= new File("Images/Fond/fondMenu.png");
 	private File fileFondMenuPoney= new File("Images/Fond/fondMenuPoney.png");
+	private File fileFondRegles= new File("Images/Fond/fondRegles.png");
 	private File fileFondVictoireEmpire= new File("Images/Fond/fondVictoireEmpire.png");
 	private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
 	//private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
@@ -184,7 +188,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	// DECLARATION DES IMAGES
 	 
-	private BufferedImage imageFond, imageFondPoney;
+	private BufferedImage imageFond, imageFondPoney, imageFondPoney2, imageFondRegles;
 	private BufferedImage imageFondMenu, imageFondMenuPoney, imageFondVictoireEmpire, imageFondVictoireRebelle;
 	private BufferedImage imageFondAPropos;
 	private ImageIcon gifAPropos;
@@ -210,6 +214,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private Controleur controleur;
 	public Panneau(Controleur controleur)
 	{		
+
+		faction[tourOrdi] = 1;
+		faction[1] = 0;
+		
 		// initialisation de la police star wars
 		//policeStarWars = new Font("Times New Roman", Font.BOLD, 30);
 		//policeStarWars = new Font();
@@ -971,7 +979,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
 			imageFond = ImageIO.read(fileFond);
 			imageFondPoney = ImageIO.read(fileFondPoney);
+			imageFondPoney2 = ImageIO.read(fileFondPoney2);
 			imageFondMenu = ImageIO.read(fileFondMenu);
+			imageFondRegles = ImageIO.read(fileFondRegles);
 			imageFondMenuPoney = ImageIO.read(fileFondMenuPoney);
 			imageFondVictoireEmpire = ImageIO.read(fileFondVictoireEmpire);
 			imageFondVictoireRebelle = ImageIO.read(fileFondVictoireRebelle);
@@ -993,8 +1003,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	        {
 	        	//vaisseau[i] = new JButton(animation[1]);
 	        	
-	        	int a= j==0?1:0;
-	        	a= j==0?0:1;
+	        	
 	        	vaisseau[j][i] = new Vaisseau(this, j, i);
 	
 	        	vaisseau[j][i].setFocusPainted( false ); // enleve la bordure de l'image
@@ -1053,7 +1062,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		this.addMouseMotionListener(this);
 		this.addKeyListener(this);
 		panelMenu.addKeyListener(this);
-		panelRegles.addKeyListener(this);
 		panelJeu.addKeyListener(this);
 		
 	    panelMenu.requestFocus();
@@ -1105,14 +1113,18 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			else
 				image = ImageIO.read(fileFondTest);*/
 			super.paintComponent(g); 
-			if(panelMenu.isVisible() || panelNouvPartie.isVisible() || panelRegles.isVisible()
+			if(panelMenu.isVisible() || panelNouvPartie.isVisible()
 					|| panelOptions.isVisible() || panelNouvPartieP1.isVisible() 
 					|| panelNouvPartieP2.isVisible() || panelNouvPartieP3.isVisible())
 			{
-				if(modePoney){
+				if(modePoney>0){
 					g.drawImage(imageFondMenuPoney, 0, 0, null);}
 				else{
 				g.drawImage(imageFondMenu, 0, 0, null);}
+			}
+			else if(panelRegles.isVisible())
+			{
+				g.drawImage(imageFondRegles, 0, 0, null);
 			}
 			else if(panelAPropos.isVisible())
 			{
@@ -1121,8 +1133,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			else if(panelJeu.isVisible())
 			{
 				 //System.out.println("on affiche le jeu");
-				if(modePoney){
+				if(modePoney==1){
 					g.drawImage(imageFondPoney, 0, 0, null);}
+				else if(modePoney==2){
+					g.drawImage(imageFondPoney2, 0, 0, null);}
 				else{
 				g.drawImage(imageFond, 0, 0, null);}
 			}
@@ -1431,6 +1445,16 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				controleur.newPartieJO(pseudo.getText(), difficulte);
 				modeDeJeu = Constantes.MODE_JVSO;
 				raz();
+				if(boutonFactionEmpire.isSelected())
+				{
+					faction[tourOrdi] = Constantes.FACTION_REBELLE; // faction de l'ordi
+					faction[1] = Constantes.FACTION_EMPIRE; // faction du joueur
+				}
+				else
+				{
+					faction[tourOrdi] = Constantes.FACTION_EMPIRE; // faction de l'ordi
+					faction[1] = Constantes.FACTION_REBELLE; // faction du joueur
+				}
 				cl.show(this, "Jeu");
 			    panelJeu.requestFocus();
 			}
@@ -1577,7 +1601,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					//System.out.println("cmptVaiss["+tourDeJeu+"] = " + cmptVaiss[tourDeJeu]);
 					System.out.println("tourDeJeu =" + tourDeJeu);
 					// Test a enlever
-					if(cmptVaiss[tourDeJeu] < Constantes.NB_VAISSEAUX/2)
+					if(cmptVaiss[faction[tourDeJeu]] < Constantes.NB_VAISSEAUX/2)
 					{
 						
 							/*ajouterVaisseau(i);
@@ -1603,12 +1627,12 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					// On deplace le pion selectionné dans cette case
 					for(int indice=0;indice<Constantes.NB_VAISSEAUX/2;indice++)
 					{
-						if(vaisseau[tourDeJeu][indice].isSelectionne())
+						if(vaisseau[faction[tourDeJeu]][indice].isSelectionne())
 						{
 							// On cherche le numero de la case initiale
 							for(int debut=0;debut<Constantes.NB_CASES;debut++)
 							{
-								if(plateau[debut]==vaisseau[tourDeJeu][indice])
+								if(plateau[debut]==vaisseau[faction[tourDeJeu]][indice])
 								{
 									controleur.DeplacerPiece(debut, i, tourDeJeu+1);
 									
@@ -1667,7 +1691,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				
 				// ==> Si on a fait un moulin et qu'on doit detruire un vaisseau ennemi
 				//if(event.getSource() == vaisseau[tourDeJeu][i] && SwingUtilities.isLeftMouseButton(event))
-				if(phase2==Constantes.PHASE_DE_CHOIX_CIBLE && event.getSource() == vaisseau[tourAutreJoueur][i])
+				if(phase2==Constantes.PHASE_DE_CHOIX_CIBLE && event.getSource() == vaisseau[faction[tourAutreJoueur]][i])
 				{
 					/*vaisseauTest = new Vaisseau(0, this);
 					panelPlateauJeu.add(vaisseauTest);
@@ -1689,7 +1713,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					// On recherche le numero de la case
 					for(int c=0;c<Constantes.NB_CASES;c++)
 					{
-						if(plateau[c]==vaisseau[tourAutreJoueur][i])
+						if(plateau[c]==vaisseau[faction[tourAutreJoueur]][i])
 						{
 							// On stock la position du vaisseau visé
 							positionDuVaissVise = c;
@@ -1705,30 +1729,30 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				//else if(event.getSource() == vaisseau[tourDeJeu][i])
 				//&& SwingUtilities.isRightMouseButton(event)
 				// Si on est dans la seconde phase
-				else if(phase == 2 && event.getSource() == vaisseau[tourDeJeu][i] 
+				else if(phase == 2 && event.getSource() == vaisseau[faction[tourDeJeu]][i] 
 						&& SwingUtilities.isLeftMouseButton(event) && phase2==Constantes.PHASE_DE_JEU)
 				{ // Si on clique sur un de nos vaisseau, on le selectionne pour le deplacer
 					
 					// On test si le bouton a été sélectionné
-					if(vaisseau[tourDeJeu][i].isSelectionne())
+					if(vaisseau[faction[tourDeJeu]][i].isSelectionne())
 					{
-						vaisseau[tourDeJeu][i].setSelectionne(false);
+						vaisseau[faction[tourDeJeu]][i].setSelectionne(false);
 						// le remetre droit
 					}
 					else
 					{
 						// On deselectionne les autres vaisseaux
-						for(int j=0;j<cmptVaiss[tourDeJeu];j++)
+						for(int j=0;j<cmptVaiss[faction[tourDeJeu]];j++)
 						{
-							if(vaisseau[tourDeJeu][j].isSelectionne())
-								vaisseau[tourDeJeu][j].setSelectionne(false);
+							if(vaisseau[faction[tourDeJeu]][j].isSelectionne())
+								vaisseau[faction[tourDeJeu]][j].setSelectionne(false);
 						}
 						// A MODIFIER
-						vaisseau[tourDeJeu][i].setSelectionne(true);//vaisseau[i].setDeplacement(20);
+						vaisseau[faction[tourDeJeu]][i].setSelectionne(true);//vaisseau[i].setDeplacement(20);
 						//mouseMoved(event);
 						// A UTILISER QUAND ON VEUT SE DEPLACER (ou exploser)
 						// construction d'un Thread en passant cette instance de Runnable en paramètre
-						//Thread thread =  new Thread(vaisseau[tourDeJeu][i]) ;
+						//Thread thread =  new Thread(vaisseau[faction[tourDeJeu]][i]) ;
 						
 				    	 // lancement de ce thread par appel à sa méthode start()
 				    	
@@ -1764,11 +1788,11 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			for(int i=0;i<Constantes.NB_VAISSEAUX/2;i++)
 			{
 				//System.out.println(tourDeJeu);
-				if(vaisseau[tourDeJeu][i].getMoulin() == 2)
+				if(vaisseau[faction[tourDeJeu]][i].getMoulin() == 2)
 				{
 					//vaisseau[i].setLocation(vaisseau[i].getX()+2, vaisseau[i].getY()+1);
 					if(event.getSource() == this){
-						vaisseau[tourDeJeu][i].setAngle(event.getX(), event.getY()-Constantes.HAUTEUR_PANEL_TOP_BOT);
+						vaisseau[faction[tourDeJeu]][i].setAngle(event.getX(), event.getY()-Constantes.HAUTEUR_PANEL_TOP_BOT);
 					}
 					else
 					{
@@ -1776,7 +1800,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						// On lui ajoute la position de la souris par rapport au composant
 						int x = event.getComponent().getX() + event.getX();
 						int y = event.getComponent().getY() + event.getY();
-						vaisseau[tourDeJeu][i].setAngle(x,y);
+						vaisseau[faction[tourDeJeu]][i].setAngle(x,y);
 						
 					}
 					repaint();
@@ -1910,15 +1934,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	public void ajouterVaisseau(int position)
 	{
 		// On met à jour le plateau
-		plateau[position] = vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]];
+		plateau[position] = vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]];
 		// On stock la position
 		positionCaseVisee = position;
 		
 		// On met à jour l'état du vaisseau
-		vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]].setEtat(Constantes.ET_PLAC_1);
+		vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]].setEtat(Constantes.ET_PLAC_1);
 		
 		// On lance le thread
-		thread =  new Thread(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]) ;
+		thread =  new Thread(vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]]) ;
     	 // lancement de ce thread par appel à sa méthode start()
 		thread.start() ;
 		
@@ -1942,7 +1966,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			if(plateau[c]!=null && plateau[c].getMoulin()==2)
 			{
 				System.out.println("indiceLaser = " + indiceLaser);
-				laser[indiceLaser] = new Laser(this, tourDeJeu, plateau[c].getX(), plateau[c].getY(), indiceLaser);
+				laser[indiceLaser] = new Laser(this, faction[tourDeJeu], plateau[c].getX(), plateau[c].getY(), indiceLaser);
 
 				laser[indiceLaser].setSize(new Dimension(Constantes.TAILLE_CASE, Constantes.TAILLE_CASE));
 				//panelPlateauJeu.add(laser[indiceLaser]);
@@ -2249,7 +2273,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
 		tourDeJeu = tourDeJeu==0 ? 1 : 0;
 		// Si c'est aux rebelles de jouer
-		if(tourDeJeu==0)
+		if(faction[tourDeJeu]==0)
 		{
 			// On allume sa cocarde
 			cocardeRebelle.setIcon(imgCocardeRebelle[1]);
@@ -2282,9 +2306,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	{
 		for(int i=0;i<Constantes.NB_VAISSEAUX/2;i++)
 		{
-			if(vaisseau[tourDeJeu][i].getMoulin()==2)
+			if(vaisseau[faction[tourDeJeu]][i].getMoulin()==2)
 			{
-				vaisseau[tourDeJeu][i].setAngle(plateau[positionDuVaissVise].getX()+Constantes.TAILLE_CASE/2
+				int a = vaisseau[faction[tourDeJeu]][i].getMoulin();
+				vaisseau[faction[tourDeJeu]][i].setAngle(plateau[positionDuVaissVise].getX()+Constantes.TAILLE_CASE/2
 						,plateau[positionDuVaissVise].getY()+Constantes.TAILLE_CASE/2);
 			}
 				
@@ -2327,24 +2352,24 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
 		System.out.println("phase fin thread : " + phase2);
 		// On enleve le vaisseau de son panel d'origine
-		if(tourDeJeu==0) // Tour des Rebelles
+		if(faction[tourDeJeu]==0) // Tour des Rebelles
 		{
-			panelPionsTop.remove(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
+			panelPionsTop.remove(vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]]);
 			//panelPionsTop.validate();
 		}
 		else // Tour de l'empire
 		{
-			panelPionsBot.remove(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
+			panelPionsBot.remove(vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]]);
 			//panelPionsTop.repaint();
 		}
 		
 
 		// On met à jour l'état du vaisseau
-		vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]].setEtat(Constantes.ET_PLAC_2);
+		vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]].setEtat(Constantes.ET_PLAC_2);
 		
 		
 		// On l'ajoute dans le jeu
-		panelPlateauJeu.add(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]);
+		panelPlateauJeu.add(vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]]);
 		Point p = casesVide[positionCaseVisee].getLocation();
 		panelPlateauJeu.remove(casesVide[positionCaseVisee]);
 		panelPlateauJeu.add(casesVide[positionCaseVisee]);
@@ -2352,15 +2377,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		
 		
 		// On positionne le vaisseau à l'endroit de la case
-		vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]].setLocation(p);//vaisseau[i].setDeplacement(20);
+		vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]].setLocation(p);//vaisseau[i].setDeplacement(20);
 		
 		// On lance le thread
-		thread =  new Thread(vaisseau[tourDeJeu][cmptVaiss[tourDeJeu]]) ;
+		thread =  new Thread(vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]]) ;
     	 // lancement de ce thread par appel à sa méthode start()
 		thread.start() ;
 		
 		// On ajoute 1 au compteur de vaisseau en fonction du joueur
-		cmptVaiss[tourDeJeu]++;
+		cmptVaiss[faction[tourDeJeu]]++;
 		// On change de phase si tout le monde a joué
 		if(cmptVaiss[0] + cmptVaiss[1] == Constantes.NB_VAISSEAUX)
 		{
@@ -2470,19 +2495,25 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		}
 	}
 	
-	public void threadExplosionTermine()
+	public void threadExplosionTermine(int num)
 	{
+		// Permet de savoir le numero du tour de l'autre joueur
+		int tourAutreJoueur = tourDeJeu==0 ? 1 : 0;
+		
+		// On enleve le vaisseau
+		panelPlateauJeu.remove(vaisseau[faction[tourAutreJoueur]][num]);
+		
 		testFinDePartie();
 		
 		// On remet droit les vaisseaux
 		for(int i=0;i<Constantes.NB_VAISSEAUX/2;i++)
 		{
-			if(vaisseau[tourDeJeu][i].getMoulin() == 2)
+			if(vaisseau[faction[tourDeJeu]][i].getMoulin() == 2)
 			{
 	
 				System.out.println("on replace le vaisseau");
-				vaisseau[tourDeJeu][i].setAngle(0);
-				vaisseau[tourDeJeu][i].setMoulin(1);
+				vaisseau[faction[tourDeJeu]][i].setAngle(0);
+				vaisseau[faction[tourDeJeu]][i].setMoulin(1);
 			}
 		}
 		phase2 = Constantes.PHASE_DE_JEU;
@@ -2491,8 +2522,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	public void threadDeplacementLaserTermine(int i)
 	{
-		// Permet de savoir le numero du tour de l'autre joueur
-		int tourAutreJoueur = tourDeJeu==0 ? 1 : 0;
 
 		// On retire le laser du jeu
 		//for(int l=0;l<3;l++)
@@ -2527,10 +2556,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 
 			JTextField tf = (JTextField) e.getSource();
-			if(pseudo.getText().length() >= 10) {
+			if(tf.getText().length() >= 10) {
 				System.out.println("limite atteinte");
 				try {
-					pseudo.setText(pseudo.getText(0, 9));
+					tf.setText(tf.getText(0, 9));
 				} catch (BadLocationException ble) { ble.printStackTrace(); }
 			}
 		}
@@ -2578,21 +2607,28 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			else if(c == 'l' && m) l = true;
 			else if(c == 'p' && m && l)
 			{
-				m=false;
-				l=false;
-				
 				System.out.println("sdfsdfd");
-				if(modePoney)
+				if(modePoney>0)
 				{
-					modePoney = false;
+					modePoney = 0;
 					repaint();
 				}
 				else
 				{
-					modePoney = true;
+					modePoney = 1;
 					repaint();
 				}
 				
+			}
+			else if(c == ' ' && modePoney==1)
+			{
+				modePoney = 2;
+				repaint();
+			}
+			else if(c == ' ' && modePoney==2)
+			{
+				modePoney = 1;
+				repaint();
 			}
 			else
 			{
@@ -2619,10 +2655,13 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		phase2=Constantes.PHASE_DE_JEU;
 		tourDeJeu = 0;
 		
-		// On ajoute et place les cases vides
+		// On ajoute, place les cases vides, et reinitialise le plateau
 
         for(int c=0;c<Constantes.NB_CASES;c++)
+        {
+        	plateau[c]=null;
         	panelPlateauJeu.add(casesVide[c]);
+        }
 		initialisation();
 		
 		// On place le bouon start
@@ -2640,8 +2679,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	        	a= j==0?0:1;
 	        	
 	        	//vaisseau[j][i] = new Vaisseau(this, a, i);// On met à jour l'état du vaisseau
-	    		vaisseau[j][i].setEtat(Constantes.ET_NULL);
-	    		vaisseau[j][i].setSelectionne(false);
+	        	vaisseau[j][i].raz();
 	
 	        	/*vaisseau[j][i].setFocusPainted( false ); // enleve la bordure de l'image
 	    		vaisseau[j][i].setBorderPainted(false); // enleve la bordure du bouton
