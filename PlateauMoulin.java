@@ -978,71 +978,38 @@ public class PlateauMoulin extends Plateau{
 		//Aucun cas bon donc pas de moulin
 		return false; 
 	}	
-	public boolean BloquerMoulin(int PlaceAIgnorer,int PlaceAverifier, int possess){
+	
+	
+	
+	public boolean BloquerMoulin(int PlaceAverifier, int possess){
 		//Présence Horizontale d'un moulin
-				if(voisinHorizontalExiste(PlaceAverifier,0)){ //VH[0] existe ?
+				if(voisinHorizontalExiste(PlaceAverifier,1)){ //VH[0] existe ?
 					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 
-						&& VoisinsHorizontaux[PlaceAverifier][0] != PlaceAIgnorer  ){
-						if(voisinHorizontalExiste(PlaceAverifier,1)){ // 
-							if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess 
-							&& VoisinsHorizontaux[PlaceAverifier][1] != PlaceAIgnorer){
-							return true;
-							}
-						}	
-						else{ //VH[0] à nous et VH[1] n'existe pas
-							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0]).getPossession() == possess 
-								&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1]).getPossession() == possess
-								&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAIgnorer
-								&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
+						&& getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess  ){
+							if(voisinVerticalExiste(PlaceAverifier,1)){
+								if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 									
+									|| getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess  ){
 									return true;
+								}
+							}else{
+								if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess){return true;}
 							}
-						}
-					}
+					}		
 				}
-				else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
-					if(	getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess 
-							&& VoisinsHorizontaux[PlaceAverifier][1] != PlaceAIgnorer){
-						if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][0]).getPossession() == possess 
-							&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1]).getPossession() == possess
-							&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAIgnorer
-							&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
-								return true;
-						}
-					}
-				}
-				
-				//Présence Verticale d'un moulin
-				if(voisinVerticalExiste(PlaceAverifier,0)){ //VH[0] existe ?
+					
+				if(voisinVerticalExiste(PlaceAverifier,1)){ //VH[0] existe ?
 					if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 
-						&& VoisinsVerticaux[PlaceAverifier][0] != PlaceAIgnorer  ){
-						if(voisinVerticalExiste(PlaceAverifier,1)){ // 
-							if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess 
-							&& VoisinsVerticaux[PlaceAverifier][1] != PlaceAIgnorer){
-							return true;
-							}
-						}	
-						else{ //VH[0] à nous et VH[1] n'existe pas
-							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0]).getPossession() == possess 
-								&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1]).getPossession() == possess
-								&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAIgnorer
-								&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
+						&& getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess  ){
+							if(voisinHorizontalExiste(PlaceAverifier,1)){
+								if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 									
+									|| getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess  ){
 									return true;
+								}
+							}else{
+								if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess){return true;}
 							}
-						}
 					}
 				}
-				else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
-					if(	getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess 
-							&& VoisinsVerticaux[PlaceAverifier][1] != PlaceAIgnorer){
-						if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0]).getPossession() == possess 
-							&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][1]).getPossession() == possess
-							&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAIgnorer
-							&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
-								return true;
-						}
-					}
-				}
-				//Aucun cas bon donc pas de moulin
 				return false; 
 			
 	}
@@ -1063,23 +1030,7 @@ public class PlateauMoulin extends Plateau{
 					}
 				}
 			}
-		}else{
-			if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess
-					&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAIgnorer][0]][0]).getPossession()==possess
-					|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAIgnorer][0]][1]).getPossession()==possess)){
-				if(voisinVerticalExiste(PlaceAIgnorer,1)){
-					if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess
-							|| getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][1]).getPossession() == possess){
-						return true;
-					}
-				}else{
-					if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess){
-						return true;
-					}
-				}			
-			}			
-		}
-		
+		}	
 		
 		
 		if(voisinVerticalExiste(PlaceAIgnorer,1)){
@@ -1096,22 +1047,8 @@ public class PlateauMoulin extends Plateau{
 					}
 				}
 			}
-		}else{
-			if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess
-					&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAIgnorer][0]][0]).getPossession()==possess
-					|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAIgnorer][0]][1]).getPossession()==possess)){
-				if(voisinHorizontalExiste(PlaceAIgnorer,1)){
-					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess
-							|| getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][1]).getPossession() == possess){
-						return true;
-					}
-				}else{
-					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess){
-						return true;
-					}
-				}			
-			}			
 		}
+		
 		return false;
 	}
 
@@ -1856,13 +1793,13 @@ System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"
 			
 			//Cas particulier dont la priorité doit être augmentée
 			//Bricolage pour lancer directement un moulin
-			if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurActif().getNumJoueur())){
+		if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurActif().getNumJoueur())){
 				//System.out.println("TestPresenceMoulin dans MeilleurCoup");
 				Max=1000000000;
 				indice=i;
 			}
 			//Possibilité de faire bloquer la création d'un moulin 
-			if(vectPlat.elementAt(i).BloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur())){
+			if(vectPlat.elementAt(i).BloquerMoulin(coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur())){
 				System.out.println("TestBloquerMoulin dans MeilleurCoup");
 				Max=100000000;
 				indice=i;
