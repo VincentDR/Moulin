@@ -588,7 +588,7 @@ public class PlateauMoulin extends Plateau{
 				if( (0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){ // 
 				// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
 					
-					int Choix=CiblePrioritaire();
+					int Choix=CiblePrioritaire(getJoueurActif().getNiveau());
 					System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
 					//Placement + Moulin a la case Choix
 					this.getPieces().elementAt(Choix).setProprietaire(new Joueur());
@@ -621,7 +621,7 @@ public class PlateauMoulin extends Plateau{
 					if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi ){
 					// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
 
-						int Choix=CiblePrioritaire();
+						int Choix=CiblePrioritaire(getJoueurActif().getNiveau());
 						System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
 						//Placement + Moulin a la case Choix
 						this.getPieces().elementAt(Choix).setProprietaire(new Joueur());
