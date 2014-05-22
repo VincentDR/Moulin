@@ -93,7 +93,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private String[] listContent = {"Menu", "NouvellePartie", "Options", "Regles", "Jeu", "APropos", "VictoireEmpire", "VictoireRebelle"};
 	private int indice = 0;
 	private JPanel panelMenu, panelNouvPartie, panelOptions, panelRegles, panelAPropos, panelVictoireEmpire, panelVictoireRebelle;
-	private JPanel panelJeu,panelPlateauJeu, panelPionsTop, panelPionsBot;
+	private JPanel panelJeu,panelPlateauJeu, panelTop, panelPionsTop, panelPionsBot;
 	private JPanel panelNouvPartieP1, panelNouvPartieP2, panelNouvPartieP3;
 	public JButton boutonMenu, boutonCommencerPartie;
 	//
@@ -791,6 +791,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		cmptVaiss[1]= 0;
 		
 		boutonMenu = new JButton("Menu");
+		boutonMenu.setSize(200, 100);
 		//boutonMenu.addMouseListener(this);
 		
 		boutonCommencerPartie = new JButton("start");
@@ -843,10 +844,28 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				, Constantes.ECART*2+120-Constantes.HAUTEUR_PANEL_TOP_BOT+Constantes.TAILLE_CASE+10);
 		
 		
-		//panelPionsTop = new JPanel(new GridLayout(1, 10, 0,0));
+		
 		panelPionsTop = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panelPionsBot = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panelPionsBot.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		
+		//panelPionsTop = new JPanel(new GridLayout(1, 10, 0,0));
+		/*panelTop = new JPanel(new GridBagLayout());
+		gbc = null;
+		gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.CENTER;
+		        
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 3;
+		gbc.insets = new Insets(5, 0, 500, 10);
+		panelTop.add(boutonMenu, gbc);
+		        
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.insets = new Insets(5, 0, 500, 10);
+		panelTop.add(panelPionsTop, gbc);*/
+				
 		/*
 		laserTest = new Laser(this, tourDeJeu, 50, 50);
 		panelPionsBot.add(laserTest);*/
@@ -855,9 +874,11 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		// Redimensionnement des panneaux
 		panelPlateauJeu.setOpaque(false);
 		panelPionsTop.setOpaque(false);
+		panelTop.setOpaque(false);
 		panelPionsBot.setOpaque(false);
 		
 		// Ajout des panneaux au panneau jeu
+		//panelJeu.add(panelPionsTop, "North");
 		panelJeu.add(panelPionsTop, "North");
 		panelJeu.add(panelPlateauJeu, "Center");
 		panelJeu.add(panelPionsBot, "South");
@@ -1009,7 +1030,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
         	
         	// On ajoute le listener
         	casesVide[i].addMouseMotionListener(this);
+        	//panelPlateauJeu.add(casesVide[i]);
         }
+
         
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -1235,7 +1258,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		// Clic sur "Regles"
 		else if(event.getSource() == btnRegles && SwingUtilities.isLeftMouseButton(event) )
 		{
-			 cl.show(this, "Regles");
+			raz();
+			cl.show(this, "Regles");
 		}
 		// Clic sur "A Propos"
 		else if(event.getSource() == btnAPropos && SwingUtilities.isLeftMouseButton(event) )
@@ -1319,6 +1343,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			if(pseudo1.getText().length() != 0 && pseudo2.getText().length() != 0)
 			{
+				controleur.newPartieJJ(pseudo1.getText(), pseudo2.getText());
+				modeDeJeu = Constantes.MODE_JVSJ;
+				initialisation();
 				cl.show(this, "Jeu");
 			}
 		}
@@ -1355,7 +1382,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			if(pseudo.getText().length() != 0)
 			{
-				cl.show(this, "Jeu");
 				int difficulte=0;
 				if(btnOrdiFacile.isSelected()){
 					difficulte = 1;}
@@ -1364,8 +1390,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				else{
 					difficulte = 2;}
 				
-			 
 				controleur.newPartieJO(pseudo.getText(), difficulte);
+				modeDeJeu = Constantes.MODE_JVSO;
+				initialisation();
+				cl.show(this, "Jeu");
 			}
 		}
 		else if(event.getSource() == pseudo && SwingUtilities.isLeftMouseButton(event) )
@@ -1460,10 +1488,12 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		else if (event.getSource() == boutonCommencerPartie ) 
 		{
 			panelPlateauJeu.remove(boutonCommencerPartie);
-			
 	        for(int c=0;c<Constantes.NB_CASES;c++)
 	        	panelPlateauJeu.add(casesVide[c]);
-			 initialisation();
+	        initialisation();
+			panelJeu.repaint();
+			panelJeu.validate();
+			
 			 // a l'ordi de commencer
 			 if(modeDeJeu == Constantes.MODE_OVSO)
 		     {
@@ -1979,10 +2009,11 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		
+
 		int tab [] = (int []) arg;
 		
-		
+
+		System.out.println("tab[0] = " + tab[0]);
 		switch(tab[0])
 		{
 		 	// Placement
@@ -2018,6 +2049,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				phase2=Constantes.PHASE_DE_PLACEMENT;
 				ajouterVaisseau(tab[2]);
 				// test
+				System.out.println("Moulin position : " + tab[2] + " , " + tab[6] + " et " + tab[7]);
 				plateau[tab[2]].setMoulin(2);
 				plateau[tab[6]].setMoulin(2);
 				plateau[tab[7]].setMoulin(2);
@@ -2060,6 +2092,55 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			case 6:
 				// Fin de partie
 				//cl.show(this, "VictoireEmpire");
+				break;
+			case 7:
+				System.out.println("case 7");
+				raz();
+				panelPlateauJeu.remove(boutonCommencerPartie);
+				// Chargement
+				tourDeJeu = tab[1];
+				if(tab[2]==1) phase=1;
+				else phase = 2;
+				// difficulte = tab[3];
+				for(int i=0;i<Constantes.NB_VAISSEAUX;i++)
+				{
+					if(tab[5+i] == 1)
+					{
+						panelPionsTop.remove(vaisseau[0][cmptVaiss[0]]);
+						panelPlateauJeu.add(vaisseau[0][cmptVaiss[0]]);
+						Point p = casesVide[i].getLocation();
+						/*panelPlateauJeu.remove(casesVide[positionCaseVisee]);
+						panelPlateauJeu.add(casesVide[positionCaseVisee]);
+						casesVide[positionCaseVisee].setLocation(p);*/
+
+						// On positionne le vaisseau à l'endroit de la case
+						vaisseau[0][cmptVaiss[0]].setLocation(p);//vaisseau[i].setDeplacement(20);
+						
+						// On met à jour le plateau
+						plateau[i] = vaisseau[0][cmptVaiss[0]];
+						cmptVaiss[0]++;
+					}
+					else if(tab[5+i] == 2)
+					{
+						panelPionsTop.remove(vaisseau[1][cmptVaiss[1]]);
+						panelPlateauJeu.add(vaisseau[1][cmptVaiss[1]]);
+						Point p = casesVide[i].getLocation();
+						/*panelPlateauJeu.remove(casesVide[positionCaseVisee]);
+						panelPlateauJeu.add(casesVide[positionCaseVisee]);
+						casesVide[positionCaseVisee].setLocation(p);*/
+
+						// On positionne le vaisseau à l'endroit de la case
+						vaisseau[1][cmptVaiss[1]].setLocation(p);//vaisseau[i].setDeplacement(20);
+						// On met à jour le plateau
+						plateau[i] = vaisseau[1][cmptVaiss[1]];
+						cmptVaiss[1]++;
+					}
+					
+				}
+				
+				panelJeu.validate();
+				panelJeu.repaint();
+				
 				break;
 			default:
 				
@@ -2405,10 +2486,22 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	public void raz()
 	{
+		System.out.println("On remet tout à zero");
 		// On enleve tous les vaisseaux du top, bot et jeu
 		panelPionsTop.removeAll();
 		panelPionsBot.removeAll();
 		panelPlateauJeu.removeAll();
+		
+		// On réinitialise les attributs
+		cmptVaiss[0] = 0;
+		cmptVaiss[1]= 0;
+		phase2=Constantes.PHASE_DE_JEU;
+		
+		// On ajoute et place les cases vides
+
+        for(int c=0;c<Constantes.NB_CASES;c++)
+        	panelPlateauJeu.add(casesVide[c]);
+		initialisation();
 		
 		// On place le bouon start
 		panelPlateauJeu.add(boutonCommencerPartie);
@@ -2424,7 +2517,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	        	int a= j==0?1:0;
 	        	a= j==0?0:1;
 	        	
-	        	vaisseau[j][i] = new Vaisseau(this, a, i);
+	        	//vaisseau[j][i] = new Vaisseau(this, a, i);// On met à jour l'état du vaisseau
+	    		vaisseau[j][i].setEtat(Constantes.ET_NULL);
+	    		vaisseau[j][i].setSelectionne(false);
 	
 	        	/*vaisseau[j][i].setFocusPainted( false ); // enleve la bordure de l'image
 	    		vaisseau[j][i].setBorderPainted(false); // enleve la bordure du bouton
@@ -2492,7 +2587,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
 	                if((file.getPath().indexOf(".moulin"))!=-1)
 	                {
-						
+		                System.out.println("On charge le fichier " + adresseDuFichier);
+						controleur.charger(adresseDuFichier);
 	                }
 	                else
 	                {
