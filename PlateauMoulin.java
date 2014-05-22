@@ -758,6 +758,58 @@ public class PlateauMoulin extends Plateau{
 		return false; 
 	}
 	
+	public boolean ExisteDeplacement(){
+		Vector<Integer> V = PiecesPossedeesPar(getJoueurActif().getNumJoueur());
+		int[][] Deplacement = new int[V.size()][4];
+		for(int i=0;i<V.size();i++){
+			for(int j=0;j<4;j++){
+				Deplacement[i][j]=-1;
+			}
+		}
+		
+		int j=0;
+		for(int i=0;i< V.size();i++){
+			j=0;
+			
+			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][0];
+				j++;
+			}
+			if(VoisinsHorizontaux[V.elementAt(i)][1] !=42){
+				if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == 0){
+					Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][1];
+					j++;
+				}
+			}
+			
+			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][0];
+				j++;
+			}
+			if(VoisinsVerticaux[V.elementAt(i)][1] !=42){
+				if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == 0){
+					Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][1];
+					j++;
+				}	
+			}
+		}
+		
+	
+		
+		boolean trouve = false;
+		for(int i=0;i<V.size();i++){
+			for(int k=0;k<4;k++){
+				if(Deplacement[i][k]!=-1){
+					trouve=true;
+				}
+			}
+		}		
+		
+		return trouve;
+	}
+	
+	
+	
 	/* Vrai si nouveau moulin pour la case PlaceAverifier, 
 	* ajoute les voisins moulin de result [numCaseResult] dans result[3] et result[4]
 	*	numCaseResult =2 si ajouterPiece, numCaseResult=4 si DeplacerPiece
