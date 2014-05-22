@@ -652,12 +652,12 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	//Posse est la possession du joueur adverse (1 ou 2)
+	//Posse est la possession du joueur actif
 	public void RetirerPiece(int PlaceARetirer, int posseAdv){
 		int []result = new int [6];
 		InitResult(result);
 		// getPossession() renvoi 1 pour l'ordi et 2 pour l'humain
-		if(this.getPieces().elementAt(PlaceARetirer).getPossession()==posseAdv){
+		if(this.getPieces().elementAt(PlaceARetirer).getPossession()==posseAdv ){
 			// Si la case ne forme pas un moulin -> OK
 			if(!PresenceMoulin(PlaceARetirer)){
 				this.getPieces().elementAt(PlaceARetirer).setProprietaire(new Joueur());
@@ -807,6 +807,11 @@ public class PlateauMoulin extends Plateau{
 		
 		return trouve;
 	}
+	
+	
+	
+	
+	
 	
 	
 	
@@ -978,11 +983,11 @@ public class PlateauMoulin extends Plateau{
 	// OvsJ avec difficulté == 1 (facile)
 	public int PlacementRandom(){
 		int random=0;
-		boolean trouve = true;
-		while(trouve){
+		boolean trouve = false;
+		while(!trouve){
 			random = (int)(Math.random() * (24-0)) + 0;
 			if(getPieces().elementAt(random).getPossession()==0){
-				trouve=false;			
+				trouve=true;			
 			}
 		}			
 		return random;
@@ -1027,14 +1032,14 @@ public class PlateauMoulin extends Plateau{
 		
 		int [] res = new int [2];
 		
-		boolean trouve = true;
-		while(trouve){
+		boolean trouve = false;
+		while(!trouve){
 			int random = (int)(Math.random() * (V.size()-0)) + 0;
 			int random2 = (int)(Math.random() * (4-0)) + 0;	
 			if(Deplacement[random][random2] !=-1){
 				res[0]=V.elementAt(random);
 				res[1]= Deplacement[random][random2];
-				trouve=false;	
+				trouve=true;	
 			}
 		}	
 		
@@ -1286,60 +1291,6 @@ public class PlateauMoulin extends Plateau{
 		
 	}
 	
-	/**
-	 * @return Pointe un couple d'entier, la pièce à bouger et la pièce vide représentant la plus grande possibilité 
-	 * de créer un moulin ou empêchant la création d'un moulin adverse et atteignable grâce aux pions déjà posés
-	 */	
-/*	public int[] DeplacementPrioritaire(){
-		
-		int PrioriteMoulin=10;
-		int PrioriteBloquerMoulin=9;
-		int PrioriteExMoulin=8;
-		//Deux Pieces et une case vide
-		int Priorite110=7;
-		//Deux Pieces et une Piece adverse
-		int Priorite112=6;
-		//Une piece
-		int Priorite010=5;
-		
-		//Recup de tous les pions de l'ordi
-		Vector<Integer> V = PiecesPossedeesPar(1);
-		//Les deplacements de [i] vers tous les [j] possibles
-		int[][] Deplacement = new int[V.size()][4];
-		int[][] Priorites = new int[V.size()][4];
-								
-								//La piece peut bloquer un moulin
-								
-								//La piece peut constituer un 110,011
-								
-								//La piece peut constituer un 112,211
-								
-								//La piece peut constituer un 010
-								
-								//La piece est d�j� dans un moulin
-									//Si on peut la d�placer sans que l'autre joueur prenne la place, priorit� 
-									//Sinon, on ne la bouge pas
-								
-								//La piece peut constituer un 112,211,121
-							
-								//La piece peut constituer un 010,100,001
-								
-								//La piece est d�j� dans un moulin
-									//Si on peut la d�placer sans que l'autre joueur prenne la place, priorit� 3
-									//Sinon, on ne la bouge pas
-		int max = 0;
-		int[] maxi = {0,0};
-		for(int i=0;i<V.size();i++){
-			for(int y=0;y<4;y++){
-				if(Priorites[i][y]>max){
-					max = Priorites[i][y];
-					maxi[0]=i;
-					maxi[1]=y;
-					}
-			}			
-		}
-		return maxi;	
-	}*/
 	
 	/**
 	 * @return Pointe la pi�ce adverse repr�sentant le  plus de danger, la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation dans de nos moulins
@@ -1352,10 +1303,10 @@ public class PlateauMoulin extends Plateau{
 		int lower = 0;
 		int higher = V.size();
 		int random=0;
-		boolean trouve=true;
-		while(trouve){
+		boolean trouve=false;
+		while(!trouve){
 			random = (int)(Math.random() * (higher-lower)) + lower;
-			if(!PresenceMoulin(V.elementAt(random))){trouve=false;}
+			if(!PresenceMoulin(V.elementAt(random))){trouve=true;}
 		}
 		
 		return V.elementAt(random);
