@@ -537,7 +537,7 @@ public class PlateauMoulin extends Plateau{
 	
 	// Initialise le tableau envoyé à la vue pour update
 	public void InitResult(int [] r){
-		for (int i=0;i<6;i++){
+		for (int i=0;i<8;i++){
 			r[i]=-1;
 		}
 	}
@@ -654,7 +654,7 @@ public class PlateauMoulin extends Plateau{
 	
 	//Posse est la possession du joueur actif
 	public void RetirerPiece(int PlaceARetirer, int posseAdv){
-		int []result = new int [6];
+		int []result = new int [8];
 		InitResult(result);
 		// getPossession() renvoi 1 pour l'ordi et 2 pour l'humain
 		if(this.getPieces().elementAt(PlaceARetirer).getPossession()==posseAdv ){
@@ -1798,68 +1798,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		}
 	}*/
 
-/***	
-	/**Controleurs*
-	public int[] ControleurHumain(int[] Proposition){
-		
-		int Choix,ChoixABouger,ChoixAAtteindre;
-		int[] Result = new int[6];
-		for(int i=0;i<6;i++){
-			Result[i]=-1;
-		}
-		Result[1]=2;
 
-		
-		//Si il y a un moulin
-		if(Proposition[2]<0 && Proposition[2]>23){
-			if(getPieces().elementAt(Proposition[2]).getPossession() == 1){
-				RetirerPiece(Proposition[2]);
-				ChangerJoueurActif();
-				TourDeJeu++;
-				Result[0]=3;
-				Result[5]=Proposition[2];
-				updateGrid(Result);
-				return Result;	
-			}			
-		}
-		//Placement
-		if(TourDeJeu<18){	
-			
-		else{//Deplacement
-			Result[0]=2;	
-			
-			//Si il n'y a pas de proposition de deplacement, on envoie un Result[0] a 2 sans 
-			//Result[2] et Result[3] afin de signifier que le deplacement propose est invalide
-			if(Proposition[0]<0 && Proposition[0]>23 && Proposition[1]<0 && Proposition[1]>23 ){
-					updateGrid(Result);
-					return Result;	
-			}
-					
-			
-			ChoixABouger = Proposition[0];
-			ChoixAAtteindre = Proposition[0];
-			if(DeplacerPiece(ChoixABouger, ChoixAAtteindre,2) == 1){
-				DeplacerPiece(ChoixABouger, ChoixAAtteindre,2);
-				Result[2]=ChoixABouger;
-				Result[3]=ChoixAAtteindre;
-			}			
-					
-			//Si il y a presence d'un moulin, on envoie un Result[0] a 4 afin de recevoir en echange la piece a eliminer
-			if(PresenceMoulin(ChoixAAtteindre)){
-				Result[0] = 4;
-				updateGrid(Result);
-				return Result;	
-			}
-			
-			ChangerJoueurActif();
-			TourDeJeu++;
-		}	
-		
-		updateGrid(Result);
-		return Result;		
-	}		
-**/	
-	
 	// Méthode appelée par la vue, quand c'est au tour d'un ordi de jouer
 	public int[] ControleurOrdi(){
 			
@@ -1877,12 +1816,8 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 					Choix = PlacementRandom();
 				}
 				else {
-					if(getJoueurActif().getNiveau() == 2){//Niveau moyen
-						Choix=PlacementPrioritaire();
-					}else{
-						Choix=PlacementPrioritaire(); //Niveau = 3 (difficile) ou Ordi vs Ordi
-					}
-				}	
+					Choix=PlacementPrioritaire(); //Niveau = 2ou 3 (la différence se fait dans la méthode)
+				}
 				System.out.println("\nOrdi a joué à "+Choix);
 				
 				if(CoupValide(Choix)){  
@@ -1899,14 +1834,10 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 					int[] coupAJ;
 					if(getJoueurActif().getNiveau() == 1){
 						coupAJ = DeplacementRandom();
-					}else{
-						if(getJoueurActif().getNiveau() == 2){
-							PlateauMoulin bestCoup = meilleurCoup(numJActif); // posses joueurActif
-							coupAJ = coupAJouer(bestCoup);
-						}else{
-							PlateauMoulin bestCoup = meilleurCoup(numJActif); // posses joueurActif
-							coupAJ = coupAJouer(bestCoup);
-						}
+					}
+					else{
+						PlateauMoulin bestCoup = meilleurCoup(numJActif); // posses joueurActif
+						coupAJ = coupAJouer(bestCoup);
 					}	
 					int ChoixABouger = coupAJ[0];
 					//System.out.println("ChoixABouger"+ChoixABouger);
