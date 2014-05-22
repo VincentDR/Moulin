@@ -88,11 +88,17 @@ public class Controleur {
 	{
 		try {
 			this.plateau = (PlateauMoulin) Plateau.getSave(nomPartie);
+			plateau.addObserver(fenetre.getPanneau());
 			this.plateau.charger();
 		} catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean ExisteDeplacement()
+	{
+		return this.plateau.ExisteDeplacement();
 	}
 	
 }
@@ -152,3 +158,4 @@ Tableau controle :
 	 * 		La vue supprimera donc la case x
 	 * 
 	 */
+
