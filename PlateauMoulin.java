@@ -925,6 +925,7 @@ public class PlateauMoulin extends Plateau{
 		return false; 
 	}	
 
+
 	// OvsJ avec difficulté == 1 (facile)
 	public int PlacementRandom(){
 		int random=0;
@@ -1313,7 +1314,7 @@ public class PlateauMoulin extends Plateau{
 	/**
 	 * @return Pointe la pi�ce adverse repr�sentant le  plus de danger, la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation dans de nos moulins
 	 */
-public int CiblePrioritaire(int difficulte){
+	public int CiblePrioritaire(int difficulte){
 		int possessionAdv = getJoueurNActif().getNumJoueur();	//Si tour de jeu==0 (joueur 1) possessionAdversaire=2, sinon 1
 		// On ne doit pas détruire de moulin adverse sauf si il ne reste que ça
 		int PrioriteDestructionMoulin=-100; //Detruire un moulin adverse permet à l'adversaire de le recréer dans la foulée
@@ -1418,6 +1419,8 @@ public int CiblePrioritaire(int difficulte){
 		}
 		return maxi;
 	}
+	
+
 	
 	/**
 	 * @return Renvoi un indice représentant l'intérêt d'un plateau, plus il sera haut, plus l'ordi sera en position de force
@@ -1870,12 +1873,16 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			Result[1]=1;
 			
 			if(TourDeJeu<18){
-				if(getJoueurActif().getNiveau() == 1){
+				if(getJoueurActif().getNiveau() == 1){//Niveau facile
 					Choix = PlacementRandom();
 				}
-				else{
-					Choix=PlacementPrioritaire();
-				}
+				else {
+					if(getJoueurActif().getNiveau() == 2){//Niveau moyen
+						Choix=PlacementPrioritaire();
+					}else{
+						Choix=PlacementPrioritaire(); //Niveau = 3 (difficile) ou Ordi vs Ordi
+					}
+				}	
 				System.out.println("\nOrdi a joué à "+Choix);
 				
 				if(CoupValide(Choix)){  
@@ -1885,8 +1892,6 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			}
 			else{ //Deplacement
 				
-// !!!! A modifier par getJoueurActif !!!!
-				
 				int numJActif = getJoueurActif().getNumJoueur();
 				Vector<Integer> piecesOrdi = PiecesPossedeesPar(numJActif);
 				if(piecesOrdi.size()>=3){ //Si l'ordi actif a au moins trois pièces
@@ -1894,21 +1899,24 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 					int[] coupAJ;
 					if(getJoueurActif().getNiveau() == 1){
 						coupAJ = DeplacementRandom();
-						
 					}else{
-					
-						PlateauMoulin bestCoup = meilleurCoup(1); // posses joueurActif
-						coupAJ = coupAJouer(bestCoup);
+						if(getJoueurActif().getNiveau() == 2){
+							PlateauMoulin bestCoup = meilleurCoup(numJActif); // posses joueurActif
+							coupAJ = coupAJouer(bestCoup);
+						}else{
+							PlateauMoulin bestCoup = meilleurCoup(numJActif); // posses joueurActif
+							coupAJ = coupAJouer(bestCoup);
+						}
 					}	
-						int ChoixABouger = coupAJ[0];
-						//System.out.println("ChoixABouger"+ChoixABouger);
-						int ChoixAAtteindre = coupAJ[1];
-						//System.out.println("ChoixAAtteindre"+ChoixAAtteindre);
+					int ChoixABouger = coupAJ[0];
+					//System.out.println("ChoixABouger"+ChoixABouger);
+					int ChoixAAtteindre = coupAJ[1];
+					//System.out.println("ChoixAAtteindre"+ChoixAAtteindre);
 			
-						Result[3]=ChoixABouger;
-						Result[4]=ChoixAAtteindre;
-						DeplacerPiece(ChoixABouger, ChoixAAtteindre,1);
-						System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
+					Result[3]=ChoixABouger;
+					Result[4]=ChoixAAtteindre;
+					DeplacerPiece(ChoixABouger, ChoixAAtteindre,1);
+					System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
 						
 				/*		
 					if(PresenceMoulin(ChoixAAtteindre)){
