@@ -37,9 +37,6 @@ public class Piece implements Serializable {
 	}
 
 
-
-	
-	
 	
 	/**************/
 	/***METHODES***/
