@@ -1048,7 +1048,70 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	public boolean ContinuerBloquerMoulin(int x, int y, int i){
+	public boolean ContinuerBloquerMoulin(int PlaceAIgnorer, int possess){
+		if(voisinHorizontalExiste(PlaceAIgnorer,1)){
+			if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess
+					&& getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][1]).getPossession() == possess){
+				if(voisinVerticalExiste(PlaceAIgnorer,1)){
+					if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess
+							|| getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][1]).getPossession() == possess){
+						return true;
+					}
+				}else{
+					if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess){
+						return true;
+					}
+				}
+			}
+		}else{
+			if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess
+					&& (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAIgnorer][0]][0]).getPossession()==possess
+					|| getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAIgnorer][0]][1]).getPossession()==possess)){
+				if(voisinVerticalExiste(PlaceAIgnorer,1)){
+					if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess
+							|| getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][1]).getPossession() == possess){
+						return true;
+					}
+				}else{
+					if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess){
+						return true;
+					}
+				}			
+			}			
+		}
+		
+		
+		
+		if(voisinVerticalExiste(PlaceAIgnorer,1)){
+			if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess
+					&& getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][1]).getPossession() == possess){
+				if(voisinHorizontalExiste(PlaceAIgnorer,1)){
+					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess
+							|| getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][1]).getPossession() == possess){
+						return true;
+					}
+				}else{
+					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess){
+						return true;
+					}
+				}
+			}
+		}else{
+			if(getPieces().elementAt(VoisinsVerticaux[PlaceAIgnorer][0]).getPossession() == possess
+					&& (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAIgnorer][0]][0]).getPossession()==possess
+					|| getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAIgnorer][0]][1]).getPossession()==possess)){
+				if(voisinHorizontalExiste(PlaceAIgnorer,1)){
+					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess
+							|| getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][1]).getPossession() == possess){
+						return true;
+					}
+				}else{
+					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAIgnorer][0]).getPossession() == possess){
+						return true;
+					}
+				}			
+			}			
+		}
 		return false;
 	}
 
@@ -1792,12 +1855,12 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			}
 			//Possibilité de faire bloquer la création d'un moulin 
 			if(vectPlat.elementAt(i).BloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur())){
-				//System.out.println("TestBloquerMoulin dans MeilleurCoup");
+				System.out.println("TestBloquerMoulin dans MeilleurCoup");
 				Max=100000000;
 				indice=i;
 			}
 			//Possibilité de continuer à bloquer un moulin
-			if(vectPlat.elementAt(i).ContinuerBloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur())){
+			if(vectPlat.elementAt(i).ContinuerBloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],getJoueurNActif().getNumJoueur())){
 				System.out.println("TestContinuerBloquerMoulin dans MeilleurCoup");
 				Max=0;
 				
