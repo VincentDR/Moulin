@@ -74,6 +74,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	// Le mode de jeu choisi avec : MODE_JVSJ , MODE_JVSO, MODE_OVSO
 	private int modeDeJeu = Constantes.MODE_JVSO;
 	
+	private boolean modePoney = false;
+	
 
 	// GESTION E/S FICHIER
 	JFileChooser fc;
@@ -166,8 +168,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private Image timer;
 	
 	// DECLARATION DES FICHIERS IMAGE
-	private File fileFond = new File("Images/Fond/fond2.png");
-	private File fileFondMenu= new File("Images/Fond/fondMenu.png");
+	private File fileFond = new File("Images/Fond/fond.png");
+	private File fileFondMenu= new File("Images/Fond/fondMenuPoney.png");
+	private File fileFondMenuPoney= new File("Images/Fond/fondMenuPoney.png");
 	private File fileFondVictoireEmpire= new File("Images/Fond/fondVictoireEmpire.png");
 	private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
 	//private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
@@ -180,7 +183,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	// DECLARATION DES IMAGES
 	 
 	private BufferedImage imageFond;
-	private BufferedImage imageFondMenu, imageFondVictoireEmpire, imageFondVictoireRebelle;
+	private BufferedImage imageFondMenu, imageFondMenuPoney, imageFondVictoireEmpire, imageFondVictoireRebelle;
 	private BufferedImage imageFondAPropos;
 	private ImageIcon gifAPropos;
 	private ImageIcon [] imgCocardeEmpire;
@@ -964,6 +967,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
 			imageFond = ImageIO.read(fileFond);
 			imageFondMenu = ImageIO.read(fileFondMenu);
+			imageFondMenuPoney = ImageIO.read(fileFondMenuPoney);
 			imageFondVictoireEmpire = ImageIO.read(fileFondVictoireEmpire);
 			imageFondVictoireRebelle = ImageIO.read(fileFondVictoireRebelle);
 			imageFondAPropos = ImageIO.read(fileFondAPropos);
@@ -1042,6 +1046,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
         
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
+		this.addKeyListener(this);
 		
 		// test
 		// On ajoute le curseur
@@ -1093,7 +1098,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					|| panelOptions.isVisible() || panelNouvPartieP1.isVisible() 
 					|| panelNouvPartieP2.isVisible() || panelNouvPartieP3.isVisible())
 			{
-				g.drawImage(imageFondMenu, 0, 0, null);
+				if(modePoney){
+					g.drawImage(imageFondMenuPoney, 0, 0, null);}
+				else{
+				g.drawImage(imageFondMenu, 0, 0, null);}
 			}
 			else if(panelAPropos.isVisible())
 			{
@@ -1325,7 +1333,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		// Clic sur "Ordi contre Ordi"
 		if(event.getSource() == btnOvsO && SwingUtilities.isLeftMouseButton(event) )
 		{
-			 cl.show(this, "Jeu");
+			controleur.newPartieOO();
+			modeDeJeu = Constantes.MODE_OVSO;
+			initialisation();
+			cl.show(this, "Jeu");
 		}
 		// Clic sur "Retour"
 		if(event.getSource() == btnRetourP0 && SwingUtilities.isLeftMouseButton(event) )
@@ -1513,7 +1524,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		     {
 				 controleur.ordi();
 		     }
-	    } 
+	    }
 		
 		//else if(SwingUtilities.isRightMouseButton(event)) {
 	            /** Bouton DROIT */
