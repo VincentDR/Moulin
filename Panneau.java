@@ -874,7 +874,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		// Redimensionnement des panneaux
 		panelPlateauJeu.setOpaque(false);
 		panelPionsTop.setOpaque(false);
-		panelTop.setOpaque(false);
+		//panelTop.setOpaque(false);
 		panelPionsBot.setOpaque(false);
 		
 		// Ajout des panneaux au panneau jeu
