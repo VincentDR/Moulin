@@ -1961,8 +1961,26 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			}else{Result[3] = -1;}
 		}
 	*/	
+		
+		int nbPiecesJoueur1 = 0;
+		int nbPiecesJoueur2 = 0;
+		
 		for(int i=0;i<24;i++){
+			if(this.getPieces().elementAt(i).getPossession() == 1){
+				nbPiecesJoueur1++;
+			}
+			if(this.getPieces().elementAt(i).getPossession() == 2){
+				nbPiecesJoueur2++;
+			}
 			Result[5 + i] = this.getPieces().elementAt(i).getPossession();
+		}
+		
+		if(Result[1]<18){
+			Result[3] = 9 - (nbPiecesJoueur1+ (9 - this.getTourDeJeu()/9));
+			Result[4] = 9 - (nbPiecesJoueur2+ (9 - this.getTourDeJeu()/9));
+		}else{
+			Result[3] = 9-nbPiecesJoueur1;
+			Result[2] = 9-nbPiecesJoueur2;
 		}
 		
 		updateGrid(Result);
