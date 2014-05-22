@@ -1733,7 +1733,7 @@ public class PlateauMoulin extends Plateau{
 		
 		if(this.EstFeuille(niveauOrdi)){ // Si le noeud est une feuille
 			int eval = this.EvalPlateau();
-System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
+//System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
 			return eval;
 		}
 		else{
