@@ -1851,7 +1851,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		
 		System.out.println("Tourdejeu modele "+TourDeJeu);
 		int Choix;
-		int[] Result = new int[6];
+		int[] Result = new int[8];
 		InitResult(Result); // init à-1
 			
 		if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){	
