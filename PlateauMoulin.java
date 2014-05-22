@@ -652,13 +652,12 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	//Posse est la possession du joueur actif
-	public void RetirerPiece(int PlaceARetirer, int posse){
+	//Posse est la possession du joueur adverse (1 ou 2)
+	public void RetirerPiece(int PlaceARetirer, int posseAdv){
 		int []result = new int [6];
 		InitResult(result);
 		// getPossession() renvoi 1 pour l'ordi et 2 pour l'humain
-		if(this.getPieces().elementAt(PlaceARetirer).getPossession()!=posse+1 && 
-				this.getPieces().elementAt(PlaceARetirer).getPossession()!=0){
+		if(this.getPieces().elementAt(PlaceARetirer).getPossession()==posseAdv){
 			// Si la case ne forme pas un moulin -> OK
 			if(!PresenceMoulin(PlaceARetirer)){
 				this.getPieces().elementAt(PlaceARetirer).setProprietaire(new Joueur());
@@ -666,9 +665,7 @@ public class PlateauMoulin extends Plateau{
 				result[5]=PlaceARetirer;
 			}
 			else{ // La case forme un moulin, on cherche une case sans moulin
-				// Si possession ==1, possession piece de l'adversaire est 1 sinon 2
-				int possesAdvPiece = posse == 1 ? 2 : 1;
-				Vector<Integer> V = PiecesPossedeesPar(possesAdvPiece); 
+				Vector<Integer> V = PiecesPossedeesPar(posseAdv); 
 				boolean trouveCase = false;
 				int compt = 0;
 				while(trouveCase == false && compt < V.size()){
