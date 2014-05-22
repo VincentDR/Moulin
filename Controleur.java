@@ -40,29 +40,19 @@ public class Controleur {
 	}
 	
 	
-	
-	/*	
-		
-		try {
-			this.save = Save.getInstance ();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
-	
+
 	//Ajoute une piÃ¨ce sur PlaceAJouer du joueur actif
 	public void AjouterPiece(int placeAJouer)
 	{
 		plateau.AjouterPiece(placeAJouer);
 	}
-		
+
+	// Retourne vrai si au moins 1 déplacement est possible
+	public boolean ExisteDeplacement()
+	{
+		return this.plateau.ExisteDeplacement();
+	}
+	
 	//Retourne 1 si le dÃ©placement est possible, 0 sinon.
 	public void DeplacerPiece(int placeARetirer, int placeAJouer, int possession)
 	{
@@ -96,10 +86,7 @@ public class Controleur {
 		}
 	}
 	
-	public boolean ExisteDeplacement()
-	{
-		return this.plateau.ExisteDeplacement();
-	}
+
 	
 }
 
