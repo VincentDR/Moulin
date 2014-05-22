@@ -940,7 +940,7 @@ public class PlateauMoulin extends Plateau{
 	
 	
 	public int[] DeplacementRandom(){
-		Vector<Integer> V = PiecesPossedeesPar(1);
+		Vector<Integer> V = PiecesPossedeesPar(getJoueurActif().getNumJoueur());
 		int[][] Deplacement = new int[V.size()][4];
 		for(int i=0;i<V.size();i++){
 			for(int j=0;j<4;j++){
