@@ -1295,7 +1295,7 @@ public class PlateauMoulin extends Plateau{
 	 * @return Pointe la pi�ce adverse repr�sentant le  plus de danger, la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation dans de nos moulins
 	 */
 	public int CiblePrioritaireRandom(){
-		int possessionAdv = TourDeJeu%2==0 ? 2 : 1;
+		int possessionAdv = getJoueurNActif().getNumJoueur();
 		Vector<Integer> V = PiecesPossedeesPar(possessionAdv);
 		
 		
@@ -1314,7 +1314,7 @@ public class PlateauMoulin extends Plateau{
 	 * @return Pointe la pi�ce adverse repr�sentant le  plus de danger, la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation dans de nos moulins
 	 */
 	public int CiblePrioritaire(int difficulte){
-		int possessionAdv = TourDeJeu%2==0 ? 2 : 1;	//Si tour de jeu==0 (joueur 1) possessionAdversaire=2, sinon 1
+		int possessionAdv = getJoueurNActif().getNumJoueur();	//Si tour de jeu==0 (joueur 1) possessionAdversaire=2, sinon 1
 		// On ne doit pas détruire de moulin adverse sauf si il ne reste que ça
 		int PrioriteDestructionMoulin=-100; //Detruire un moulin adverse permet à l'adversaire de le recréer dans la foulée
 		//Pieces possédées par le joueur
