@@ -54,7 +54,7 @@ public class Laser extends JButton  implements Runnable{
 
 		if(equipe==0)
 		{
-			imageOriginale = new ImageIcon("Images/laserEmpireDouble.png");
+			imageOriginale = new ImageIcon("Images/laserRebelleDouble.png");
 		}
 		else // equipe==1
 		{
@@ -69,7 +69,7 @@ public class Laser extends JButton  implements Runnable{
 		
 			String chemin="";
 			if(equipe==0)
-			    chemin = "Images/laserEmpireDouble.png";
+			    chemin = "Images/laserRebelleDouble.png";
 			else
 			    chemin = "Images/laserEmpireDouble.png";
 			    //explosionXwing[i-1] = new ImageIcon(rotatingImage);
@@ -97,7 +97,7 @@ public class Laser extends JButton  implements Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 
-		System.out.println("On déplace les lasers");
+		System.out.println("On déplace le laser");
 		
 		//rotatingImage.setAngleD(90);
 		
