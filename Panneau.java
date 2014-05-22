@@ -74,7 +74,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	// Le mode de jeu choisi avec : MODE_JVSJ , MODE_JVSO, MODE_OVSO
 	private int modeDeJeu = Constantes.MODE_JVSO;
 	
+	private boolean retourPartie = false;
 	private boolean modePoney = false;
+	private boolean m = false, l = false;
+	private boolean reprendrePartieCliquable = false;
 	
 
 	// GESTION E/S FICHIER
@@ -158,8 +161,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	Cursor curseurTir = tk.createCustomCursor(imageViseur, new Point(16, 16), "curseur");
 	
 	// test
-	public int x=0;
-	public int y=0;
 	
 	//private JPanel panelPionsTop, panelPionsBot, panelPlateauJeu;
 	//private Fenetre maFenetre;
@@ -169,7 +170,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	// DECLARATION DES FICHIERS IMAGE
 	private File fileFond = new File("Images/Fond/fond.png");
-	private File fileFondMenu= new File("Images/Fond/fondMenuPoney.png");
+	private File fileFondPoney = new File("Images/Fond/fond4.png");
+	private File fileFondMenu= new File("Images/Fond/fondMenu.png");
 	private File fileFondMenuPoney= new File("Images/Fond/fondMenuPoney.png");
 	private File fileFondVictoireEmpire= new File("Images/Fond/fondVictoireEmpire.png");
 	private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
@@ -182,7 +184,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	// DECLARATION DES IMAGES
 	 
-	private BufferedImage imageFond;
+	private BufferedImage imageFond, imageFondPoney;
 	private BufferedImage imageFondMenu, imageFondMenuPoney, imageFondVictoireEmpire, imageFondVictoireRebelle;
 	private BufferedImage imageFondAPropos;
 	private ImageIcon gifAPropos;
@@ -910,6 +912,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	    this.add(panelVictoireRebelle, "VictoireRebelle");
 	    // On montre la premiere carte
 	    cl.show(this, "Menu");
+	    panelMenu.setFocusable(true);
+	    panelMenu.requestFocus();
 		////////
 		//// FIN TEST
 		//////////:
@@ -966,6 +970,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		try {
 
 			imageFond = ImageIO.read(fileFond);
+			imageFondPoney = ImageIO.read(fileFondPoney);
 			imageFondMenu = ImageIO.read(fileFondMenu);
 			imageFondMenuPoney = ImageIO.read(fileFondMenuPoney);
 			imageFondVictoireEmpire = ImageIO.read(fileFondVictoireEmpire);
@@ -990,7 +995,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	        	
 	        	int a= j==0?1:0;
 	        	a= j==0?0:1;
-	        	vaisseau[j][i] = new Vaisseau(this, a, i);
+	        	vaisseau[j][i] = new Vaisseau(this, j, i);
 	
 	        	vaisseau[j][i].setFocusPainted( false ); // enleve la bordure de l'image
 	    		vaisseau[j][i].setBorderPainted(false); // enleve la bordure du bouton
@@ -1047,6 +1052,12 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.addKeyListener(this);
+		panelMenu.addKeyListener(this);
+		panelRegles.addKeyListener(this);
+		panelJeu.addKeyListener(this);
+		
+	    panelMenu.requestFocus();
+		//panel.addKeyListener(this);
 		
 		// test
 		// On ajoute le curseur
@@ -1110,7 +1121,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			else if(panelJeu.isVisible())
 			{
 				 //System.out.println("on affiche le jeu");
-				g.drawImage(imageFond, 0, 0, null);
+				if(modePoney){
+					g.drawImage(imageFondPoney, 0, 0, null);}
+				else{
+				g.drawImage(imageFond, 0, 0, null);}
 			}
 			else if(panelVictoireEmpire.isVisible())
 			{
@@ -1155,7 +1169,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseEntered(MouseEvent event) {
 		// TODO Auto-generated method stub
 			//JButton temp = (JButton)event.getSource();
-		if(event.getSource() == btnReprPartie)
+		if(event.getSource() == btnReprPartie && reprendrePartieCliquable)
 		{
 			btnReprPartie.setIcon(imgReprPartie[1]);
 		}
@@ -1243,9 +1257,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	if(panelMenu.isVisible())
 	{
 		// Clic sur "Options"
-		if(event.getSource() == btnReprPartie && SwingUtilities.isLeftMouseButton(event) )
+		if(event.getSource() == btnReprPartie && SwingUtilities.isLeftMouseButton(event) && reprendrePartieCliquable)
 		{
 			 cl.show(this, "Jeu");
+			 panelJeu.requestFocus();
 		}
 		// Clic sur "Nouvelle Partie"
 		else if(event.getSource() == btnNouvPartie && SwingUtilities.isLeftMouseButton(event) )
@@ -1268,12 +1283,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		else if(event.getSource() == btnOptions && SwingUtilities.isLeftMouseButton(event) )
 		{
 			 cl.show(this, "Options");
+
+			 panelOptions.requestFocus();
 		}
 		// Clic sur "Regles"
 		else if(event.getSource() == btnRegles && SwingUtilities.isLeftMouseButton(event) )
 		{
-			raz();
 			cl.show(this, "Regles");
+
+		    panelRegles.requestFocus();
 		}
 		// Clic sur "A Propos"
 		else if(event.getSource() == btnAPropos && SwingUtilities.isLeftMouseButton(event) )
@@ -1335,13 +1353,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			controleur.newPartieOO();
 			modeDeJeu = Constantes.MODE_OVSO;
-			initialisation();
+			raz();
 			cl.show(this, "Jeu");
+		    panelJeu.requestFocus();
 		}
 		// Clic sur "Retour"
 		if(event.getSource() == btnRetourP0 && SwingUtilities.isLeftMouseButton(event) )
 		{
 			 cl.show(this, "Menu");
+			 panelMenu.requestFocus();
 		}
 	}
 	else if(panelNouvPartieP1.isVisible())
@@ -1362,8 +1382,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			{
 				controleur.newPartieJJ(pseudo1.getText(), pseudo2.getText());
 				modeDeJeu = Constantes.MODE_JVSJ;
-				initialisation();
+				raz();
 				cl.show(this, "Jeu");
+			    panelJeu.requestFocus();
 			}
 		}
 		else if(event.getSource() == pseudo1 && SwingUtilities.isLeftMouseButton(event) )
@@ -1409,8 +1430,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				
 				controleur.newPartieJO(pseudo.getText(), difficulte);
 				modeDeJeu = Constantes.MODE_JVSO;
-				initialisation();
+				raz();
 				cl.show(this, "Jeu");
+			    panelJeu.requestFocus();
 			}
 		}
 		else if(event.getSource() == pseudo && SwingUtilities.isLeftMouseButton(event) )
@@ -1470,26 +1492,31 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	{
 		// Clic dans l'option
 			 cl.show(this, "Menu");
+			 panelMenu.requestFocus();
 	}
 	else if(panelRegles.isVisible())
 	{
 		// Clic dans le menu
 			 cl.show(this, "Menu");
+			 panelMenu.requestFocus();
 	}
 	else if(panelAPropos.isVisible())
 	{
 		// Clic dans l'a propos
 			 cl.show(this, "Menu");
+			 panelMenu.requestFocus();
 	}
 	else if(panelVictoireEmpire.isVisible())
 	{
 		// Clic apres victoire empire
 			 cl.show(this, "Menu");
+			 panelMenu.requestFocus();
 	}
 	else if(panelVictoireRebelle.isVisible())
 	{
 		// Clic apres victoire rebelle
 			 cl.show(this, "Menu");
+			 panelMenu.requestFocus();
 	}
 	else if(panelJeu.isVisible())
 	{
@@ -1501,13 +1528,16 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		if(event.getSource() == boutonMenu && SwingUtilities.isLeftMouseButton(event) )
 		{
 		        cl.show(this, "Menu");
+				 panelMenu.requestFocus();
 		} 	
 		else if(event.getSource() == this && SwingUtilities.isMiddleMouseButton(event) )
 		{
 		        cl.show(this, "Menu");
+				 panelMenu.requestFocus();
 		} 	
 		else if (event.getSource() == boutonCommencerPartie ) 
 		{
+			reprendrePartieCliquable = true;
 			panelPlateauJeu.remove(boutonCommencerPartie);
 	        for(int c=0;c<Constantes.NB_CASES;c++)
 	        	panelPlateauJeu.add(casesVide[c]);
@@ -1709,6 +1739,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					
 				}
 			}
+
+		    panelJeu.setFocusable(true);
+		    panelJeu.requestFocus();
 	}
 	}
 
@@ -2276,10 +2309,14 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			if(nbPionsEmpire<3)
 			{
 				cl.show(this, "VictoireRebelle");
+
+				reprendrePartieCliquable = false;
 			}
 			if(nbPionsRebelle<3)
 			{
 				cl.show(this, "VictoireEmpire");
+
+				reprendrePartieCliquable = false;
 			}
 		}
 		
@@ -2481,11 +2518,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	public void keyTyped(KeyEvent e) {
+
+		
+		repaint();
 		
 	    // Permet de limiter le nombre de caractere a 10 apres saisi
-		JTextField pseudo = (JTextField) e.getSource();
-		if(e.getSource() == pseudo)
+		if(e.getSource() == pseudo || e.getSource() == pseudo1 || e.getSource() == pseudo2)
 		{
+
+			JTextField tf = (JTextField) e.getSource();
 			if(pseudo.getText().length() >= 10) {
 				System.out.println("limite atteinte");
 				try {
@@ -2493,22 +2534,79 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				} catch (BadLocationException ble) { ble.printStackTrace(); }
 			}
 		}
+		/*else
+		{
+			System.out.println(m + " " + l + " " + p);
+			char c = e.getKeyChar();
+			System.out.println("c = " + c);
+			if(c == 'm'){ m =true;
+			}
+			else if(c == 'l') l = true;
+			else if(c == 'p') p = true;
+			
+			if(m&&l&&p)
+			{
+				if(modePoney)
+				{
+					modePoney = false;
+				}
+				else
+				{
+					modePoney = true;
+				}
+			}
+		}*/
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+		
+		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+
+	//	if(panelMenu.isVisible() || panelJeu.isVisible())
+		//{
+			System.out.println(".");
+			char c = e.getKeyChar();
+			if(c == 'm') m =true;
+			else if(c == 'l' && m) l = true;
+			else if(c == 'p' && m && l)
+			{
+				m=false;
+				l=false;
+				
+				System.out.println("sdfsdfd");
+				if(modePoney)
+				{
+					modePoney = false;
+					repaint();
+				}
+				else
+				{
+					modePoney = true;
+					repaint();
+				}
+				
+			}
+			else
+			{
+				m=false;
+				l=false;
+			}
+		}
 		
-	}
+		
+	//}
 	
 	public void raz()
 	{
+		
 		System.out.println("On remet tout à zero");
 		// On enleve tous les vaisseaux du top, bot et jeu
 		panelPionsTop.removeAll();
@@ -2519,6 +2617,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		cmptVaiss[0] = 0;
 		cmptVaiss[1]= 0;
 		phase2=Constantes.PHASE_DE_JEU;
+		tourDeJeu = 0;
 		
 		// On ajoute et place les cases vides
 
