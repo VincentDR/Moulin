@@ -1764,35 +1764,44 @@ public class PlateauMoulin extends Plateau{
 		return false;
 	}
 	
-	// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
-	public boolean EstFeuille(){
-		if(this.nivArbo==3){
-			return true;
+// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
+	public boolean EstFeuille(int niveauOrdi){
+		if(niveauOrdi == 2){
+			if(this.nivArbo==2){
+				return true;
+			}
 		}
+		else{
+			if(niveauOrdi == 3){
+				if(this.nivArbo==6){
+					return true;
+				}
+			}		
+		}	
 		return false;
 	}
 	
 	// Renvoi le min ou le max en fonction de niveauHarbo
-	public int MinMax(int posses,int alpha, int beta){
+	public int MinMax(int posses,int niveauOrdi,int alpha, int beta){
 		
 		//TEST fin de partie
 		Vector<Integer> piecesJ1 = PiecesPossedeesPar(1);
 		Vector<Integer> piecesJ2 = PiecesPossedeesPar(2);
 		if(piecesJ1.size()<=3 && piecesJ2.size()<=3 && TourDeJeu >=18){ 
-System.out.println("Dans minMax est feuille terminale + nivharbo :"+this.nivArbo);
+//System.out.println("Dans minMax est feuille terminale + nivharbo :"+this.nivArbo);
 			return (10000000);
 		}
 		
 		
 		
-		if(this.EstFeuille()){ // Si le noeud est une feuille
+		if(this.EstFeuille(niveauOrdi)){ // Si le noeud est une feuille
 			int eval = this.EvalPlateau();
 System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
 			return eval;
 		}
 		else{
 			Vector<PlateauMoulin> vectPlateau = this.plateauCoupSuivant(posses);
-System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArbo);			
+//System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArbo);			
 			// On va utiliser la possession de l'adversaire pour le minMax des "sous plateaux"
 			int possesAdv = posses==1 ? 2 : 1;
 			
@@ -1800,7 +1809,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 //System.out.println("Dans minMax noeud max + nivharbo :"+this.nivArbo);
 
 				for(int i=0; i<vectPlateau.size();i++){
-					alpha = Math.max(alpha,vectPlateau.elementAt(i).MinMax(possesAdv,alpha,beta));
+					alpha = Math.max(alpha,vectPlateau.elementAt(i).MinMax(possesAdv,niveauOrdi,alpha,beta));
 					if(alpha>=beta){
 						return beta;
 					}
@@ -1812,7 +1821,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 //System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
 
 				for(int i=0; i<vectPlateau.size();i++){
-					beta = Math.min(beta,vectPlateau.elementAt(i).MinMax(possesAdv,alpha,beta));
+					beta = Math.min(beta,vectPlateau.elementAt(i).MinMax(possesAdv,niveauOrdi,alpha,beta));
 					if(alpha>=beta){
 						return alpha;
 					}
@@ -1822,7 +1831,6 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			}
 		}
 	}
-	
 	
 	// Renvoi la meilleur configuration de plateau à jouer
 	public PlateauMoulin meilleurCoup(int posses){
@@ -1903,15 +1911,9 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 	}
 	
 
-
-
-		
-	
-
-	
 	// Méthode appelée par la vue, quand c'est au tour d'un ordi de jouer
 	public int[] ControleurOrdi(){
-		
+			
 		System.out.println("Tourdejeu modele "+TourDeJeu);
 		int Choix;
 		int[] Result = new int[8];
@@ -1926,7 +1928,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 					Choix = PlacementRandom();
 				}
 				else {
-					Choix=PlacementPrioritaire(); //Niveau = 2ou 3 (la différence se fait dans la méthode)
+					Choix=PlacementPrioritaire(); //Niveau = 2 ou 3 (la différence se fait dans la méthode)
 				}
 				System.out.println("\nOrdi a joué à "+Choix);
 				
@@ -1938,15 +1940,16 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			else{ //Deplacement
 				
 				int numJActif = getJoueurActif().getNumJoueur();
+				int niveauJActif = getJoueurActif().getNiveau();
 				Vector<Integer> piecesOrdi = PiecesPossedeesPar(numJActif);
 				if(piecesOrdi.size()>=3){ //Si l'ordi actif a au moins trois pièces
 
 					int[] coupAJ;
-					if(getJoueurActif().getNiveau() == 1){
+					if(niveauJActif == 1){
 						coupAJ = DeplacementRandom();
 					}
-					else{
-						PlateauMoulin bestCoup = meilleurCoup(numJActif); // posses joueurActif
+					else{ // niveau 2 ou 3 pour OrdivsJoueur  ou 0 pour OrdivsOrdi
+						PlateauMoulin bestCoup = meilleurCoup(numJActif,niveauJActif); // posses joueurActif
 						coupAJ = coupAJouer(bestCoup);
 					}	
 					int ChoixABouger = coupAJ[0];
@@ -1958,19 +1961,6 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 					Result[4]=ChoixAAtteindre;
 					DeplacerPiece(ChoixABouger, ChoixAAtteindre,numJActif);
 					System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
-						
-				/*		
-					if(PresenceMoulin(ChoixAAtteindre)){
-						
-						Choix=CiblePrioritaire();
-						System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
-						RetirerPiece(Choix,1);
-						Result[0]=5;
-						Result[5]=Choix;
-					}
-					//ChangerJoueurActif();
-					//TourDeJeu++;			
-				*/
 				}
 				else{
 					Result[0]=6; // Fin de partie
