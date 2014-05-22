@@ -978,7 +978,79 @@ public class PlateauMoulin extends Plateau{
 		//Aucun cas bon donc pas de moulin
 		return false; 
 	}	
-
+	public boolean BloquerMoulin(int PlaceAIgnorer,int PlaceAverifier, int possess){
+		//Présence Horizontale d'un moulin
+				if(voisinHorizontalExiste(PlaceAverifier,0)){ //VH[0] existe ?
+					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 
+						&& VoisinsHorizontaux[PlaceAverifier][0] != PlaceAIgnorer  ){
+						if(voisinHorizontalExiste(PlaceAverifier,1)){ // 
+							if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess 
+							&& VoisinsHorizontaux[PlaceAverifier][1] != PlaceAIgnorer){
+							return true;
+							}
+						}	
+						else{ //VH[0] à nous et VH[1] n'existe pas
+							if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0]).getPossession() == possess 
+								&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1]).getPossession() == possess
+								&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAIgnorer
+								&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
+									return true;
+							}
+						}
+					}
+				}
+				else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
+					if(	getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess 
+							&& VoisinsHorizontaux[PlaceAverifier][1] != PlaceAIgnorer){
+						if(getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][0]).getPossession() == possess 
+							&& getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][1]][1]).getPossession() == possess
+							&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAIgnorer
+							&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
+								return true;
+						}
+					}
+				}
+				
+				//Présence Verticale d'un moulin
+				if(voisinVerticalExiste(PlaceAverifier,0)){ //VH[0] existe ?
+					if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 
+						&& VoisinsVerticaux[PlaceAverifier][0] != PlaceAIgnorer  ){
+						if(voisinVerticalExiste(PlaceAverifier,1)){ // 
+							if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess 
+							&& VoisinsVerticaux[PlaceAverifier][1] != PlaceAIgnorer){
+							return true;
+							}
+						}	
+						else{ //VH[0] à nous et VH[1] n'existe pas
+							if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0]).getPossession() == possess 
+								&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1]).getPossession() == possess
+								&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAIgnorer
+								&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
+									return true;
+							}
+						}
+					}
+				}
+				else{ // VH[0] n'existe pas donc forcement VH[1] existe,  if(VH[1] à nous)
+					if(	getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess 
+							&& VoisinsVerticaux[PlaceAverifier][1] != PlaceAIgnorer){
+						if(getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][0]).getPossession() == possess 
+							&& getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][1]][1]).getPossession() == possess
+							&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAIgnorer
+							&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAIgnorer){
+								return true;
+						}
+					}
+				}
+				//Aucun cas bon donc pas de moulin
+				return false; 
+			
+	}
+	
+	
+	public boolean ContinuerBloquerMoulin(int x, int y, int i){
+		return false;
+	}
 
 	// OvsJ avec difficulté == 1 (facile)
 	public int PlacementRandom(){
@@ -1067,7 +1139,10 @@ public class PlateauMoulin extends Plateau{
 		Vector<Integer> V = PiecesPossedeesPar(0);
 		int[] Priorites = new int[V.size()];
 		
-		
+		if(getJoueurActif().getNiveau() == 3 || getJoueurActif().getNiveau()==0 ){
+			PrioriteMoulinBloque=0;
+			PrioriteFuturMoulinAdverse=0;
+		}
 		for(int i=0;i<V.size();i++){
 			Priorites[i]=0;		
 			
@@ -1710,13 +1785,23 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			
 			//Cas particulier dont la priorité doit être augmentée
 			//Bricolage pour lancer directement un moulin
-			if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],1)){
+			if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurActif().getNumJoueur())){
 				//System.out.println("TestPresenceMoulin dans MeilleurCoup");
 				Max=1000000000;
 				indice=i;
 			}
 			//Possibilité de faire bloquer la création d'un moulin 
-			
+			if(vectPlat.elementAt(i).BloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur())){
+				//System.out.println("TestBloquerMoulin dans MeilleurCoup");
+				Max=100000000;
+				indice=i;
+			}
+			//Possibilité de continuer à bloquer un moulin
+			if(vectPlat.elementAt(i).ContinuerBloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur())){
+				System.out.println("TestContinuerBloquerMoulin dans MeilleurCoup");
+				Max=0;
+				
+			}
 			//Possibilité de multi-moulin (en H, a chaque déplacement du pion central 
 			//on va créer un moulin, une fois à droite, une fois à gauche
 			
@@ -1754,54 +1839,16 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 		return caj;
 	}
 	
+
+
+
+		
 	
-	/*
+
 	
-	public int[] bloquerMoulin(int posses){
-		int[]res = new int[2];
-		int possesAdv = posses==1 ? 2 : 1;
-		for(int i=0;i<24;i++){
-			//On chercher tous les futurs moulins adverses possibles
-			if(this.getPieces().elementAt(i).getPossession() == possesAdv){
-				if(VoisinsHorizontaux[i][1] !=42){
-					if(this.getPieces().elementAt(VoisinsHorizontaux[i][0]).getPossession() == possesAdv){
-						if(this.getPieces().elementAt(VoisinsHorizontaux[i][1]).getPossession() == 0
-							&& this.getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[i][1]][0]).getPossession() == posses){
-							//Il y a un futur moulin et on peut le bloquer
-							res[0]=VoisinsHorizontaux[VoisinsHorizontaux[i][1]][0];
-							res[1]=VoisinsHorizontaux[i][1];
-						}
-					
-					}else{
-						if(this.getPieces().elementAt(VoisinsHorizontaux[i][1]).getPossession() == possesAdv){
-							if(this.getPieces().elementAt(VoisinsHorizontaux[i][0]).getPossession() == 0
-									&& this.getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[i][0]][0]).getPossession() == posses){
-									//Il y a un futur moulin et on peut le bloquer
-									res[0]=VoisinsHorizontaux[VoisinsHorizontaux[i][0]][0];
-									res[1]=VoisinsHorizontaux[i][0];
-							}
-						}
-					}
-				}else{
-					if(this.getPieces().elementAt(VoisinsHorizontaux[i][0]).getPossession() == possesAdv 
-						&& ((this.getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[i][0]][0]).getPossession() == 0)
-						&& (i != VoisinsHorizontaux[VoisinsHorizontaux[i][0]][0])
-						||	(this.getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[i][0]][1]).getPossession() == 0)
-						&& (i != VoisinsHorizontaux[VoisinsHorizontaux[i][0]][1])
-						)){
-						if()
-					}
-
-					
-				}
-			}
-		}
-	}*/
-
-
 	// Méthode appelée par la vue, quand c'est au tour d'un ordi de jouer
 	public int[] ControleurOrdi(){
-			
+		
 		System.out.println("Tourdejeu modele "+TourDeJeu);
 		int Choix;
 		int[] Result = new int[6];
