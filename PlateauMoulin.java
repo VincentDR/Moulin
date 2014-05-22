@@ -1777,7 +1777,7 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	// Renvoi la meilleur configuration de plateau à jouer
-	public PlateauMoulin meilleurCoup(int posses){
+public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 		this.setNivHarbo(0);
 		Vector<PlateauMoulin> vectPlat = this.plateauCoupSuivant(posses);
 
@@ -1793,14 +1793,14 @@ public class PlateauMoulin extends Plateau{
 //System.out.println("Max avant :"+Max);
 //vectPlat.elementAt(i).affichage();
 //System.out.println("Eval du plateau :"+vectPlat.elementAt(i).MinMax(possesAdv));
-			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv,-10000, 100000));
+			maxIntermediaire = Math.max(Max,vectPlat.elementAt(i).MinMax(possesAdv,niveauOrdi,-10000, 100000));
 //System.out.println("maxInter:"+maxIntermediaire +" \n");
 			
 			
 			
 			//Cas particulier dont la priorité doit être augmentée
 			//Bricolage pour lancer directement un moulin
-		if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurActif().getNumJoueur())){
+			if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurActif().getNumJoueur())){
 				//System.out.println("TestPresenceMoulin dans MeilleurCoup");
 				Max=1000000000;
 				indice=i;
