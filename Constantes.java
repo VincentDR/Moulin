@@ -5,11 +5,11 @@ public class Constantes {
 	public static final int FENETRE_LARGEUR = 1000;
 	public static final int FENETRE_HAUTEUR = 750;
 	public static final int ECART = 80;
-	public static final int HAUTEUR_PANEL_TOP_BOT = 80;
+	public static final int HAUTEUR_PANEL_TOP_BOT = 100;
 	public static final int NB_ANIMATIONS_EXPL_W = 14;
 	public static final int NB_ANIMATIONS_EXPL_T = 18;
-	public static final int NB_ANIMATIONS_PLAC_W = 14;
-	public static final int NB_ANIMATIONS_PLAC_T = 18;
+	public static final int NB_ANIMATIONS_PLAC_W = 11;
+	public static final int NB_ANIMATIONS_PLAC_T = 11;
 	public static final int NB_VAISSEAUX = 18;
 	public static final int NB_CASES = 24;
 	public static final int TAILLE_CASE = 70;
