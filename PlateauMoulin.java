@@ -1155,8 +1155,30 @@ public class PlateauMoulin extends Plateau{
 				maxi=V.elementAt(i);
 			}			
 		}
+		int Maxis[] = new int[10];
+		for(int i=0;i<10;i++){
+				Maxis[i]=-1;
+		}
+
+		int j=0;
+
+		for(int i=0;i<V.size();i++){
+
+			if(Priorites[i]==max){			
+				Maxis[j] = V.elementAt(i);
+				j++;
+			}			
+	}
+
+		int lower = 0;
+		int higher = j;
+		int random = (int)(Math.random() * (higher-lower)) + lower;
+
+		//System.out.println("\n TA GRANDPAIRE "+j+" "+random);
+
+			return Maxis[random];
 		//System.out.println("\n"+maxi+" "+max);
-		return maxi;
+			//	return maxi;
 		
 	}
 	
