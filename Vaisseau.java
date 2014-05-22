@@ -21,7 +21,7 @@ public  class Vaisseau extends JButton  implements Runnable
 	// Les images de l'animation moteur du vaisseau
     private BufferedImage [] imagesMoteur;
     
-	private ImageIcon imageOriginale, imageSelectionne;
+	private ImageIcon imageOriginale, imageAnimations, imageSelectionne;
 	// Equipe à laquelle le bouton appartient
 	//private int equipe;
 	 		 // 0 : equipe 1 | 1 : equipe 2
@@ -32,6 +32,7 @@ public  class Vaisseau extends JButton  implements Runnable
 
 	// Equipe du vaisseau : 0 : Rebelle | 1 : Imperiaux
 	private int equipe;
+	// numero du vaisseau
 	private int numero;
 	// Ecart entre le vaisseau et la position finale : 1, 2 ou 3
 	private int ecart;
@@ -67,7 +68,8 @@ public  class Vaisseau extends JButton  implements Runnable
 		 
 		if(equipe==0)
 		{
-			imageOriginale = new ImageIcon("Images/Animations/Explosions/Xplo1.png");
+			imageOriginale = new ImageIcon("Images/Xwing.png");
+			imageAnimations = new ImageIcon("Images/Xwing.png");
 			imageSelectionne = new ImageIcon("Images/Animations/XwingSelect.png");
 			//filesVaisseau = new File("Images/Animations/Explosions/Xplo1.png");
 			nbrAnimExplosion = Constantes.NB_ANIMATIONS_EXPL_W;
@@ -75,7 +77,8 @@ public  class Vaisseau extends JButton  implements Runnable
 		}
 		else
 		{
-			imageOriginale = new ImageIcon("Images/Animations/Explosions/Tplo1.png");
+			imageOriginale = new ImageIcon("Images/TIE.png");
+			imageAnimations = new ImageIcon("Images/Xwing.png");
 			imageSelectionne = new ImageIcon("Images/Animations/TIEselect.png");
 			//filesVaisseau = new File("Images/Animations/Explosions/Tplo1.png");
 			nbrAnimExplosion = Constantes.NB_ANIMATIONS_EXPL_T;
@@ -181,7 +184,7 @@ public  class Vaisseau extends JButton  implements Runnable
     public  void run()
     {
     	
-    	
+    	this.setIcon(imageAnimations);
 		System.out.println("Debut fonction run(), x = "+getX());
 		
 
@@ -194,7 +197,7 @@ public  class Vaisseau extends JButton  implements Runnable
 		          try {
 		        	  	
 		        	  
-			        	imageOriginale.setImage(imagesPlacement[i]);
+		        	  	imageAnimations.setImage(imagesPlacement[i]);
 				     	repaint();
 			            Thread.sleep(60) ; // 70
 		          	}  
@@ -216,7 +219,7 @@ public  class Vaisseau extends JButton  implements Runnable
 		          try {
 		        	  	
 		        	  
-			        	imageOriginale.setImage(imagesPlacement[i]);
+		        	  	imageAnimations.setImage(imagesPlacement[i]);
 				     	repaint();
 			            Thread.sleep(60) ; // 70
 		          	}  
@@ -231,8 +234,7 @@ public  class Vaisseau extends JButton  implements Runnable
 	    }
 		else if(etat == Constantes.ET_DEPL) // etat = deplacement
 		{
- 
-    	  
+	    	this.setIcon(imageOriginale);
 			int i =  0 ; 
 			int deplacementX = 0, deplacementY = 0;
 	       
@@ -337,7 +339,7 @@ public  class Vaisseau extends JButton  implements Runnable
 	        	  
 		     	   //this.setIcon(imagesExplosion[i]);
 	        	  //  imageOriginale = imagesExplosion[i]; 
-				   imageOriginale.setImage(imagesExplosion[i]);
+	        	   imageAnimations.setImage(imagesExplosion[i]);
 		     	   repaint();
 		     	//repaint(getX(), getY(), getWidth()+20, getHeight()+20);
 	            Thread.sleep(70) ;
@@ -349,12 +351,14 @@ public  class Vaisseau extends JButton  implements Runnable
 	       }
 
 	       // On fait disparaitre le vaisseau ? Comment ?
-	       this.setLocation(1200,1200);
+	       //this.setLocation(1200,1200);
 	       // simplement en envoyant son numero ici
-	       this.monPanneau.threadExplosionTermine(/*numero*/);
+	       this.monPanneau.threadExplosionTermine(numero);
       }
 
 			System.out.println("Fin fonction run(), x = "+getX());
+			
+	 this.setIcon(imageOriginale);
    }
     
   
@@ -493,5 +497,14 @@ public  class Vaisseau extends JButton  implements Runnable
 			ecart = (caseY-getY())/Constantes.ECART;
 			rotation = 180/Constantes.NBR_TIKS_ROT;
 		}
+	}
+	
+	public void raz()
+	{
+		this.setIcon(imageOriginale);
+		this.etat = Constantes.ET_NULL;
+		
+		this.setSelectionne(false);
+		this.setMoulin(0);
 	}
 }
