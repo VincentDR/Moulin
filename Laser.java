@@ -21,8 +21,6 @@ public class Laser extends JButton  implements Runnable{
 
 	// Equipe du vaisseau : 0 : Rebelle | 1 : Imperiaux
 	private int equipe;
-	// Ecart entre les vaisseaux : 1...6;
-	private int ecart;
 	private int numero;
 	
 	private boolean sens;
@@ -52,7 +50,7 @@ public class Laser extends JButton  implements Runnable{
 		
 		this.monPanneau = monPanneau;
 
-		if(equipe==0)
+		if(equipe==Constantes.FACTION_REBELLE)
 		{
 			imageOriginale = new ImageIcon("Images/laserRebelleDouble.png");
 		}
@@ -99,16 +97,7 @@ public class Laser extends JButton  implements Runnable{
 
 		System.out.println("On déplace le laser");
 		
-		//rotatingImage.setAngleD(90);
-		
 		int i=0;
-		/*if(sens==true)
-			x=Constantes.NBR_TIKS_DEP_LASER;
-		else
-			x=-Constantes.NBR_TIKS_DEP_LASER;*/
-		
-		
-		//while (i < ecart*(Constantes.ECART/Constantes.NBR_TIKS_DEP_LASER)) 
 		while (i < Constantes.NBR_TIKS_DEP_LASER)
 		{
 		    try{
@@ -138,28 +127,9 @@ public class Laser extends JButton  implements Runnable{
 	{
 		return this.sens;
 	}
-
-	public void setEcart(int ecart)
-	{
-		this.ecart = ecart;
-	}
 	
-	public int getEcart()
-	{
-		return this.ecart;
-	}
-	
-	// A enlever probablement
 	public void calculerEcart(int x2, int y2)
 	{
-		int ecartX=0;
-		int ecartY=0;
-		
-		ecartX=Math.abs(x2-getX());
-		ecartY=Math.abs(y2-getY());
-		
-		ecart = Math.max(ecartX, ecartY)/Constantes.ECART;
-		
 		x = (x2-getX())/Constantes.NBR_TIKS_DEP_LASER;
 		y = (y2-getY())/Constantes.NBR_TIKS_DEP_LASER;
 	}
