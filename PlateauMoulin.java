@@ -1862,7 +1862,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			//Possibilité de continuer à bloquer un moulin
 			if(vectPlat.elementAt(i).ContinuerBloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],getJoueurNActif().getNumJoueur())){
 				System.out.println("TestContinuerBloquerMoulin dans MeilleurCoup");
-				Max=0;
+				maxIntermediaire=0;
 				
 			}
 			//Possibilité de multi-moulin (en H, a chaque déplacement du pion central 
