@@ -18,6 +18,9 @@ public  class Vaisseau extends JButton  implements Runnable
     private BufferedImage [] imagesExplosion;
 	// Les images du placement du vaisseau
     private BufferedImage [] imagesPlacement;
+	// Les images de l'animation moteur du vaisseau
+    private BufferedImage [] imagesMoteur;
+    
 	private ImageIcon imageOriginale, imageSelectionne;
 	// Equipe à laquelle le bouton appartient
 	//private int equipe;
@@ -111,15 +114,15 @@ public  class Vaisseau extends JButton  implements Runnable
 		{
 			String chemin="";
 			if(equipe==0)
-			    chemin = "Images/Animations/Explosions/Xplo"+(i+1)+".png";
+			    chemin = "Images/Animations/Teleportations/Xtp"+i+".png";
 			else
-			    chemin = "Images/Animations/Explosions/Tplo"+(i+1)+".png";
+			    chemin = "Images/Animations/Teleportations/Ttp"+i+".png";
 			
 			filesVaisseauPlac[i] = new File(chemin);
 			    	
 			try {
 
-			    imagesPlacement[i] = ImageIO.read(filesVaisseauExpl[i]);
+			    imagesPlacement[i] = ImageIO.read(filesVaisseauPlac[i]);
 			} 
 			catch (IOException e) {
 				// TODO Auto-generated catch block
