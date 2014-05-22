@@ -43,15 +43,7 @@ public class Piece implements Serializable {
 	/**************/
 	public int getPossession()
 	{
-		if(Proprietaire.getClass().getName() == "moulin.Humain"){
-			return 2;
-		}
-		else{
-			if(Proprietaire.getClass().getName() == "moulin.NonHumain"){
-				return 1;
-			}
-		
-		else{ return 0;}}
+		return Proprietaire.getNumJoueur();
 	}
 
 }
