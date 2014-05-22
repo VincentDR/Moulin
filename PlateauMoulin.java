@@ -930,13 +930,62 @@ public class PlateauMoulin extends Plateau{
 		int random=0;
 		boolean trouve = true;
 		while(trouve){
-			random = (int)(Math.random() * (0-24)) + 24;
+			random = (int)(Math.random() * (24-0)) + 0;
 			if(getPieces().elementAt(random).getPossession()==0){
 				trouve=false;			
 			}
 		}			
 		return random;
 	}
+	
+	
+	public int[] DeplacementRandom(){
+		Vector<Integer> V = PiecesPossedeesPar(1);
+		int[][] Deplacement = new int[V.size()][4];
+		for(int i=0;i<V.size();i++){
+			for(int j=0;j<4;j++){
+				Deplacement[i][j]=-1;
+			}
+		}
+		
+		int j=0;
+		for(int i=0;i< V.size();i++){
+			j=0;
+			
+			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][0];
+				j++;
+			}
+			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][1];
+				j++;
+			}
+			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][0];
+				j++;
+			}
+			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == 0){
+				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][1];
+				j++;
+			}	
+		}
+		
+		int [] res = new int [2];
+		
+		boolean trouve = true;
+		while(trouve){
+			int random = (int)(Math.random() * (V.size()-0)) + 0;
+			int random2 = (int)(Math.random() * (4-0)) + 0;	
+			if(Deplacement[random][random2] !=-1){
+				res[0]=random;
+				res[1]= Deplacement[random][random2];
+				trouve=false;	
+			}
+		}	
+		
+		return res;
+	}
+	
 	
 	/**
 	 * @return Pointe la pi�ce vide repr�sentant la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation d'un moulin adverse
@@ -1180,54 +1229,6 @@ public class PlateauMoulin extends Plateau{
 		//System.out.println("\n"+maxi+" "+max);
 			//	return maxi;
 		
-	}
-	
-	
-	public int[] DeplacementRandom(){
-		Vector<Integer> V = PiecesPossedeesPar(1);
-		int[][] Deplacement = new int[V.size()][4];
-		for(int i=0;i<V.size();i++){
-			for(int j=0;j<4;j++){
-				Deplacement[i][j]=-1;
-			}
-		}
-		
-		int j=0;
-		for(int i=0;i< V.size();i++){
-			j=0;
-			
-			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][0];
-				j++;
-			}
-			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][1];
-				j++;
-			}
-			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][0];
-				j++;
-			}
-			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][1];
-				j++;
-			}			
-		}
-		
-		int [] res = new int [2];
-		
-		boolean trouve = true;
-		while(trouve){
-		int random = (int)(Math.random() * (0-V.size())) + V.size();
-		int random2 = (int)(Math.random() * (0-4)) + 4;			
-			if(Deplacement[random][random2] !=-1){
-				res[0]=random;
-				res[1]= Deplacement[random][random2];
-				trouve=false;			
-			}
-		}		
-		
-		return res;
 	}
 	
 	/**
@@ -1815,21 +1816,29 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 				
 // !!!! A modifier par getJoueurActif !!!!
 				
-				Vector<Integer> piecesOrdi = PiecesPossedeesPar(1);
+				int numJActif = getJoueurActif().getNumJoueur();
+				Vector<Integer> piecesOrdi = PiecesPossedeesPar(numJActif);
 				if(piecesOrdi.size()>=3){ //Si l'ordi actif a au moins trois pièces
 
-					PlateauMoulin bestCoup = meilleurCoup(1); // posses joueurActif
-		
-					int[] coupAJ = coupAJouer(bestCoup);
-					int ChoixABouger = coupAJ[0];
-					//System.out.println("ChoixABouger"+ChoixABouger);
-					int ChoixAAtteindre = coupAJ[1];
-					//System.out.println("ChoixAAtteindre"+ChoixAAtteindre);
-		
-					Result[3]=ChoixABouger;
-					Result[4]=ChoixAAtteindre;
-					DeplacerPiece(ChoixABouger, ChoixAAtteindre,1);
-					System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
+					int[] coupAJ;
+					if(getJoueurActif().getNiveau() == 1){
+						coupAJ = DeplacementRandom();
+						
+					}else{
+					
+						PlateauMoulin bestCoup = meilleurCoup(1); // posses joueurActif
+						coupAJ = coupAJouer(bestCoup);
+					}	
+						int ChoixABouger = coupAJ[0];
+						//System.out.println("ChoixABouger"+ChoixABouger);
+						int ChoixAAtteindre = coupAJ[1];
+						//System.out.println("ChoixAAtteindre"+ChoixAAtteindre);
+			
+						Result[3]=ChoixABouger;
+						Result[4]=ChoixAAtteindre;
+						DeplacerPiece(ChoixABouger, ChoixAAtteindre,1);
+						System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
+						
 				/*		
 					if(PresenceMoulin(ChoixAAtteindre)){
 						
@@ -1897,5 +1906,4 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 	}
 
 }
-
 
