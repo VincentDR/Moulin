@@ -983,7 +983,7 @@ public class PlateauMoulin extends Plateau{
 			int random = (int)(Math.random() * (V.size()-0)) + 0;
 			int random2 = (int)(Math.random() * (4-0)) + 0;	
 			if(Deplacement[random][random2] !=-1){
-				res[0]=random;
+				res[0]=V.elementAt(random);
 				res[1]= Deplacement[random][random2];
 				trouve=false;	
 			}
@@ -1915,7 +1915,7 @@ System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArb
 			
 					Result[3]=ChoixABouger;
 					Result[4]=ChoixAAtteindre;
-					DeplacerPiece(ChoixABouger, ChoixAAtteindre,1);
+					DeplacerPiece(ChoixABouger, ChoixAAtteindre,numJActif);
 					System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
 						
 				/*		
