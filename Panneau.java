@@ -166,7 +166,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private Image timer;
 	
 	// DECLARATION DES FICHIERS IMAGE
-	private File fileFond = new File("Images/Fond/fond.png");
+	private File fileFond = new File("Images/Fond/fond2.png");
 	private File fileFondMenu= new File("Images/Fond/fondMenu.png");
 	private File fileFondVictoireEmpire= new File("Images/Fond/fondVictoireEmpire.png");
 	private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
@@ -790,22 +790,18 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		cmptVaiss[0] = 0;
 		cmptVaiss[1]= 0;
 		
-		boutonMenu = new JButton("Menu");
-		boutonMenu.setSize(200, 100);
+		boutonMenu = new JButton();
+		//boutonMenu.setSize(200, 100);
+		boutonMenu.setPreferredSize(new Dimension(200, 100));
+		//boutonMenu.setFocusPainted( false ); // enleve la bordure de l'image
+		boutonMenu.setBorderPainted(false); // enleve la bordure du bouton
+		boutonMenu.setOpaque(false); // enleve la bordure du bouton
+		boutonMenu.setContentAreaFilled(false);
+		boutonMenu.addMouseListener(this);
+		
 		//boutonMenu.addMouseListener(this);
 		
-		boutonCommencerPartie = new JButton("start");
-
-		//boutonCommencerPartie = new JButton(new ImageIcon("Images/Menu/nouvellePartie1.png"));
-		policeStarWars = policeStarWars.deriveFont((float)36.0);
-		boutonCommencerPartie.setFont(policeStarWars);
-		boutonCommencerPartie.setFocusPainted( false );
-        boutonCommencerPartie.setContentAreaFilled(false);
-        boutonCommencerPartie.setForeground(orangeSW);
-        boutonCommencerPartie.setBorder(bordureOrange);
-		boutonCommencerPartie.setPreferredSize(new Dimension(380,40));
-		boutonCommencerPartie.setSize(new Dimension(Constantes.TAILLE_CASE*2,Constantes.TAILLE_CASE));
-		boutonCommencerPartie.addMouseListener(this);
+		
         
 		plateau = new Vaisseau[24];
 		// On initialise le plateau
@@ -839,47 +835,57 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		panelPlateauJeu = new JPanel();
 		panelPlateauJeu.setLayout(null);
 		
-		panelPlateauJeu.add(boutonCommencerPartie);
-		boutonCommencerPartie.setLocation(Constantes.ECART*2+250 + Constantes.TAILLE_CASE -22
-				, Constantes.ECART*2+120-Constantes.HAUTEUR_PANEL_TOP_BOT+Constantes.TAILLE_CASE+10);
-		
 		
 		
 		panelPionsTop = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		//panelPionsTop.setPreferredSize(new Dimension(755, 80));
 		panelPionsBot = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panelPionsBot.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		//panelPionsTop.setSize(new Dimension(755, 80));
 		
 		//panelPionsTop = new JPanel(new GridLayout(1, 10, 0,0));
-		/*panelTop = new JPanel(new GridBagLayout());
-		gbc = null;
-		gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.CENTER;
-		        
-		gbc.gridx = 0;
+		//panelTop = new JPanel(new GridBagLayout());
+		
+		panelTop = new JPanel(new BorderLayout());
+		panelTop.add(boutonMenu, BorderLayout.WEST);
+		panelTop.add(panelPionsTop, BorderLayout.EAST);
+		
+
+		
+		
+		boutonCommencerPartie = new JButton("start");
+
+		//boutonCommencerPartie = new JButton(new ImageIcon("Images/Menu/nouvellePartie1.png"));
+		policeStarWars = policeStarWars.deriveFont((float)36.0);
+		boutonCommencerPartie.setFont(policeStarWars);
+		boutonCommencerPartie.setFocusPainted( false );
+        boutonCommencerPartie.setContentAreaFilled(false);
+        boutonCommencerPartie.setForeground(orangeSW);
+        boutonCommencerPartie.setBorder(bordureOrange);
+		boutonCommencerPartie.setPreferredSize(new Dimension(380,40));
+		boutonCommencerPartie.setSize(new Dimension(Constantes.TAILLE_CASE*2,Constantes.TAILLE_CASE));
+		boutonCommencerPartie.addMouseListener(this);
+		boutonCommencerPartie.setLocation(Constantes.ECART*2+250 + Constantes.TAILLE_CASE -22
+				, Constantes.ECART*2+120-Constantes.HAUTEUR_PANEL_TOP_BOT+Constantes.TAILLE_CASE+10);
+		panelPlateauJeu.add(boutonCommencerPartie);
+		
+		/*gbc.gridx = 1;
 		gbc.gridy = 0;
-		gbc.gridwidth = 3;
-		gbc.insets = new Insets(5, 0, 500, 10);
-		panelTop.add(boutonMenu, gbc);
-		        
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		gbc.insets = new Insets(5, 0, 500, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.EAST;
+		gbc.insets = new Insets(0, 0, 0, 0);
 		panelTop.add(panelPionsTop, gbc);*/
-				
-		/*
-		laserTest = new Laser(this, tourDeJeu, 50, 50);
-		panelPionsBot.add(laserTest);*/
 		
 		
 		// Redimensionnement des panneaux
 		panelPlateauJeu.setOpaque(false);
 		panelPionsTop.setOpaque(false);
-		//panelTop.setOpaque(false);
+		panelTop.setOpaque(false);
 		panelPionsBot.setOpaque(false);
 		
 		// Ajout des panneaux au panneau jeu
 		//panelJeu.add(panelPionsTop, "North");
-		panelJeu.add(panelPionsTop, "North");
+		panelJeu.add(panelTop, "North");
 		panelJeu.add(panelPlateauJeu, "Center");
 		panelJeu.add(panelPionsBot, "South");
 		//panelJeu.add(boutonMenu);
@@ -1476,11 +1482,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	}
 	else if(panelJeu.isVisible())
 	{
-		if(event.getSource() == this && SwingUtilities.isMiddleMouseButton(event) )
+		/*if(event.getSource() == this && SwingUtilities.isMiddleMouseButton(event) )
 		{
-		                /** Bouton du milieu */
+		                // Bouton du milieu 
 		        cl.show(this, "Menu");
-		}
+		}*/
+		if(event.getSource() == boutonMenu && SwingUtilities.isLeftMouseButton(event) )
+		{
+		        cl.show(this, "Menu");
+		} 	
 		else if(event.getSource() == this && SwingUtilities.isMiddleMouseButton(event) )
 		{
 		        cl.show(this, "Menu");
@@ -1523,6 +1533,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				// Test si on est dans la premiere phase ou seconde
 				if(phase == 1) // Premiere phase de jeu
 				{
+					//System.out.println("cmptVaiss["+tourDeJeu+"] = " + cmptVaiss[tourDeJeu]);
+					System.out.println("tourDeJeu =" + tourDeJeu);
 					// Test a enlever
 					if(cmptVaiss[tourDeJeu] < Constantes.NB_VAISSEAUX/2)
 					{
@@ -1948,7 +1960,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		// Initialisations des positions
         int ecart=Constantes.ECART; //70 correct
         int positionPlateauX=250;//event.getX(); // 280 pour ecart = 70
-        int positionPlateauY=120-Constantes.HAUTEUR_PANEL_TOP_BOT;//event.getY(); // 140 pour ecart = 70
+        int positionPlateauY=120-panelTop.getHeight();//Constantes.HAUTEUR_PANEL_TOP_BOT;//event.getY(); // 140 pour ecart = 70
         int x=0, y=0;
         //for(int c=0;c<Constantes.NB_CASES;c++)
         //	panelPlateauJeu.add(casesVide[c]);
@@ -2098,7 +2110,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				raz();
 				panelPlateauJeu.remove(boutonCommencerPartie);
 				// Chargement
-				tourDeJeu = tab[1];
+				tourDeJeu = tab[1]%2;
 				if(tab[2]==1) phase=1;
 				else phase = 2;
 				// difficulte = tab[3];
