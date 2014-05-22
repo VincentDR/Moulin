@@ -956,18 +956,23 @@ public class PlateauMoulin extends Plateau{
 				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][0];
 				j++;
 			}
-			if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][1];
-				j++;
+			if(VoisinsHorizontaux[V.elementAt(i)][1] !=42){
+				if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == 0){
+					Deplacement[i][j]=VoisinsHorizontaux[V.elementAt(i)][1];
+					j++;
+				}
 			}
+			
 			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == 0){
 				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][0];
 				j++;
 			}
-			if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == 0){
-				Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][1];
-				j++;
-			}	
+			if(VoisinsVerticaux[V.elementAt(i)][1] !=42){
+				if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == 0){
+					Deplacement[i][j]=VoisinsVerticaux[V.elementAt(i)][1];
+					j++;
+				}	
+			}
 		}
 		
 		int [] res = new int [2];
