@@ -38,7 +38,10 @@ public class Joueur implements Serializable{
 		numJoueur = num;
 	}
 
-	
+	public Joueur(Joueur j){
+		numJoueur = j.numJoueur;
+		
+	}
 	/**************/
 	/***METHODES***/
 	/**************/
