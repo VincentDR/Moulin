@@ -1313,7 +1313,7 @@ public class PlateauMoulin extends Plateau{
 	/**
 	 * @return Pointe la pi�ce adverse repr�sentant le  plus de danger, la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation dans de nos moulins
 	 */
-	public int CiblePrioritaire(int difficulte){
+public int CiblePrioritaire(int difficulte){
 		int possessionAdv = getJoueurNActif().getNumJoueur();	//Si tour de jeu==0 (joueur 1) possessionAdversaire=2, sinon 1
 		// On ne doit pas détruire de moulin adverse sauf si il ne reste que ça
 		int PrioriteDestructionMoulin=-100; //Detruire un moulin adverse permet à l'adversaire de le recréer dans la foulée
@@ -1321,84 +1321,89 @@ public class PlateauMoulin extends Plateau{
 		Vector<Integer> V = PiecesPossedeesPar(possessionAdv);
 		int[] Priorites = new int[V.size()];		
 		
-		if(difficulte == 3){
-			int PrioriteDeuxVoisins = 10;
-			int PrioriteUnVoisinEtabli = 5;
-					
-			for(int i=0;i<V.size();i++){
-				Priorites[i]=0;
-				
-				if(PresenceMoulin(V.elementAt(i))){
-					Priorites[i]=PrioriteDestructionMoulin;
-				}			
-				//Si la pièce possède deux voisins, on incrémente sa priorité
-				if(VoisinsHorizontaux[V.elementAt(i)][1]!=42){
-					Priorites[i] += PrioriteDeuxVoisins;
-					//Si la pièce possède un de ses deux voisins déjà établi, on incrémente sa priorité
-					if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == possessionAdv 
-					|| getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == possessionAdv)
-					{
-						Priorites[i] += PrioriteUnVoisinEtabli;
-					}
-				}
-				else{
-					if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == possessionAdv)
-					{
-						Priorites[i] += PrioriteUnVoisinEtabli;
-					}
-				}			
-				if(VoisinsVerticaux[V.elementAt(i)][1]!=42){
-					Priorites[i]++;
-					if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == possessionAdv 
-					|| getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == possessionAdv)
-					{
-						Priorites[i] += PrioriteUnVoisinEtabli;
-					}
-				}
-				else{
-					if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == possessionAdv)
-					{
-						Priorites[i] += PrioriteUnVoisinEtabli;
-					}
-				}			
-			}
+		
+		if(difficulte == 1){
+			return CiblePrioritaireRandom();
 		}else{
-			for(int i=0;i<V.size();i++){
-				Priorites[i]=1;
-				
-				if(PresenceMoulin(V.elementAt(i))){
-					Priorites[i]=PrioriteDestructionMoulin;
-				}			
-				//Si la pièce possède deux voisins, on incrémente sa priorité
-				if(VoisinsHorizontaux[V.elementAt(i)][1]!=42){
-					Priorites[i]++;
-					//Si la pièce possède un de ses deux voisins déjà établi, on incrémente sa priorité
-					if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == possessionAdv 
-					|| getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == possessionAdv)
-					{
-						Priorites[i]++;
+			if(difficulte == 3 || difficulte == 0){
+				int PrioriteDeuxVoisins = 10;
+				int PrioriteUnVoisinEtabli = 5;
+						
+				for(int i=0;i<V.size();i++){
+					Priorites[i]=0;
+					
+					if(PresenceMoulin(V.elementAt(i))){
+						Priorites[i]=PrioriteDestructionMoulin;
+					}			
+					//Si la pièce possède deux voisins, on incrémente sa priorité
+					if(VoisinsHorizontaux[V.elementAt(i)][1]!=42){
+						Priorites[i] += PrioriteDeuxVoisins;
+						//Si la pièce possède un de ses deux voisins déjà établi, on incrémente sa priorité
+						if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == possessionAdv 
+						|| getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == possessionAdv)
+						{
+							Priorites[i] += PrioriteUnVoisinEtabli;
+						}
 					}
+					else{
+						if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == possessionAdv)
+						{
+							Priorites[i] += PrioriteUnVoisinEtabli;
+						}
+					}			
+					if(VoisinsVerticaux[V.elementAt(i)][1]!=42){
+						Priorites[i]++;
+						if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == possessionAdv 
+						|| getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == possessionAdv)
+						{
+							Priorites[i] += PrioriteUnVoisinEtabli;
+						}
+					}
+					else{
+						if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == possessionAdv)
+						{
+							Priorites[i] += PrioriteUnVoisinEtabli;
+						}
+					}			
 				}
-				else{
-					if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == possessionAdv)
-					{
+			}else{
+				for(int i=0;i<V.size();i++){
+					Priorites[i]=1;
+					
+					if(PresenceMoulin(V.elementAt(i))){
+						Priorites[i]=PrioriteDestructionMoulin;
+					}			
+					//Si la pièce possède deux voisins, on incrémente sa priorité
+					if(VoisinsHorizontaux[V.elementAt(i)][1]!=42){
 						Priorites[i]++;
+						//Si la pièce possède un de ses deux voisins déjà établi, on incrémente sa priorité
+						if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == possessionAdv 
+						|| getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][1]).getPossession() == possessionAdv)
+						{
+							Priorites[i]++;
+						}
 					}
-				}			
-				if(VoisinsVerticaux[V.elementAt(i)][1]!=42){
-					Priorites[i]++;
-					if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == possessionAdv 
-					|| getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == possessionAdv)
-					{
+					else{
+						if(getPieces().elementAt(VoisinsHorizontaux[V.elementAt(i)][0]).getPossession() == possessionAdv)
+						{
+							Priorites[i]++;
+						}
+					}			
+					if(VoisinsVerticaux[V.elementAt(i)][1]!=42){
 						Priorites[i]++;
+						if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == possessionAdv 
+						|| getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][1]).getPossession() == possessionAdv)
+						{
+							Priorites[i]++;
+						}
 					}
+					else{
+						if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == possessionAdv)
+						{
+							Priorites[i]++;
+						}
+					}			
 				}
-				else{
-					if(getPieces().elementAt(VoisinsVerticaux[V.elementAt(i)][0]).getPossession() == possessionAdv)
-					{
-						Priorites[i]++;
-					}
-				}			
 			}
 		}
 		
