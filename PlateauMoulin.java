@@ -1679,12 +1679,14 @@ public class PlateauMoulin extends Plateau{
 		int[] Result = new int[8];
 		InitResult(Result); // init à-1
 			
-		if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){	
+		if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){
+			int numJActif = getJoueurActif().getNumJoueur();
+			int niveauJActif = getJoueurActif().getNiveau();
 			//Possession a l'ordi
-			Result[1]=1;
+			Result[1]=numJActif;
 			
 			if(TourDeJeu<18){
-				if(getJoueurActif().getNiveau() == 1){//Niveau facile
+				if(niveauJActif == 1){//Niveau facile
 					Choix = PlacementRandom();
 				}
 				else {
@@ -1699,8 +1701,6 @@ public class PlateauMoulin extends Plateau{
 			}
 			else{ //Deplacement
 				
-				int numJActif = getJoueurActif().getNumJoueur();
-				int niveauJActif = getJoueurActif().getNiveau();
 				Vector<Integer> piecesOrdi = PiecesPossedeesPar(numJActif);
 				if(piecesOrdi.size()>=3){ //Si l'ordi actif a au moins trois pièces
 
