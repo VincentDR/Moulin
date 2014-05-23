@@ -15,25 +15,15 @@ import java.util.Observer;
 
 public class Plateau extends Observable implements Serializable{
 		
-	/**
-	 * 
-	 */
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 4215081519258187885L;
-	/***************/
-	/***ATTRIBUTS***/
-	/***************/
+	
 	private Vector<Piece> Pieces;
 	private Joueur JoueurActif;
 	private Joueur JoueurNActif;
 
 	
-	/*****************/
-	/***ACCESSEURS****/
-	/*****************/
+	
 	public Vector<Piece> getPieces() {
 		return Pieces;
 	}
@@ -59,9 +49,7 @@ public class Plateau extends Observable implements Serializable{
 	}
 	
 	
-	/*******************/
-	/***CONSTRUCTEURS***/
-	/*******************/
+	
 	public Plateau(Joueur ja,Joueur jna) {		
 		JoueurActif = ja;
 		JoueurNActif = jna;
@@ -72,6 +60,26 @@ public class Plateau extends Observable implements Serializable{
 	
 	}
 	
+	public Plateau(){
+		Pieces = new Vector <Piece> (24);
+		for(int i=0;i<24;i++){
+			Pieces.addElement(new Piece());			
+		}
+	}
+	
+	public Plateau(Plateau p){
+		this.JoueurActif = p.getJoueurActif();
+		this.JoueurNActif = p.getJoueurNActif();
+		Pieces = new Vector <Piece> (24);
+		for(int i=0;i<24;i++){
+			Pieces.addElement(p.getPieces().elementAt(i));			
+		}
+	}
+
+	
+	
+	
+	//On récupére la sauvegarde en fonction de son nom, s
 	public static Plateau getSave (String s) throws FileNotFoundException, IOException, ClassNotFoundException
 	{
 		File f = new File(s);
@@ -84,6 +92,8 @@ public class Plateau extends Observable implements Serializable{
 		return null;
 	}
 	
+	
+	//On crée une sauvegarde du jeu en cours en lui attribuant un nom, s 
 	public void sauvegarder(String s)
     {
        File fichier =  new File(s);
@@ -110,30 +120,17 @@ public class Plateau extends Observable implements Serializable{
 		
     }
 	
-	public Plateau(){
-		Pieces = new Vector <Piece> (24);
-		for(int i=0;i<24;i++){
-			Pieces.addElement(new Piece());			
-		}
-	}
-	public Plateau(Plateau p){
-		this.JoueurActif = p.getJoueurActif();
-		this.JoueurNActif = p.getJoueurNActif();
-		Pieces = new Vector <Piece> (24);
-		for(int i=0;i<24;i++){
-			Pieces.addElement(p.getPieces().elementAt(i));			
-		}
-	}
-
 	
-	/**************/
-	/***METHODES***/
-	/**************/
+	
+	
+	//Changement du joueurActif
 	public void ChangerJoueurActif(){
 		Joueur Joueur = JoueurActif;
 		JoueurActif = JoueurNActif;
 		JoueurNActif = Joueur;
 	}
+	
+	//Toutes ces fonctions sont redéfinies dans PlateauMoulin
 	public boolean CoupValide(){
 		return false;		
 	}
@@ -155,11 +152,11 @@ public class Plateau extends Observable implements Serializable{
 		return JoueurActif == j;
 	}
 	
+	
 	public int[] charger(){
 		int[] Result = new int[29];
 		
 		Result[0] = 7;
-
 		
 		return Result;		
 	}
