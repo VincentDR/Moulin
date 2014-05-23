@@ -100,7 +100,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private String[] listContent = {"Menu", "NouvellePartie", "Options", "Regles", "Jeu", "APropos", "VictoireEmpire", "VictoireRebelle"};
 	private int indice = 0;
 	private JPanel panelMenu, panelNouvPartie, panelOptions, panelRegles, panelAPropos, panelVictoireEmpire, panelVictoireRebelle;
-	private JPanel panelJeu,panelPlateauJeu, panelTop, panelPionsTop, panelPionsBot;
+	private JPanel panelJeu,panelPlateauJeu, panelTop, panelWest, panelEast, panelPionsTop, panelPionsBot;
 	private JPanel panelNouvPartieP1, panelNouvPartieP2, panelNouvPartieP3;
 	public JButton boutonMenu, boutonCommencerPartie;
 	//
@@ -149,7 +149,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
             3, 3, 3, 3, orangeSW);
     
 	// la police star wars
-	private Font policeStarWars;
+	private Font policeStarWars, policeSpaceAge;
 	private GridBagConstraints gbc;
 	////
 	// Fin des composants menu
@@ -202,7 +202,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	private int cmpt_anim;
 	
-	private JLabel labelAnimation, labelAnimation2;
 	private JLabel labelGifAPropos;
 	
 	private JButton [] casesVide;
@@ -210,6 +209,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private Laser [] laser;
 	private Laser laserTest;
 	private Vaisseau vaisseauTest;
+	private JLabel pseudoJ1, pseudoJ2;
 	
 	private Controleur controleur;
 	public Panneau(Controleur controleur)
@@ -224,12 +224,14 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		//policeStarWars = Font.createFont(Font.TRUETYPE_FONT, "Starjhol.ttf");
 		try {
 			policeStarWars = Font.createFont(Font.TRUETYPE_FONT, new File("Starjhol.ttf"));
+			policeSpaceAge = Font.createFont(Font.TRUETYPE_FONT, new File("Police/spaceAge.ttf"));
 		} catch (FontFormatException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		//policeStarWars = policeStarWars.deriveFont((float)30);
 		policeStarWars = policeStarWars.deriveFont((float)30.0);
+		policeSpaceAge = policeSpaceAge.deriveFont((float)25.0);
 		
 		// couleur jaune : 255 , 241, 31
 		// couleur orange : 255 , 177, 9
@@ -412,8 +414,17 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		btnJvsJ = new JButton(new ImageIcon("Images/Menu/nouvellePartie1.png"));
 		btnJvsO = new JButton(new ImageIcon("Images/Menu/nouvellePartie1.png"));
 		btnOvsO = new JButton(new ImageIcon("Images/Menu/nouvellePartie1.png"));
-		btnRetourP0 = new JButton();
-		btnRetourP0.setPreferredSize(new Dimension(200,50));
+		
+	       
+		btnRetourP0 = new JButton(" retour ");
+		btnRetourP0.setFont(policeStarWars);
+		btnRetourP0.setFocusPainted( false );
+	    // btnRetourP2.setBorderPainted(false);
+		btnRetourP0.setContentAreaFilled(false);
+		btnRetourP0.setForeground(jauneSW);
+		btnRetourP0.setBorder(bordureJaune);
+		
+		//btnRetourP0.setPreferredSize(new Dimension(200,50));
 
 		btnJvsJ.setFont(policeStarWars);
 		btnJvsJ.setText("joueur vs joueur");
@@ -650,6 +661,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
         btnOrdiFacile = new JButton("facile");
         btnOrdiFacile.setFont(policeStarWars);
         btnOrdiFacile.setPreferredSize(new Dimension(380,40));
+       // btnOrdiFacile.setPreferredSize(new Dimension(380,40));
         btnOrdiFacile.setFocusPainted( false );
        // btnOrdiFacile.setBorderPainted(false);
         btnOrdiFacile.setContentAreaFilled(false);
@@ -800,6 +812,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
         // Fin A Propos
 		
         // Initialisation des variables concernant le déroulement du jeu
+        
 		cmptVaiss[0] = 0;
 		cmptVaiss[1]= 0;
 		
@@ -863,7 +876,12 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		panelTop.add(boutonMenu, BorderLayout.WEST);
 		panelTop.add(panelPionsTop, BorderLayout.EAST);
 		
-
+		panelWest = new JPanel(new BorderLayout());
+		panelWest.setPreferredSize(new Dimension(Constantes.LARGEUR_PANEL_WEST, Constantes.FENETRE_HAUTEUR));
+		panelEast = new JPanel(new BorderLayout());
+		panelEast.setPreferredSize(new Dimension(Constantes.LARGEUR_PANEL_EAST, Constantes.FENETRE_HAUTEUR));
+		
+		
 		
 		
 		boutonCommencerPartie = new JButton("start");
@@ -878,7 +896,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		boutonCommencerPartie.setPreferredSize(new Dimension(380,40));
 		boutonCommencerPartie.setSize(new Dimension(Constantes.TAILLE_CASE*2,Constantes.TAILLE_CASE));
 		boutonCommencerPartie.addMouseListener(this);
-		boutonCommencerPartie.setLocation(Constantes.ECART*2+250 + Constantes.TAILLE_CASE -22
+		boutonCommencerPartie.setLocation(Constantes.ECART*2+250 + Constantes.TAILLE_CASE -22-Constantes.LARGEUR_PANEL_WEST
 				, Constantes.ECART*2+120-Constantes.HAUTEUR_PANEL_TOP_BOT+Constantes.TAILLE_CASE+10);
 		panelPlateauJeu.add(boutonCommencerPartie);
 		
@@ -894,13 +912,25 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		panelPlateauJeu.setOpaque(false);
 		panelPionsTop.setOpaque(false);
 		panelTop.setOpaque(false);
+		panelWest.setOpaque(false);
+		panelEast.setOpaque(false);
 		panelPionsBot.setOpaque(false);
+
+		// Initialisation des pseudos
+		pseudoJ1 = new JLabel("",JLabel.CENTER);
+		pseudoJ1.setFont(policeSpaceAge);
+		pseudoJ1.setForeground(jauneSW);
+		pseudoJ2 = new JLabel("",JLabel.CENTER);
+		pseudoJ2.setFont(policeSpaceAge);
+		pseudoJ2.setForeground(jauneSW);
 		
 		// Ajout des panneaux au panneau jeu
 		//panelJeu.add(panelPionsTop, "North");
-		panelJeu.add(panelTop, "North");
-		panelJeu.add(panelPlateauJeu, "Center");
-		panelJeu.add(panelPionsBot, "South");
+		panelJeu.add(panelTop, BorderLayout.NORTH);
+		panelJeu.add(panelPlateauJeu, BorderLayout.CENTER);
+		panelJeu.add(panelPionsBot, BorderLayout.SOUTH);
+		panelJeu.add(panelWest, BorderLayout.WEST);
+		panelJeu.add(panelEast, BorderLayout.EAST);
 		//panelJeu.add(boutonMenu);
 		
 		
@@ -1397,6 +1427,27 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				controleur.newPartieJJ(pseudo1.getText(), pseudo2.getText());
 				modeDeJeu = Constantes.MODE_JVSJ;
 				raz();
+
+				pseudoJ1.setText(pseudo1.getText());
+				pseudoJ2.setText(pseudo2.getText());
+				System.out.println("pseudo 1 = " + pseudoJ1.getText());
+				System.out.println("pseudo 2 = " + pseudoJ2.getText());
+				if(boutonEchangerFactions.isSelected())
+				{
+					faction[0] = Constantes.FACTION_EMPIRE; // faction du joueur 1
+					faction[1] = Constantes.FACTION_REBELLE; // faction du joueur 2
+					// modifier l'emplacement du pseudo
+					panelWest.add(pseudoJ1, BorderLayout.NORTH);
+					panelEast.add(pseudoJ2, BorderLayout.SOUTH);
+				}
+				else
+				{
+					faction[0] = Constantes.FACTION_REBELLE; // faction du joueur 1
+					faction[1] = Constantes.FACTION_EMPIRE; // faction du joueur 2
+					// modifier l'emplacement du pseudo
+					panelEast.add(pseudoJ1, BorderLayout.NORTH);
+					panelWest.add(pseudoJ2, BorderLayout.SOUTH);
+				}
 				cl.show(this, "Jeu");
 			    panelJeu.requestFocus();
 			}
@@ -1445,15 +1496,25 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				controleur.newPartieJO(pseudo.getText(), difficulte);
 				modeDeJeu = Constantes.MODE_JVSO;
 				raz();
+				pseudoJ1.setText(pseudo.getText());
+				pseudoJ2.setText("R2D2");
 				if(boutonFactionEmpire.isSelected())
 				{
 					faction[tourOrdi] = Constantes.FACTION_REBELLE; // faction de l'ordi
 					faction[1] = Constantes.FACTION_EMPIRE; // faction du joueur
+					
+					// modifier l'emplacement du pseudo
+					panelWest.add(pseudoJ1, BorderLayout.SOUTH);
+					panelEast.add(pseudoJ2, BorderLayout.NORTH);
 				}
 				else
 				{
 					faction[tourOrdi] = Constantes.FACTION_EMPIRE; // faction de l'ordi
 					faction[1] = Constantes.FACTION_REBELLE; // faction du joueur
+					
+					// modifier l'emplacement du pseudo
+					panelWest.add(pseudoJ2, BorderLayout.SOUTH);
+					panelEast.add(pseudoJ1, BorderLayout.NORTH);
 				}
 				cl.show(this, "Jeu");
 			    panelJeu.requestFocus();
@@ -2027,7 +2088,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	{
 		// Initialisations des positions
         int ecart=Constantes.ECART; //70 correct
-        int positionPlateauX=250;//event.getX(); // 280 pour ecart = 70
+        int positionPlateauX=250-panelWest.getWidth();//event.getX(); // 280 pour ecart = 70
         int positionPlateauY=120-panelTop.getHeight();//Constantes.HAUTEUR_PANEL_TOP_BOT;//event.getY(); // 140 pour ecart = 70
         int x=0, y=0;
         //for(int c=0;c<Constantes.NB_CASES;c++)
@@ -2176,6 +2237,11 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			case 7:
 				System.out.println("case 7");
 				raz();
+		        for(int c=0;c<Constantes.NB_CASES;c++)
+		        {
+		        	panelPlateauJeu.add(casesVide[c]);
+		        }
+				initialisation();
 				panelPlateauJeu.remove(boutonCommencerPartie);
 				// Chargement
 				tourDeJeu = tab[1]%2;
@@ -2655,18 +2721,17 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		phase2=Constantes.PHASE_DE_JEU;
 		tourDeJeu = 0;
 		
-		// On ajoute, place les cases vides, et reinitialise le plateau
-
+		// On ajoute les cases vides et reinitialise le plateau
         for(int c=0;c<Constantes.NB_CASES;c++)
         {
         	plateau[c]=null;
-        	panelPlateauJeu.add(casesVide[c]);
-        }
-		initialisation();
+        } 
+        
+		//initialisation();
 		
 		// On place le bouon start
 		panelPlateauJeu.add(boutonCommencerPartie);
-		boutonCommencerPartie.setLocation(Constantes.ECART*2+250 + Constantes.TAILLE_CASE -22
+		boutonCommencerPartie.setLocation(Constantes.ECART*2+250 + Constantes.TAILLE_CASE -22-Constantes.LARGEUR_PANEL_WEST
 				, Constantes.ECART*2+120-Constantes.HAUTEUR_PANEL_TOP_BOT+Constantes.TAILLE_CASE+10);
 		
 		for(int j=0;j<2;j++)
