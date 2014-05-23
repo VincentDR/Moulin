@@ -10,14 +10,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-public class Laser extends JButton  implements Runnable{
+public class Laser extends JLabel  implements Runnable{
 
 	private Panneau monPanneau;
-	private ImageIcon imageOriginale;
+	private ImageIcon imageOriginale, imageOriginalePoney;
 	private int etat = Constantes.ET_NULL;
-			 // Aucun | Deplacement | Explosion
+			 // Aucun |Â Deplacement | Explosion
 	//private Direction direction = Direction.HAUT;
-	 // Aucun | Deplacement | Explosion
+	 // Aucun |Â Deplacement | Explosion
 
 	// Equipe du vaisseau : 0 : Rebelle | 1 : Imperiaux
 	private int equipe;
@@ -25,20 +25,20 @@ public class Laser extends JButton  implements Runnable{
 	
 	private boolean sens;
 	private int x, y;
-	 		// 0 : Haut | 1 : Bas | Gauche | Droite
-	// Déplacement du vaisseau verticalement (en pixel)
+	 		// 0 : Haut |Â 1 : Bas | Gauche | Droite
+	// DÃ©placement du vaisseau verticalement (en pixel)
 	//private int deplacementY;
 	private int nbr_anim;
-    // Angle du vaisseau par rapport à l'axe vertical
+    // Angle du vaisseau par rapport Ã  l'axe vertical
 	private double angle;
 	// INITIALISATION DES FICHIERS IMAGE
-    private File fileLaser;
+    private File fileLaser, fileLaserPoney;
 	//private File fileVaisseau = new File("Images/Animations/Explosions/Xplo1.png");
-
+    private int modePoney;
 	// Les images du laser
-    private BufferedImage imageLaser;
+    private BufferedImage imageLaser, imageLaserPoney;
     // L'image rotative
-    private RotatingImage rotatingImage;
+    private RotatingImage rotatingImage, rotatingImagePoney;
     
 
     public Laser(){}
@@ -46,22 +46,26 @@ public class Laser extends JButton  implements Runnable{
     public Laser(Panneau monPanneau, int equipe, int x, int y, int numero)
     {
     	this.numero = numero;
+    	this.modePoney = monPanneau.modePoney();
+    	
     	this.setPreferredSize(new Dimension(200,200));
 		
 		this.monPanneau = monPanneau;
 
 		if(equipe==Constantes.FACTION_REBELLE)
 		{
-			imageOriginale = new ImageIcon("Images/laserRebelleDouble.png");
+				imageOriginalePoney = new ImageIcon("Images/Mlp/gummyBulles.png");
+				imageOriginale = new ImageIcon("Images/laserRebelleDouble.png");
 		}
 		else // equipe==1
 		{
-			imageOriginale = new ImageIcon("Images/laserEmpireDouble.png");
+				imageOriginalePoney = new ImageIcon("Images/Mlp/angelCarotte.png");
+				imageOriginale = new ImageIcon("Images/laserEmpireDouble.png");
 		}
-		this.setFocusPainted( false ); // enleve la bordure de l'image
-		this.setBorderPainted(false); // enleve la bordure du bouton
+		//this.setFocusPainted( false ); // enleve la bordure de l'image
+		//this.setBorderPainted(false); // enleve la bordure du bouton
 		//vaisseau[i].setOpaque(false); // enleve la bordure du bouton
-		this.setContentAreaFilled(false);
+		//this.setContentAreaFilled(false);
 		
 		// Initialisation des fichiers et des images
 		
@@ -73,29 +77,42 @@ public class Laser extends JButton  implements Runnable{
 			    //explosionXwing[i-1] = new ImageIcon(rotatingImage);
 			fileLaser = new File(chemin);
 
+			chemin="";
+			if(equipe==0)
+			    chemin = "Images/Mlp/gummyBulles.png";
+			else
+			    chemin = "Images/Mlp/angelCarrotte.png";
+			    //explosionXwing[i-1] = new ImageIcon(rotatingImage);
+			fileLaserPoney = new File(chemin);
+			
 
 			// Initialisation de l'image rotative
 			try {
 
 				imageLaser= ImageIO.read(fileLaser);
+				imageLaserPoney= ImageIO.read(fileLaserPoney);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			rotatingImage = new RotatingImage(imageLaser);
+			rotatingImagePoney = new RotatingImage(imageLaserPoney);
 					//this.setIcon(rotatingImage);
 					//setImage(rotatingImage);
+			
 			rotatingImage.setAngleD(angle);
-			this.setIcon(imageOriginale);
+			rotatingImagePoney.setAngleD(angle);
+			if(modePoney>0)
+				this.setIcon(imageOriginalePoney);
+			else
+				this.setIcon(imageOriginale);
 			
     }
     
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-
-		System.out.println("On déplace le laser");
 		
 		int i=0;
 		while (i < Constantes.NBR_TIKS_DEP_LASER)
@@ -149,18 +166,41 @@ public class Laser extends JButton  implements Runnable{
 			angle = Math.toDegrees(Math.atan((x1-x2)/(y2-y1)))+180;
 		
 		//actualiserAngle();
-		rotatingImage = new RotatingImage(imageLaser);
-		//this.setIcon(rotatingImage);
-		//setImage(rotatingImage);
-		rotatingImage.setAngleD(angle);
+		if(modePoney>0)
+		{
+			rotatingImagePoney = new RotatingImage(imageLaserPoney);
+			rotatingImagePoney.setAngleD(angle);
+			imageOriginalePoney.setImage(rotatingImagePoney);
+		}
+		else
+		{
+			rotatingImage = new RotatingImage(imageLaser);
+			rotatingImage.setAngleD(angle);
+			imageOriginale.setImage(rotatingImage);
+		}
 		
-		//////((ImageIcon)this.getIcon()).setImage(rotatingImage);
-		imageOriginale.setImage(rotatingImage);
 		//this.setIcon(xWing);
 		repaint();
 		
 		//this.setIcon(xWing);
 		
+	}
+	
+	public void setModePoney(int m)
+	{
+		modePoney = m;
+		if(m>0)
+		{
+			this.setIcon(imageOriginalePoney);
+			imageOriginalePoney.setImage(rotatingImagePoney);
+		}
+		else
+		{
+			imageOriginale.setImage(rotatingImage);
+			this.setIcon(imageOriginale);
+		}
+		
+		repaint();
 	}
 
 }
