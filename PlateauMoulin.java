@@ -63,6 +63,10 @@ import java.util.Vector;
 public class PlateauMoulin extends Plateau{
 	
 	
+	int[] dernierCoup = new int[2];
+	int[] dernierCoup2 = new int[2];
+	boolean changerDernierCoup = true;
+	
 	/***************/
 	/***ATTRIBUTS***/
 	/***************/
@@ -821,6 +825,32 @@ public class PlateauMoulin extends Plateau{
 				}
 		return false; 			
 	}
+	
+	//Vrai si on peut sortir d'un moulin pour le récréer juste après
+	//Possess est la possession adverse, PlaceDepart la place de départ (dans le moulin), PlaceAverifier la place hors moulin
+	public boolean ReMoulin(int PlaceDepart,int PlaceAverifier, int posseA, int posse){
+		if(PresenceMoulinD(PlaceAverifier,PlaceDepart,posse)){
+			System.out.println("\n\n"+PlaceDepart+"\n\n");
+			if(voisinHorizontalExiste(PlaceDepart,1)){
+				if(getPieces().elementAt(VoisinsHorizontaux[PlaceDepart][0]).getPossession() != posseA
+						&& getPieces().elementAt(VoisinsHorizontaux[PlaceDepart][1]).getPossession() != posseA){
+					return true;					
+				}				
+			}else{return true;}
+			
+			if(voisinVerticalExiste(PlaceDepart,1)){
+				if(getPieces().elementAt(VoisinsVerticaux[PlaceDepart][0]).getPossession() != posseA 
+					&& getPieces().elementAt(VoisinsVerticaux[PlaceDepart][1]).getPossession() != posseA ){
+					return true;					
+				}				
+			}else{return true;}
+			
+		}
+		return false;
+	}
+	
+	
+	
 
 	//Utilisé pour le mode OvsJ avec difficulté == 1 (facile)
 	public int PlacementRandom(){
@@ -1247,7 +1277,7 @@ public class PlateauMoulin extends Plateau{
 		}
 		
 		//Récupère la Priorité la plus haute
-		int max = 0;
+		int max = -10;
 		int maxi = 0;
 		for(int i=0;i<V.size();i++){
 			if(Priorites[i]>max){
@@ -1255,6 +1285,7 @@ public class PlateauMoulin extends Plateau{
 				maxi=V.elementAt(i);
 			}			
 		}
+		System.out.println("maxi : " + maxi);
 		return maxi;
 	}
 	
@@ -1471,12 +1502,12 @@ public class PlateauMoulin extends Plateau{
 		}
 		else{
 			if(niveauOrdi == 3){
-				if(this.nivArbo==6){
+				if(this.nivArbo==5){
 					return true;
 				}
 			}
 			else{
-				if(this.nivArbo==5){
+				if(this.nivArbo==6){
 					return true;
 				}	
 			}
@@ -1485,18 +1516,17 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	// Renvoi le min ou le max en fonction de niveauHarbo
+	// Renvoi le min ou le max en fonction de niveauHarbo, coupure alpha-beta
 	public int MinMax(int posses,int niveauOrdi,int alpha, int beta){
 		
 		//TEST fin de partie
-		Vector<Integer> piecesJ1 = PiecesPossedeesPar(1);
-		Vector<Integer> piecesJ2 = PiecesPossedeesPar(2);
-		if(piecesJ1.size()<=3 && piecesJ2.size()<=3 && TourDeJeu >=18){ 
+		int possesAdv = posses==1 ? 2 : 1;
+		
+		Vector<Integer> piecesJNActif = PiecesPossedeesPar(possesAdv);
+		if(piecesJNActif.size()<=3 && TourDeJeu >=18){ 
 //System.out.println("Dans minMax est feuille terminale + nivharbo :"+this.nivArbo);
 			return (10000000);
-		}
-		
-		
+		}		
 		
 		if(this.EstFeuille(niveauOrdi)){ // Si le noeud est une feuille
 			int eval = this.EvalPlateau();
@@ -1507,11 +1537,9 @@ public class PlateauMoulin extends Plateau{
 			Vector<PlateauMoulin> vectPlateau = this.plateauCoupSuivant(posses);
 //System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArbo);			
 			// On va utiliser la possession de l'adversaire pour le minMax des "sous plateaux"
-			int possesAdv = posses==1 ? 2 : 1;
 			
 			if(this.noeudMax(posses)){ // posses ==1
 //System.out.println("Dans minMax noeud max + nivharbo :"+this.nivArbo);
-
 				for(int i=0; i<vectPlateau.size();i++){
 					alpha = Math.max(alpha,vectPlateau.elementAt(i).MinMax(possesAdv,niveauOrdi,alpha,beta));
 					if(alpha>=beta){
@@ -1523,7 +1551,6 @@ public class PlateauMoulin extends Plateau{
 			}
 			else{ // noeud Min
 //System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
-
 				for(int i=0; i<vectPlateau.size();i++){
 					beta = Math.min(beta,vectPlateau.elementAt(i).MinMax(possesAdv,niveauOrdi,alpha,beta));
 					if(alpha>=beta){
@@ -1537,6 +1564,8 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
+	
+
 	// Renvoi la meilleur configuration de plateau à jouer
 	public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 		this.setNivHarbo(0);
@@ -1563,14 +1592,14 @@ public class PlateauMoulin extends Plateau{
 			//Bricolage pour lancer directement un moulin
 			if(vectPlat.elementAt(i).PresenceMoulinD(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurActif().getNumJoueur())){
 				//System.out.println("TestPresenceMoulin dans MeilleurCoup");
-				Max=1000000000;
-				indice=i;
+				maxIntermediaire=1000000000;
+				
 			}
 			//Possibilité de faire bloquer la création d'un moulin 
 			if(vectPlat.elementAt(i).BloquerMoulin(coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur())){
 				//System.out.println("TestBloquerMoulin dans MeilleurCoup");
-				Max=100000000;
-				indice=i;
+				maxIntermediaire=100000000;
+		
 			}
 			//Possibilité de continuer à bloquer un moulin
 			if(vectPlat.elementAt(i).BloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],getJoueurNActif().getNumJoueur())){
@@ -1578,19 +1607,44 @@ public class PlateauMoulin extends Plateau{
 				maxIntermediaire=0;
 				
 			}
-			//Possibilité de multi-moulin (en H, a chaque déplacement du pion central 
-			//on va créer un moulin, une fois à droite, une fois à gauche
+			//Possibilité de sortir d'un moulin pour le recréer dans la foulée
+			if(vectPlat.elementAt(i).ReMoulin(coupAJouer(vectPlat.elementAt(i))[0],coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur(),getJoueurActif().getNumJoueur())){
+				System.out.println("TestSortirMoulin dans MeilleurCoup");
+				maxIntermediaire=1000000;
+				
+			}
+			
+			
+			if((coupAJouer(vectPlat.elementAt(i))[0] == dernierCoup[1] && coupAJouer(vectPlat.elementAt(i))[1]== dernierCoup[0])
+			 || (coupAJouer(vectPlat.elementAt(i))[0] == dernierCoup2[1] && coupAJouer(vectPlat.elementAt(i))[1]== dernierCoup2[0])
+			 ||(coupAJouer(vectPlat.elementAt(i))[0] == dernierCoup[0] && coupAJouer(vectPlat.elementAt(i))[1]== dernierCoup[1])
+			 || (coupAJouer(vectPlat.elementAt(i))[0] == dernierCoup2[0] && coupAJouer(vectPlat.elementAt(i))[1]== dernierCoup2[1])) {
+				System.out.println("\n\nSAmeMouvement\n\n");
+				maxIntermediaire -= 10000000;
+			}
 			
 			
 			if(maxIntermediaire > Max){
 				Max = maxIntermediaire;
 				indice = i;
 			}	
-		
+			
 
 		}
 		//System.out.println("max obtenu :"+Max);
 		PlateauMoulin aJouer = vectPlat.elementAt(indice);
+		
+		if(changerDernierCoup){
+			dernierCoup[0]= coupAJouer(vectPlat.elementAt(indice))[0];
+			dernierCoup[1] = coupAJouer(vectPlat.elementAt(indice))[1];
+			changerDernierCoup = !changerDernierCoup;
+		}else{
+			dernierCoup2[0]= coupAJouer(vectPlat.elementAt(indice))[0];
+			dernierCoup2[1] = coupAJouer(vectPlat.elementAt(indice))[1];
+			changerDernierCoup = !changerDernierCoup;
+		}
+
+
 		//System.out.println("\n Plateau bon :");
 		//aJouer.affichage();
 		return aJouer;
