@@ -4,17 +4,12 @@ import java.io.Serializable;
 
 public class Joueur implements Serializable{
 	
-	/***************/
-	/***ATTRIBUTS***/
-	/***************/
 	
 	private static final long serialVersionUID = -2788360831910322017L;
 	
 	private int numJoueur; // Représente la possession pour les pièces de jeu
 
-	/*****************/
-	/***ACCESSEURS****/
-	/*****************/
+
 	
 	// Retourne le numéro du joueur
 	public int getNumJoueur() {
@@ -31,9 +26,7 @@ public class Joueur implements Serializable{
 		return 0;
 	}
 	
-	/*******************/
-	/***CONSTRUCTEURS***/
-	/*******************/
+	
 	
 	// Cré un nouveau Joueur avec son numéro égal à 0
 	public Joueur() {		
