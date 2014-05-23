@@ -1875,7 +1875,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					}
 					else if(event.getComponent().getParent() == panelPionsBot || event.getComponent().getParent() == panelPionsTop){
 						vaisseau[faction[tourDeJeu]][i].setAngle(0,0);
-						System.out.println("");
+						System.out.println("erger");
 					}
 					else
 					{
@@ -2743,7 +2743,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		cmptVaiss[1]= 0;
 		actionEnCoursVaisseau=Constantes.PHASE_DE_JEU;
 		tourDeJeu = 0;
-		phase = 0;
+		phase = 1;
 		
 		// On ajoute les cases vides et reinitialise le plateau
         for(int c=0;c<Constantes.NB_CASES;c++)
