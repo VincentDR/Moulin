@@ -2,17 +2,10 @@ package moulin;
 
 public class Humain extends Joueur {
 	
-	/***************/
-	/***ATTRIBUTS***/
-	/***************/
 	
 	private String Pseudo;
 
 	
-	
-	/*****************/
-	/***ACCESSEURS****/
-	/*****************/
 	
 	// Retourne le pseudo du joueur Humain
 	public String getPseudo() {
@@ -25,10 +18,7 @@ public class Humain extends Joueur {
 	}
 	
 	
-	/*******************/
-	/***CONSTRUCTEURS***/
-	/*******************/
-	
+
 	// Création d'un nouveau joueur Humain avec un pseudo et un numéro de joueur nul 
 	public Humain() {		
 		super();
