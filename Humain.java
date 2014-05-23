@@ -5,6 +5,7 @@ public class Humain extends Joueur {
 	/***************/
 	/***ATTRIBUTS***/
 	/***************/
+	
 	private String Pseudo;
 
 	
@@ -12,29 +13,32 @@ public class Humain extends Joueur {
 	/*****************/
 	/***ACCESSEURS****/
 	/*****************/
+	
+	// Retourne le pseudo du joueur Humain
 	public String getPseudo() {
 		return Pseudo;
 	}
 
-	public void setPseudo(String pseudo) {
-		Pseudo = pseudo;
+	// Modifie le pseudo du joueur Humain par newPseudo
+	public void setPseudo(String newPseudo) {
+		Pseudo = newPseudo;
 	}
 	
 	
 	/*******************/
 	/***CONSTRUCTEURS***/
 	/*******************/
+	
+	// Création d'un nouveau joueur Humain avec un pseudo et un numéro de joueur nul 
 	public Humain() {		
 		super();
 		Pseudo="";
 	}
 
+	// Création d'un nouveau joueur Humain avec un pseudo égal à s et un numéro de joueur égal à numJ
 	public Humain(String s,int numJ){
 		super(numJ);
 		Pseudo=s;
 	}	
-	
-	/**************/
-	/***METHODES***/
-	/**************/
+
 }
