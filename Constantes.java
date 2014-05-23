@@ -12,6 +12,7 @@ public class Constantes {
 	public static final int NB_ANIMATIONS_EXPL_T = 18;
 	public static final int NB_ANIMATIONS_PLAC_W = 11;
 	public static final int NB_ANIMATIONS_PLAC_T = 11;
+	public static final int NB_ANIMATIONS_PONEY = 11;
 	public static final int NB_VAISSEAUX = 18;
 	public static final int NB_CASES = 24;
 	public static final int TAILLE_CASE = 70;
