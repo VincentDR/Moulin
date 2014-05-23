@@ -1474,7 +1474,12 @@ public class PlateauMoulin extends Plateau{
 				if(this.nivArbo==6){
 					return true;
 				}
-			}		
+			}
+			else{
+				if(this.nivArbo==5){
+					return true;
+				}	
+			}
 		}	
 		return false;
 	}
