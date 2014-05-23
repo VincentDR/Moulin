@@ -17,7 +17,7 @@ public class Controleur {
 		Humain H1 = new Humain(nomJ1,1);
 		Humain H2 = new Humain(nomJ2,2);
 
-		if(this.plateau == null){
+		if(this.plateau != null){
 			this.plateau.deleteObserver(fenetre.getPanneau());
 		}
 		plateau = new PlateauMoulin(H1,H2);
@@ -29,7 +29,7 @@ public class Controleur {
 		Humain H = new Humain(nomJ,2);
 		NonHumain NH = new NonHumain(difficulte,1);
 		
-		if(this.plateau == null){
+		if(this.plateau != null){
 			this.plateau.deleteObserver(fenetre.getPanneau());
 		}
 		plateau = new PlateauMoulin(NH,H);
@@ -41,7 +41,7 @@ public class Controleur {
 		NonHumain NH1 = new NonHumain(0,1);
 		NonHumain NH2 = new NonHumain(0,2);
 		
-		if(this.plateau == null){
+		if(this.plateau != null){
 			this.plateau.deleteObserver(fenetre.getPanneau());
 		}
 		plateau = new PlateauMoulin(NH1,NH2);
