@@ -17,7 +17,7 @@ public class Laser extends JLabel  implements Runnable{
 	private int etat = Constantes.ET_NULL;
 			 // Aucun |Â Deplacement | Explosion
 	//private Direction direction = Direction.HAUT;
-	 // Aucun |Â Deplacement | Explosion
+	 // 0-Aucun | 1 Deplacement | 2-Explosion
 
 	// Equipe du vaisseau : 0 : Rebelle | 1 : Imperiaux
 	private int equipe;
@@ -25,11 +25,11 @@ public class Laser extends JLabel  implements Runnable{
 	
 	private boolean sens;
 	private int x, y;
-	 		// 0 : Haut |Â 1 : Bas | Gauche | Droite
-	// DÃ©placement du vaisseau verticalement (en pixel)
+	 		// 0 : Haut | 1 : Bas | Gauche | Droite
+	// Déplacement du vaisseau verticalement (en pixel)
 	//private int deplacementY;
 	private int nbr_anim;
-    // Angle du vaisseau par rapport Ã  l'axe vertical
+    // Angle du vaisseau par rapport à l'axe vertical
 	private double angle;
 	// INITIALISATION DES FICHIERS IMAGE
     private File fileLaser, fileLaserPoney;
