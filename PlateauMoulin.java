@@ -66,9 +66,11 @@ import java.util.Vector;
 
 public class PlateauMoulin extends Plateau{
 	
+	
 	/***************/
 	/***ATTRIBUTS***/
 	/***************/
+	
 	private int[][] VoisinsHorizontaux;
 	private int[][] VoisinsVerticaux;
 	private int nivArbo;
@@ -78,9 +80,7 @@ public class PlateauMoulin extends Plateau{
 	private boolean ordiVsJoueur; // =false si deux joueurs ou deux ordis, =true si Ordi Vs Joueur
 	private boolean ordiVsOrdi; // =false si deux joueurs ou OrdiVsJoueur, =true si Ordi Vs Ordi
 	
-	/*****************/
-	/***ACCESSEURS****/
-	/*****************/
+
 	public int[][] getVoisinsHorizontaux() {
 		return VoisinsHorizontaux;
 	}
@@ -129,9 +129,11 @@ public class PlateauMoulin extends Plateau{
 		this.ordiVsOrdi = ordiVsO;
 	}
 	
+	
 	/*******************/
 	/***CONSTRUCTEURS***/
 	/*******************/
+	
 
 	public PlateauMoulin(NonHumain ja,Humain jna) {		
 		super(ja,jna);
@@ -172,7 +174,7 @@ public class PlateauMoulin extends Plateau{
 		}
 		initialiserVoisinsCercle();
 	}
-	
+
 	public PlateauMoulin(NonHumain ja,NonHumain jna) {		
 		super(ja,jna);
 
@@ -193,99 +195,11 @@ public class PlateauMoulin extends Plateau{
 		initialiserVoisinsCercle();
 	}
 	
-	/*public void initialiserVoisinsLigne() {
-		//Par Ligne
-		
-		VoisinsHorizontaux[0][0] = 1;
-		VoisinsVerticaux[0][0] = 9;
-		
-		VoisinsHorizontaux[1][0] = 0;
-		VoisinsHorizontaux[1][1] = 2;
-		VoisinsVerticaux[1][0] = 4;			
-		
-		VoisinsHorizontaux[2][0] = 1;	
-		VoisinsVerticaux[2][0] = 14;
-		
-		VoisinsHorizontaux[3][0] = 4;
-		VoisinsVerticaux[3][0] = 10;
-		
-		VoisinsHorizontaux[4][0] = 3;
-		VoisinsHorizontaux[4][1] = 5;
-		VoisinsVerticaux[4][0] = 1;			
-		VoisinsVerticaux[4][1] = 7;	
-		
-		VoisinsHorizontaux[5][0] = 4;
-		VoisinsVerticaux[5][0] = 13;
-		
-		VoisinsHorizontaux[6][0] = 7;
-		VoisinsVerticaux[6][0] = 11;
-		
-		VoisinsHorizontaux[7][0] = 6;
-		VoisinsHorizontaux[7][1] = 8;
-		VoisinsVerticaux[7][0] = 4;	
-		
-		VoisinsHorizontaux[8][0] = 7;
-		VoisinsVerticaux[8][0] = 12;
-			
-		VoisinsHorizontaux[9][0] = 10;
-		VoisinsVerticaux[9][0] = 0;
-		VoisinsVerticaux[9][1] = 21;
-		
-		VoisinsHorizontaux[10][0] = 9;
-		VoisinsHorizontaux[10][1] = 11;
-		VoisinsVerticaux[10][0] = 3;	
-		VoisinsVerticaux[10][1] = 18;
-		
-		VoisinsHorizontaux[11][0] = 10;
-		VoisinsVerticaux[11][0] = 6;
-		VoisinsVerticaux[11][1] = 15;
-		
-		VoisinsHorizontaux[12][0] = 13;
-		VoisinsVerticaux[12][0] = 8;
-		VoisinsVerticaux[12][1] = 17;
-		
-		VoisinsHorizontaux[13][0] = 12;
-		VoisinsHorizontaux[13][1] = 14;
-		VoisinsVerticaux[13][0] = 5;	
-		VoisinsVerticaux[13][1] = 20;
-		
-		VoisinsHorizontaux[14][0] = 13;
-		VoisinsVerticaux[14][0] = 2;
-		VoisinsVerticaux[14][1] = 23;
-		
-		VoisinsHorizontaux[15][0] = 16;
-		VoisinsVerticaux[15][0] = 11;
-		
-		VoisinsHorizontaux[16][0] = 15;
-		VoisinsHorizontaux[16][1] = 17;
-		VoisinsVerticaux[16][0] = 19;	
-		
-		VoisinsHorizontaux[17][0] = 16;
-		VoisinsVerticaux[17][0] = 12;
-		
-		VoisinsHorizontaux[18][0] = 19;
-		VoisinsVerticaux[18][0] = 10;
-		
-		VoisinsHorizontaux[19][0] = 18;
-		VoisinsHorizontaux[19][1] = 20;
-		VoisinsVerticaux[19][0] = 16;			
-		VoisinsVerticaux[19][1] = 22;	
-		
-		VoisinsHorizontaux[20][0] = 19;
-		VoisinsVerticaux[20][0] = 13;
-		
-		VoisinsHorizontaux[21][0] = 22;
-		VoisinsVerticaux[21][0] = 9;
-		
-		VoisinsHorizontaux[22][0] = 21;
-		VoisinsHorizontaux[22][1] = 23;
-		VoisinsVerticaux[22][0] = 19;			
-		
-		VoisinsHorizontaux[23][0] = 22;	
-		VoisinsVerticaux[23][0] = 14;
-	}*/
-		
-	// Cré les cases vosines entre elles en faisant un cercle
+	
+	/**
+	 * Création des liens entre cases afin de créer les voisins
+	 * Le plateau est vu comme une spirale partant de la place en haut à gauche
+	 */
 	public void initialiserVoisinsCercle(){
 		
 		VoisinsHorizontaux[0][0] = 1;
@@ -395,145 +309,11 @@ public class PlateauMoulin extends Plateau{
 	
 
 	
+	
 	/**************/
 	/***METHODES***/
 	/**************/
-	public void affichage(){
-		String res="";
-		
-		
-		//Par ligne
-		/*
-		//Ligne1
-		res+=getPieces().elementAt(0).getPossession();
-		res+="------------------";
-		res+=getPieces().elementAt(1).getPossession();
-		res+="------------------";
-		res+=getPieces().elementAt(2).getPossession();		
-		System.out.println(res);
-		
-		//Ligne2
-		res="\t";
-		res+=getPieces().elementAt(3).getPossession();
-		res+="-----------";
-		res+=getPieces().elementAt(4).getPossession();
-		res+="-----------";
-		res+=getPieces().elementAt(5).getPossession();			
-		System.out.println(res);
-		
-		//Ligne3
-		res="\t\t";
-		res+=getPieces().elementAt(6).getPossession();
-		res+="---";
-		res+=getPieces().elementAt(7).getPossession();
-		res+="---";
-		res+=getPieces().elementAt(8).getPossession();			
-		System.out.println(res);
-		
-		
-		//Ligne4
-		res="";
-		res+=getPieces().elementAt(9).getPossession();
-		res+="-------";
-		res+=getPieces().elementAt(10).getPossession();
-		res+="-----";
-		res+=getPieces().elementAt(11).getPossession();		
-		
-		System.out.println(res+"          "+getPieces().elementAt(12).getPossession()+"-----"+getPieces().elementAt(13).getPossession()+"-------"+getPieces().elementAt(14).getPossession());
-		
-		//Ligne5
-		res="\t\t";
-		res+=getPieces().elementAt(15).getPossession();
-		res+="---";
-		res+=getPieces().elementAt(16).getPossession();
-		res+="---";
-		res+=getPieces().elementAt(17).getPossession();			
-		System.out.println(res);
-		
-		//Ligne6
-		res="\t";
-		res+=getPieces().elementAt(18).getPossession();
-		res+="-----------";
-		res+=getPieces().elementAt(19).getPossession();
-		res+="-----------";
-		res+=getPieces().elementAt(20).getPossession();			
-		System.out.println(res);
-		
-		//Ligne7
-		res="";
-		res+=getPieces().elementAt(21).getPossession();
-		res+="------------------";
-		res+=getPieces().elementAt(22).getPossession();
-		res+="------------------";
-		res+=getPieces().elementAt(23).getPossession();		
-		System.out.println(res);
-		
-		*/
-		
-		//Ligne1
-				res+=getPieces().elementAt(0).getPossession();
-				res+="------------------";
-				res+=getPieces().elementAt(1).getPossession();
-				res+="------------------";
-				res+=getPieces().elementAt(2).getPossession();		
-				System.out.println(res);
-				
-				//Ligne2
-				res="\t";
-				res+=getPieces().elementAt(8).getPossession();
-				res+="-----------";
-				res+=getPieces().elementAt(9).getPossession();
-				res+="-----------";
-				res+=getPieces().elementAt(10).getPossession();			
-				System.out.println(res);
-				
-				//Ligne3
-				res="\t\t";
-				res+=getPieces().elementAt(16).getPossession();
-				res+="---";
-				res+=getPieces().elementAt(17).getPossession();
-				res+="---";
-				res+=getPieces().elementAt(18).getPossession();			
-				System.out.println(res);
-				
-				
-				//Ligne4
-				res="";
-				res+=getPieces().elementAt(7).getPossession();
-				res+="-------";
-				res+=getPieces().elementAt(15).getPossession();
-				res+="-----";
-				res+=getPieces().elementAt(23).getPossession();		
-				
-				System.out.println(res+"          "+getPieces().elementAt(19).getPossession()+"-----"+getPieces().elementAt(11).getPossession()+"-------"+getPieces().elementAt(3).getPossession());
-				
-				//Ligne5
-				res="\t\t";
-				res+=getPieces().elementAt(22).getPossession();
-				res+="---";
-				res+=getPieces().elementAt(21).getPossession();
-				res+="---";
-				res+=getPieces().elementAt(20).getPossession();			
-				System.out.println(res);
-				
-				//Ligne6
-				res="\t";
-				res+=getPieces().elementAt(14).getPossession();
-				res+="-----------";
-				res+=getPieces().elementAt(13).getPossession();
-				res+="-----------";
-				res+=getPieces().elementAt(12).getPossession();			
-				System.out.println(res);
-				
-				//Ligne7
-				res="";
-				res+=getPieces().elementAt(6).getPossession();
-				res+="------------------";
-				res+=getPieces().elementAt(5).getPossession();
-				res+="------------------";
-				res+=getPieces().elementAt(4).getPossession();		
-				System.out.println(res);
-	}
+	
 	
 	// Initialise le tableau envoyé à la vue pour update
 	public void InitResult(int [] r){
@@ -583,7 +363,7 @@ public class PlateauMoulin extends Plateau{
 			result[2]=PlaceAJouer;
 			getPieces().elementAt(PlaceAJouer).setProprietaire(getJoueurActif());
 			if(PresenceMoulin(PlaceAJouer,result,2)){
-				System.out.println("Moulin");
+				//System.out.println("Moulin");
 				result[0]=4;
 				if( (0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){ // 
 				// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
@@ -602,7 +382,7 @@ public class PlateauMoulin extends Plateau{
 		updateGrid(result);		
 	}
 	
-
+	//Deplace une pièce de PlaceADeplacer vers PlaceAJouer et vérifie la présence d'un moulin grâce à posses
 	public void DeplacerPiece(int PlaceADeplacer, int PlaceAJouer, int posses)
 	{
 		
@@ -622,7 +402,7 @@ public class PlateauMoulin extends Plateau{
 					// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
 
 						int Choix=CiblePrioritaire(getJoueurActif().getNiveau());
-						System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
+						//System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
 						//Placement + Moulin a la case Choix
 						this.getPieces().elementAt(Choix).setProprietaire(new Joueur());
 						
@@ -652,7 +432,7 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	//Posse est la possession du joueur actif
+	//Retire la pièce à la case PlaceARetirer, PosseAdv est la possession du joueur Non-Actif
 	public void RetirerPiece(int PlaceARetirer, int posseAdv){
 		int []result = new int [8];
 		InitResult(result);
@@ -686,7 +466,7 @@ public class PlateauMoulin extends Plateau{
 		updateGrid(result);
 	}
 	
-	//Possession, 1 pour l'ordi, 2 pour le joueur
+	//Renvoie les pièces possédées par  1 pour l'ordi ou le joueur1, 2 pour le joueur ou le joueur2
 	public Vector<Integer> PiecesPossedeesPar(int possession){
 		Vector<Integer> V = new Vector<Integer>();
 		for(int j=0;j<24;j++)
@@ -695,14 +475,12 @@ public class PlateauMoulin extends Plateau{
 				V.addElement(j);
 			}
 		}
-		return V;
-		
+		return V;		
 	}
 
-	// Vrai si nouveau moulin pour la case PlaceAverifier
+	// Vrai si la case PlaceAverifier crée un nouveau moulin
 	public boolean PresenceMoulin(int PlaceAverifier){
-		int possess = getPieces().elementAt(PlaceAverifier).getPossession();
-		
+		int possess = getPieces().elementAt(PlaceAverifier).getPossession();		
 		
 		//Présence Horizontale d'un moulin, aussi on met dans result[3] et result[4] les voisins de la case qui fait le moulin
 		if(voisinHorizontalExiste(PlaceAverifier,0)){ //VH[0] existe ?
@@ -758,6 +536,8 @@ public class PlateauMoulin extends Plateau{
 		return false; 
 	}
 	
+	
+	//Renvoie vrai si il existe AU MOINS un déplacement possible sur le plateau pour le joueurActif, faux sinon
 	public boolean ExisteDeplacement(){
 		Vector<Integer> V = PiecesPossedeesPar(getJoueurActif().getNumJoueur());
 		int[][] Deplacement = new int[V.size()][4];
@@ -793,9 +573,7 @@ public class PlateauMoulin extends Plateau{
 				}	
 			}
 		}
-		
-	
-		
+				
 		boolean trouve = false;
 		for(int i=0;i<V.size();i++){
 			for(int k=0;k<4;k++){
@@ -803,8 +581,7 @@ public class PlateauMoulin extends Plateau{
 					trouve=true;
 				}
 			}
-		}		
-		
+		}				
 		return trouve;
 	}
 	
@@ -815,9 +592,9 @@ public class PlateauMoulin extends Plateau{
 	
 	
 	
-	/* Vrai si nouveau moulin pour la case PlaceAverifier, 
-	* ajoute les voisins moulin de result [numCaseResult] dans result[3] et result[4]
-	*	numCaseResult =2 si ajouterPiece, numCaseResult=4 si DeplacerPiece
+	/*  Vrai si la case PlaceAverifier crée un nouveau moulin
+	* 	Ajoute les voisins moulin de result [numCaseResult] dans result[3] et result[4]
+	*	numCaseResult = 2 si ajouterPiece, numCaseResult=4 si DeplacerPiece
 	*/
 	public boolean PresenceMoulin(int PlaceAverifier,int [] result,int numCaseResult){
 		int possess = getPieces().elementAt(PlaceAverifier).getPossession();
@@ -909,7 +686,9 @@ public class PlateauMoulin extends Plateau{
 		return false; 
 	}		
 	
-	// Vrai si nouveau moulin pour la case PlaceAverifier
+	
+	// Vrai si la case PlaceAverifier crée un nouveau moulin tout en excluant PlaceAIgnorer
+	//A utiliser pour les déplacements prévus mais non effectués
 	public boolean PresenceMoulinD(int PlaceAIgnorer,int PlaceAverifier, int possess){		
 			
 		//Présence Horizontale d'un moulin
@@ -980,86 +759,74 @@ public class PlateauMoulin extends Plateau{
 	}	
 	
 	
-	
+	//Si la PlaceAVerifier bloquer un moulin du joueur Adverse
+	//Possess est la possession du joueur non actif
 	public boolean BloquerMoulin(int PlaceAverifier, int possess){
 		//Présence Horizontale d'un moulin
-				if(voisinHorizontalExiste(PlaceAverifier,1)){ //VH[0] existe ?
+			if(voisinHorizontalExiste(PlaceAverifier,1)){ //VH[0] existe ?
+				if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 
+					&& getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess  ){
+						if(voisinVerticalExiste(PlaceAverifier,1)){
+							if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 									
+								|| getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess  ){
+									return true;
+							}
+						}else{
+							if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess){return true;}
+						}
+					}		
+				}				
+				else{
 					if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 
-						&& getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess  ){
+						&& ((getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0]).getPossession() == possess 
+						&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAverifier)
+						|| (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1]).getPossession() == possess 
+						&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAverifier))){
 							if(voisinVerticalExiste(PlaceAverifier,1)){
 								if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 									
-									|| getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess  ){
-									return true;
+										|| getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess  ){
+											return true;
 								}
 							}else{
 								if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess){return true;}
 							}
-					}		
-				}
+						}					
+				}			
 				
-				else{if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 
-						&& ((getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0]).getPossession() == possess 
-						&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][0] != PlaceAverifier)
-						|| (getPieces().elementAt(VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1]).getPossession() == possess 
-							&& VoisinsHorizontaux[VoisinsHorizontaux[PlaceAverifier][0]][1] != PlaceAverifier))){
-					if(voisinVerticalExiste(PlaceAverifier,1)){
-						if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 									
-							|| getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess  ){
-							return true;
-						}
-					}else{
-						if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess){return true;}
-					}
-				}					
-				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
-					
+				//Vertical
 				if(voisinVerticalExiste(PlaceAverifier,1)){ //VH[0] existe ?
 					if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 
 						&& getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][1]).getPossession() == possess  ){
 							if(voisinHorizontalExiste(PlaceAverifier,1)){
 								if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 									
 									|| getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess  ){
-									return true;
+										return true;
+									}
+							}else{
+								if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess){return true;}
+						}
+					}
+				}
+				else{
+					if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 
+						&& ((getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0]).getPossession() == possess 
+						&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAverifier)
+						|| (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1]).getPossession() == possess 
+						&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAverifier))){
+							if(voisinHorizontalExiste(PlaceAverifier,1)){
+								if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 									
+									|| getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess  ){
+											return true;
 								}
 							}else{
 								if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess){return true;}
 							}
-					}
+					}					
 				}
-				
-				
-				else{if(getPieces().elementAt(VoisinsVerticaux[PlaceAverifier][0]).getPossession() == possess 
-						&& ((getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0]).getPossession() == possess 
-						&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][0] != PlaceAverifier)
-						|| (getPieces().elementAt(VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1]).getPossession() == possess 
-							&& VoisinsVerticaux[VoisinsVerticaux[PlaceAverifier][0]][1] != PlaceAverifier))){
-					if(voisinHorizontalExiste(PlaceAverifier,1)){
-						if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess 									
-							|| getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][1]).getPossession() == possess  ){
-							return true;
-						}
-					}else{
-						if(getPieces().elementAt(VoisinsHorizontaux[PlaceAverifier][0]).getPossession() == possess){return true;}
-					}
-				}					
-				}
-				
-				
-				
-				return false; 
-			
+		return false; 			
 	}
 
-	// OvsJ avec difficulté == 1 (facile)
+	//Utilisé pour le mode OvsJ avec difficulté == 1 (facile)
 	public int PlacementRandom(){
 		int random=0;
 		boolean trouve = false;
@@ -1072,7 +839,7 @@ public class PlateauMoulin extends Plateau{
 		return random;
 	}
 	
-	
+	//Utilisé pour le mode OvsJ avec difficulté == 1 (facile)
 	public int[] DeplacementRandom(){
 		Vector<Integer> V = PiecesPossedeesPar(getJoueurActif().getNumJoueur());
 		int[][] Deplacement = new int[V.size()][4];
@@ -1126,9 +893,8 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	/**
-	 * @return Pointe la pi�ce vide repr�sentant la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation d'un moulin adverse
-	 */
+
+	// Pointe la pièce vide reprèsentant la plus grande possibilité de créer un moulin ou empéchant la création d'un moulin adverse
 	public int PlacementPrioritaire()
 	{	
 		int PrioriteUnVoisin=1;
@@ -1339,11 +1105,9 @@ public class PlateauMoulin extends Plateau{
 		
 		//Récupère la Priorité la plus haute
 		int max = 0;
-		int maxi = 0;
 		for(int i=0;i<V.size();i++){
 			if(Priorites[i]>=max){
 				max = Priorites[i];
-				maxi=V.elementAt(i);
 			}			
 		}
 		int Maxis[] = new int[10];
@@ -1365,18 +1129,13 @@ public class PlateauMoulin extends Plateau{
 		int higher = j;
 		int random = (int)(Math.random() * (higher-lower)) + lower;
 
-		//System.out.println("\n TA GRANDPAIRE "+j+" "+random);
 
 			return Maxis[random];
-		//System.out.println("\n"+maxi+" "+max);
-			//	return maxi;
-		
 	}
 	
-	
-	/**
-	 * @return Pointe la pi�ce adverse repr�sentant le  plus de danger, la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation dans de nos moulins
-	 */
+
+	//Pointe la pièce adverse représentant le  plus de danger, la plus grande possibilité de créer un moulin ou 
+	//empéchant la création d'un de nos moulins
 	public int CiblePrioritaireRandom(){
 		int possessionAdv = getJoueurNActif().getNumJoueur();
 		Vector<Integer> V = PiecesPossedeesPar(possessionAdv);
@@ -1393,9 +1152,10 @@ public class PlateauMoulin extends Plateau{
 		
 		return V.elementAt(random);
 	}
-	/**
-	 * @return Pointe la pi�ce adverse repr�sentant le  plus de danger, la plus grande possibilit� de cr�er un moulin ou emp�chant la cr�ation dans de nos moulins
-	 */
+	
+	
+	//Pointe la pièce adverse représentant le  plus de danger, la plus grande possibilité de créer un moulin ou 
+	//empéchant la création d'un de nos moulins
 	public int CiblePrioritaire(int difficulte){
 		int possessionAdv = getJoueurNActif().getNumJoueur();	//Si tour de jeu==0 (joueur 1) possessionAdversaire=2, sinon 1
 		// On ne doit pas détruire de moulin adverse sauf si il ne reste que ça
@@ -1504,9 +1264,8 @@ public class PlateauMoulin extends Plateau{
 	
 
 	
-	/**
-	 * @return Renvoi un indice représentant l'intérêt d'un plateau, plus il sera haut, plus l'ordi sera en position de force
-	 */
+
+	//Renvoi un indice représentant l'intérêt d'un plateau, plus il sera haut, plus l'ordi sera en position de force
 	public int EvalPlateau(){
 		//On est pas en fin de jeu, sinon return 0;	
 		
@@ -1658,14 +1417,10 @@ public class PlateauMoulin extends Plateau{
 				}
 				
 			
-			return IndiceOrdi-IndiceJoueur;		
-	/*	}//fin test (!fin de partie ?)
-		else{
-			return null;
-		}
-		
-		*/
+			return IndiceOrdi-IndiceJoueur;			
 	}
+	
+	
 	// Renvoi un tableau contenant les plateaux fils de pm, ceux qui contiennent un coup suivant. Appelé seulement par ordi
 	public Vector<PlateauMoulin> plateauCoupSuivant(int possession){
 		Vector<PlateauMoulin> ensFils = new Vector<PlateauMoulin>();
@@ -1700,6 +1455,8 @@ public class PlateauMoulin extends Plateau{
 		}
 		return ensFils;
 	}
+	
+	
 	// true si posses = posses du joueur actif
 	public boolean noeudMax(int posses){
 		if(posses== getJoueurActif().getNumJoueur()){
@@ -1708,7 +1465,8 @@ public class PlateauMoulin extends Plateau{
 		return false;
 	}
 	
-// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
+	
+	// Vrai si le plateau est une feuille lors de l'évaluaton des coups à jouer
 	public boolean EstFeuille(int niveauOrdi){
 		if(niveauOrdi == 2){
 			if(this.nivArbo==2){
@@ -1724,6 +1482,7 @@ public class PlateauMoulin extends Plateau{
 		}	
 		return false;
 	}
+	
 	
 	// Renvoi le min ou le max en fonction de niveauHarbo
 	public int MinMax(int posses,int niveauOrdi,int alpha, int beta){
@@ -1776,8 +1535,9 @@ public class PlateauMoulin extends Plateau{
 		}
 	}
 	
+	
 	// Renvoi la meilleur configuration de plateau à jouer
-public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
+	public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 		this.setNivHarbo(0);
 		Vector<PlateauMoulin> vectPlat = this.plateauCoupSuivant(posses);
 
@@ -1807,13 +1567,13 @@ public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 			}
 			//Possibilité de faire bloquer la création d'un moulin 
 			if(vectPlat.elementAt(i).BloquerMoulin(coupAJouer(vectPlat.elementAt(i))[1],getJoueurNActif().getNumJoueur())){
-				System.out.println("TestBloquerMoulin dans MeilleurCoup");
+				//System.out.println("TestBloquerMoulin dans MeilleurCoup");
 				Max=100000000;
 				indice=i;
 			}
 			//Possibilité de continuer à bloquer un moulin
 			if(vectPlat.elementAt(i).BloquerMoulin(coupAJouer(vectPlat.elementAt(i))[0],getJoueurNActif().getNumJoueur())){
-				System.out.println("TestContinuerBloquerMoulin dans MeilleurCoup");
+				//System.out.println("TestContinuerBloquerMoulin dans MeilleurCoup");
 				maxIntermediaire=0;
 				
 			}
@@ -1830,10 +1590,11 @@ public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 		}
 		//System.out.println("max obtenu :"+Max);
 		PlateauMoulin aJouer = vectPlat.elementAt(indice);
-		System.out.println("\n Plateau bon :");
-		aJouer.affichage();
+		//System.out.println("\n Plateau bon :");
+		//aJouer.affichage();
 		return aJouer;
 	}
+	
 	
 	// Indique la pièce à deplacer pour arriver à la configuration que renvoie meilleurCoup() 
 	// avec indice 0 la case départ et indice 1 la case d'arrivée
@@ -1858,7 +1619,7 @@ public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 	// Méthode appelée par la vue, quand c'est au tour d'un ordi de jouer
 	public int[] ControleurOrdi(){
 			
-		System.out.println("Tourdejeu modele "+TourDeJeu);
+		//System.out.println("Tourdejeu modele "+TourDeJeu);
 		int Choix;
 		int[] Result = new int[8];
 		InitResult(Result); // init à-1
@@ -1874,11 +1635,11 @@ public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 				else {
 					Choix=PlacementPrioritaire(); //Niveau = 2 ou 3 (la différence se fait dans la méthode)
 				}
-				System.out.println("\nOrdi a joué à "+Choix);
+				//System.out.println("\nOrdi a joué à "+Choix);
 				
 				if(CoupValide(Choix)){  
 					AjouterPiece(Choix);
-				}else{System.out.println("Mauvais choix ordi");}
+				}else{}
 	
 			}
 			else{ //Deplacement
@@ -1904,7 +1665,7 @@ public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 					Result[3]=ChoixABouger;
 					Result[4]=ChoixAAtteindre;
 					DeplacerPiece(ChoixABouger, ChoixAAtteindre,numJActif);
-					System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
+					//System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
 				}
 				else{
 					Result[0]=6; // Fin de partie
@@ -1927,15 +1688,6 @@ public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 		}else{
 			Result[2] = 2;
 		}		
-	/*	
-		if(getJoueurActif().getClass().getName()=="moulin.NonHumain"){
-			Result[3] = getJoueurActif().getNiveau();
-		}else{
-			if(getJoueurNActif().getClass().getName()=="moulin.NonHumain"){
-				Result[3] = getJoueurNActif().getNiveau();
-			}else{Result[3] = -1;}
-		}
-	*/	
 		
 		int nbPiecesJoueur1 = 0;
 		int nbPiecesJoueur2 = 0;
@@ -1967,7 +1719,6 @@ public PlateauMoulin meilleurCoup(int posses,int niveauOrdi){
 	
 	public void updateGrid (int[] Tab)
 	{
-//		System.out.println("Coucou updategrid !! :D" );
 		this.setChanged ();
 		this.notifyObservers(Tab);
 	}
