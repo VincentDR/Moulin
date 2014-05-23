@@ -7,8 +7,9 @@ public class Joueur implements Serializable{
 	
 	private static final long serialVersionUID = -2788360831910322017L;
 	
-	private int numJoueur; // Représente la possession pour les pièces de jeu
-
+	// Représente la possession pour les pièces de jeu, fait la différence entre le joueur 1 et joueur 2
+	private int numJoueur;
+	
 
 	
 	// Retourne le numéro du joueur
