@@ -24,6 +24,7 @@ import java.util.Vector;
  * 						4 ->	Placement+Moulin
  * 						5 ->	Deplacement+Moulin
  * 						6 ->	Ordi a moins de 3 cases, fin de partie
+ * 						7 -> 	Chargement
  * 
  * 		Seconde case -> La possession (1 si action ordi, 2 si action joueur)
  * 			Result[1] =	1 ->	Ordi
@@ -52,14 +53,15 @@ import java.util.Vector;
  *  	Septième case -> Le moulin
  * 			Result[7] =	-1 ->	Pas de case voisine
  *  					x ->	La case x est le deuxième voisin de la case qui a fait un moulin
+ *  	
+ *  	Chargement 
+ *  		Result[1] -> Le tour de Jeu
+ *  		Result[2] -> La phase (1 pour le placement, 2pour le deplacement)
+ *  		Result[3] -> Le nombre de pièces perdues par le joueur1/ordi
+ *  		Result[4] -> Le nombre de pièces perdues par le joueur2/joueur
+ *  		Result[5 à 29] -> La possession des pièces sur le plateau
  *  
- *  
- *  Resume:
- * 			La vue envoie un tableau de 3 entiers, le modele lui repond par un tableau de 6 entiers
- * 
- * 	Ex: La vue envoie Proposition[0] == Proposition[1] == -1 et Proposition[2] = x
- * 		Si x est une piece adverse, alors le modele renverra Result[0] = 3 et Result[5] = x
- * 		La vue supprimera donc la case x
+ *
  * 
  */
 
@@ -1707,7 +1709,7 @@ public class PlateauMoulin extends Plateau{
 			Result[4] = 9 - (nbPiecesJoueur2+ (9 - this.getTourDeJeu()/9));
 		}else{
 			Result[3] = 9-nbPiecesJoueur1;
-			Result[2] = 9-nbPiecesJoueur2;
+			Result[4] = 9-nbPiecesJoueur2;
 		}
 		
 		updateGrid(Result);
