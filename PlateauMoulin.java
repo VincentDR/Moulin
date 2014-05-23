@@ -9,12 +9,6 @@ import java.util.Vector;
  * Tableau controle :
  * 
  * 		
- * 		ENVOI PAR LA VUE
- * 		Premiere case -> Placement (ou depart deplacement)
- * 		Deuxieme case -> Deplacement arrive
- * 		Troisieme case -> Piece a eliminer
- * 
- * 
  * 		ENVOI PAR LE MODELE
  *  	Premiere case -> Info sur les infos transmises afin d'informer la vue
  *  		Result[0] =	-1 ->	Rien
