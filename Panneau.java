@@ -446,7 +446,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		btnOvsO.setHorizontalTextPosition(SwingConstants.CENTER); 
 
 		btnRetourP0.setFont(policeStarWars);
-		btnRetourP0.setText("retour");
+		btnRetourP0.setText("   retour   ");
 
 		btnJvsJ.setPreferredSize(new Dimension(380,120));
 		btnJvsO.setPreferredSize(new Dimension(380,120));
@@ -1245,6 +1245,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			btnAPropos.setIcon(imgAPropos[1]);
 		}
+		if(event.getSource() == btnRetourP0 || event.getSource() == btnRetourP1 
+				|| event.getSource() == btnRetourP2 || event.getSource() == btnRetourP3 
+				|| event.getSource() == btnSuivantP1 || event.getSource() == btnSuivantP2 
+				/*|| event.getSource() == btnSuivantP3*/)
+		{
+			JButton b = (JButton)event.getSource();
+			b.setForeground(orangeSW);
+			b.setBorder(bordureOrange);
+		}
 		//event.getSource()
 	}
 
@@ -1284,6 +1293,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		else if(event.getSource() == btnAPropos)
 		{
 			btnAPropos.setIcon(imgAPropos[0]);
+		}
+		if(event.getSource() == btnRetourP0 || event.getSource() == btnRetourP1 
+				|| event.getSource() == btnRetourP2 || event.getSource() == btnRetourP3 
+				|| event.getSource() == btnSuivantP1 || event.getSource() == btnSuivantP2 
+				/*|| event.getSource() == btnSuivantP3*/)
+		{
+			JButton b = (JButton)event.getSource();
+			b.setForeground(jauneSW);
+			b.setBorder(bordureJaune);
 		}
 	}
 	@Override
