@@ -6,7 +6,8 @@ public class Constantes {
 	public static final int FENETRE_HAUTEUR = 750;
 	public static final int ECART = 80;
 	public static final int HAUTEUR_PANEL_TOP_BOT = 100;
-	public static final int LARGEUR_PANEL_W_E = 100;
+	public static final int LARGEUR_PANEL_WEST = 220;
+	public static final int LARGEUR_PANEL_EAST = 200; // 180
 	public static final int NB_ANIMATIONS_EXPL_W = 14;
 	public static final int NB_ANIMATIONS_EXPL_T = 18;
 	public static final int NB_ANIMATIONS_PLAC_W = 11;
