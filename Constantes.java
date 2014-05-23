@@ -45,8 +45,10 @@ public class Constantes {
 	
 	// A metre en variable
 
-	public static final int VITESSE_ROT = 10;
-	public static final int VITESSE_DEP = 30;
-	public static final int VITESSE_DEP_LASER = 10;
+	public static final int VITESSE_ROT = 10; // 10 default
+	public static final int VITESSE_DEP = 30; // 30 default
+	public static final int VITESSE_EXPL = 30; // 70 default
+	public static final int VITESSE_DEP_LASER = 10; // 10 default
+	public static final int VITESSE_PLA = 30; // 60 default
 	
 }
