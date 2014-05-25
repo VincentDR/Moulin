@@ -535,10 +535,12 @@ public  class Vaisseau extends JButton  implements Runnable
 		x2=getX()+getWidth()/2;
 		y2=getY()+getHeight()/2;
 		//test = Math.toDegrees(Math.atan((x1-x2)/(y2-y1)));
-		if((y2-y1)>=0)
+		if((y2-y1)>0)
 			angle = Math.toDegrees(Math.atan((x1-x2)/(y2-y1)));
-		else
+		else if((y2-y1)<0)
 			angle = Math.toDegrees(Math.atan((x1-x2)/(y2-y1)))+180;
+		else
+			angle = Math.toDegrees(Math.atan((x1-x2)/(1/Integer.MAX_VALUE)));
 		
 		actualiserAngle();
 		//this.setIcon(xWing);
