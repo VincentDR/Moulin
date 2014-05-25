@@ -2465,16 +2465,14 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			case 7:
 				System.out.println("case 7");
 				raz();
+				phase = tab[2];
 		        for(int c=0;c<Constantes.NB_CASES;c++)
 		        {
 		        	panelPlateauJeu.add(casesVide[c]);
 		        }
 				initialisation();
 				panelPlateauJeu.remove(boutonCommencerPartie);
-				// Chargement
-				tourDeJeu = tab[1]%2;
-				if(tab[2]==1) phase=1;
-				else phase = 2;
+
 				// difficulte = tab[3];
 				for(int i=0;i<Constantes.NB_VAISSEAUX;i++)
 				{
@@ -2509,6 +2507,23 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						plateau[i] = vaisseau[1][cmptVaiss[1]];
 						cmptVaiss[1]++;
 					}
+					
+				}
+				
+				for(int i=0;i<Result[3];i++)
+				{
+					panelTop.remove(vaisseau[0][cmptVaiss[0]]);
+					cmptVaiss[0]++;
+				}
+				for(int i=0;i<Result[4];i++)
+				{
+					panelBot.remove(vaisseau[1]|cmptVaiss[1]]);
+					cmptVaiss[1]++;
+				}
+				
+				}
+				else
+				{
 					
 				}
 				
