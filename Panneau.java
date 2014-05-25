@@ -138,7 +138,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private JLabel labelJoueur, labelJoueur1, labelJoueur2, labelFaction, labelDifficulte;
 	private JLabel labelFactionJ1, labelFactionJ2;
 	private JButton boutonFactionEmpire, boutonFactionRebelle , boutonEchangerFactions;
+	private JButton boutonFactionEmpirePoney, boutonFactionRebellePoney;
 	private ImageIcon imgXwing, imgXwingSelect, imgTIE, imgTIESelect;
+	private ImageIcon imgXwingPoney, imgXwingSelectPoney, imgTIEPoney, imgTIESelectPoney;
 	private JTextField pseudo, pseudo1, pseudo2;
 	
 	// Boutons de la page Regles
@@ -196,11 +198,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
 	private File fileFondVictoireRebellePoney = new File("Images/Fond/fondVictoireRebellePoney.png");
 	//private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
-	private File fileFondAPropos= new File("Images/Fond/fondtest.png");
-	// test
-	private File fileFondTest = new File("Images/Fond/fondtest.png");
-	private BufferedImage imageFondTest;
-	private File fileVaisseau = new File("Images/Animations/bleu.png");
+	private File fileFondAPropos= new File("Images/Fond/fondAPropos.png");
+	private File fileFondAProposPoney= new File("Images/Fond/fondAProposPoney.gif");
+	
 	
 	// DECLARATION DES IMAGES
 	 
@@ -527,6 +527,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
         // Attributs communs des pages 1, 2 et 3
         imgXwing = new ImageIcon("Images/Xwing.png");
         imgTIE = new ImageIcon("Images/TIE.png");
+        imgXwingPoney = new ImageIcon("Images/Mlp/gummy.png");
+        imgTIEPoney = new ImageIcon("Images/Mlp/angel.png");
         
         
         // On s'occupe de la Page 1 : Joueur vs Joueur
@@ -654,6 +656,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
         imgXwingSelect = new ImageIcon("Images/XwingSelect.png");
         imgTIESelect = new ImageIcon("Images/TIESelect.png");
+
+        imgXwingSelectPoney = new ImageIcon("Images/Mlp/gummySelected.png");
+        imgTIESelectPoney = new ImageIcon("Images/Mlp/angelSelected.png");
         
 		policeStarWars = policeStarWars.deriveFont((float)25.0);
         labelJoueur = new JLabel("joueur : ");
@@ -884,9 +889,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
         // On initialise les attributs concernant la page A Propos
         
         panelAPropos = new JPanel();
-        gifAPropos = new ImageIcon("Images/Fond/fondAPropos.gif");
+        gifAPropos = new ImageIcon(fileFondAProposPoney.getAbsolutePath());
         labelGifAPropos = new JLabel(gifAPropos);
-        panelAPropos.add(labelGifAPropos);
         // Fin A Propos
 		////
 		// Fin des composants menu
@@ -1116,7 +1120,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			imageFondVictoireRebelle = ImageIO.read(fileFondVictoireRebelle);
 			imageFondVictoireRebellePoney = ImageIO.read(fileFondVictoireRebellePoney);
 			imageFondAPropos = ImageIO.read(fileFondAPropos);
-			imageFondTest = ImageIO.read(fileFondTest);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1266,7 +1269,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			}
 			else if(panelAPropos.isVisible())
 			{
-				//g.drawImage(imageFondAPropos, 0, 0, null);
+				if(modePoney==0)
+				{
+					g.drawImage(imageFondAPropos, 0, 0, null);
+				}
 			}
 			else if(panelJeu.isVisible())
 			{
@@ -1601,8 +1607,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					faction[0] = Constantes.FACTION_EMPIRE; // faction du joueur 1
 					faction[1] = Constantes.FACTION_REBELLE; // faction du joueur 2
 					// modifier l'emplacement du pseudo
-					panelWest.add(pseudoJ1, BorderLayout.NORTH);
-					panelEast.add(pseudoJ2, BorderLayout.SOUTH);
+					panelWest.add(pseudoJ1, BorderLayout.SOUTH);
+					panelEast.add(pseudoJ2, BorderLayout.NORTH);
 
 					// On allume sa cocarde
 					cocardeEmpire.setIcon(imgCocardeEmpire[1]);
@@ -1709,20 +1715,30 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		else if(event.getSource() == boutonFactionEmpire && SwingUtilities.isLeftMouseButton(event) )
 		{
 			boutonFactionEmpire.setSelected(true);
-			boutonFactionEmpire.setIcon(imgTIESelect);
-			if(boutonFactionRebelle.isSelected())
+			boutonFactionRebelle.setSelected(false);
+			if(modePoney>0)
 			{
-				boutonFactionRebelle.setSelected(false);
+				boutonFactionEmpire.setIcon(imgTIESelectPoney);
+				boutonFactionRebelle.setIcon(imgXwingPoney);
+			}
+			else
+			{
+				boutonFactionEmpire.setIcon(imgTIESelect);
 				boutonFactionRebelle.setIcon(imgXwing);
 			}
 		}
 		else if(event.getSource() == boutonFactionRebelle && SwingUtilities.isLeftMouseButton(event) )
 		{
 			boutonFactionRebelle.setSelected(true);
-			boutonFactionRebelle.setIcon(imgXwingSelect);
-			if(boutonFactionEmpire.isSelected())
+			boutonFactionEmpire.setSelected(false);
+			if(modePoney>0)
 			{
-				boutonFactionEmpire.setSelected(false);
+				boutonFactionRebelle.setIcon(imgXwingSelectPoney);
+				boutonFactionEmpire.setIcon(imgTIEPoney);
+			}
+			else
+			{
+				boutonFactionRebelle.setIcon(imgXwingSelect);
 				boutonFactionEmpire.setIcon(imgTIE);
 			}
 		}
@@ -2730,6 +2746,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				actionEnCoursVaisseau=Constantes.PHASE_DE_CHOIX_CIBLE;
 				// On change le curseur en mode tir
 				this.setCursor(curseurTir);
+				// On simule un mouvement de souris
+				//mouseMoved(new Event());
 			}
 		}
 		else
@@ -2916,6 +2934,19 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					
 					cocardeEmpire.setIcon(imgCocardeEmpire[0]);
 					cocardeRebelle.setIcon(imgCocardeRebelle[0]);
+					panelAPropos.remove(labelGifAPropos);
+			        labelFactionJ1.setIcon(imgXwing);
+			        labelFactionJ2.setIcon(imgTIE);
+			        if(boutonFactionRebelle.isSelected())
+			        {
+			        	boutonFactionRebelle.setIcon(imgXwingSelect);
+				        boutonFactionEmpire.setIcon(imgTIE);
+			        }
+			        else
+			        {
+			        	boutonFactionRebelle.setIcon(imgXwing);
+				        boutonFactionEmpire.setIcon(imgTIESelect);
+			        }
 					repaint();
 				}
 				else
@@ -2925,6 +2956,19 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					// On met les cocardes
 					cocardeEmpire.setIcon(imgCocardeEmpirePoney[0]);
 					cocardeRebelle.setIcon(imgCocardeRebellePoney[0]);
+					panelAPropos.add(labelGifAPropos);
+			        labelFactionJ1.setIcon(imgXwingPoney);
+			        labelFactionJ2.setIcon(imgTIEPoney);
+			        if(boutonFactionRebelle.isSelected())
+			        {
+			        	boutonFactionRebelle.setIcon(imgXwingSelectPoney);
+				        boutonFactionEmpire.setIcon(imgTIEPoney);
+			        }
+			        else
+			        {
+			        	boutonFactionRebelle.setIcon(imgXwingPoney);
+				        boutonFactionEmpire.setIcon(imgTIESelectPoney);
+			        }
 					repaint();
 				}
 
