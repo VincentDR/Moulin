@@ -1741,8 +1741,8 @@ public class PlateauMoulin extends Plateau{
 		}
 		
 		if(Result[1]<18){
-			Result[3] = 9 - (nbPiecesJoueur1+ (9 - 9/(this.getTourDeJeu()/2)));
-			Result[4] = 9 - (nbPiecesJoueur2+ (9 - 9/(this.getTourDeJeu()/2)));
+			Result[3] = 9 - (nbPiecesJoueur1+ (9 - (this.getTourDeJeu()+1/2)));
+			Result[4] = 9 - (nbPiecesJoueur2+ (9 - (this.getTourDeJeu()/2)));
 		}else{
 		}else{
 			Result[3] = 9-nbPiecesJoueur1;
