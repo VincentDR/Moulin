@@ -1732,8 +1732,8 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	public int[] charger(){
-		int[] Result = new int[29];
+public int[] charger(){
+		int[] Result = new int[30];
 		Result = super.charger();		
 		
 		Result[1] = this.getTourDeJeu();
@@ -1763,6 +1763,18 @@ public class PlateauMoulin extends Plateau{
 		}else{
 			Result[3] = 9-nbPiecesJoueur1;
 			Result[4] = 9-nbPiecesJoueur2;
+		}
+		
+		if(getJoueurActif().getClass().getName() =="moulin.Humain" && getJoueurNActif().getClass().getName()=="moulin.Humain")
+		{
+			Result[29]=2;
+		}else{
+			if(getJoueurActif().getClass().getName() =="moulin.Humain" || getJoueurNActif().getClass().getName()=="moulin.Humain"){
+				Result[29]=1;
+			}else{
+				Result[29]=0;
+			}
+
 		}
 		
 		updateGrid(Result);
