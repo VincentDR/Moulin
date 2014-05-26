@@ -154,7 +154,7 @@ public class Plateau extends Observable implements Serializable{
 	
 	
 	public int[] charger(){
-		int[] Result = new int[29];
+		int[] Result = new int[30];
 		
 		Result[0] = 7;
 		
