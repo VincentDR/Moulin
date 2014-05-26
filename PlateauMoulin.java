@@ -1743,8 +1743,6 @@ public class PlateauMoulin extends Plateau{
 		if(Result[1]<18){
 			Result[3] = 9 - (nbPiecesJoueur1+ (9 - ((this.getTourDeJeu()+1)/2)));
 			Result[4] = 9 - (nbPiecesJoueur2+ (9 - (this.getTourDeJeu()/2)));
-			System.out.println("Result[3] = " + Result[3] );
-			System.out.println("Result[4] = " + Result[4] );
 		}else{
 			Result[3] = 9-nbPiecesJoueur1;
 			Result[4] = 9-nbPiecesJoueur2;
