@@ -352,28 +352,24 @@ public class PlateauMoulin extends Plateau{
 		return false;
 	}
 	
-	//Ajoute une pièce sur PlaceAJouer du joueur actif
+	//Ajoute une pièce sur PlaceAJouer pour le joueur actif et vérifie la présence d'un moulin
 	public void AjouterPiece(int PlaceAJouer){
 		int []result = new int [8];
 		InitResult(result);
 		
 		if(CoupValide(PlaceAJouer))
 		{
-			result[0]=1;
+			result[0]=1; //Placement
 			result[2]=PlaceAJouer;
 			getPieces().elementAt(PlaceAJouer).setProprietaire(getJoueurActif());
 			if(PresenceMoulin(PlaceAJouer,result,2)){
-				//System.out.println("Moulin");
-				result[0]=4;
+				result[0]=4; // Placement + Moulin
 				if( (0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){ // 
-				// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
+				// Ordi dans jeu et c'est le tour de la machine (JvsO) ou deux ordi en jeu (OvsO)
 					
 					int Choix=CiblePrioritaire(getJoueurActif().getNiveau());
-					System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
-					//Placement + Moulin a la case Choix
 					this.getPieces().elementAt(Choix).setProprietaire(new Joueur());
-
-					result[5]=Choix;
+					result[5]=Choix; // Pièce à détruire
 				}
 			}
 			TourDeJeu++;
@@ -382,7 +378,7 @@ public class PlateauMoulin extends Plateau{
 		updateGrid(result);		
 	}
 	
-	//Deplace une pièce de PlaceADeplacer vers PlaceAJouer et vérifie la présence d'un moulin grâce à posses
+	//Déplace une pièce de PlaceADeplacer vers PlaceAJouer et vérifie la présence d'un moulin grâce à posses
 	public void DeplacerPiece(int PlaceADeplacer, int PlaceAJouer, int posses)
 	{
 		
@@ -393,20 +389,17 @@ public class PlateauMoulin extends Plateau{
 			if(CoupValide(PlaceAJouer) && estVoisin(PlaceADeplacer,PlaceAJouer)){
 				getPieces().elementAt(PlaceADeplacer).setProprietaire(new Joueur());
 				getPieces().elementAt(PlaceAJouer).setProprietaire(getJoueurActif());
-				result[0]=2; //Deplacement
+				result[0]=2; // Déplacement
 				result[3]=PlaceADeplacer;
 				result[4]=PlaceAJouer;
 				if(PresenceMoulin(PlaceAJouer,result,4)){
-					result[0]=5; //Deplacement Moulin
+					result[0]=5; //Déplacement + Moulin
 					if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi ){
 					// Ordi dans jeu et c'est le tour de l'ordi(JvsO) ou deux ordi en jeu (OvsO)
 
 						int Choix=CiblePrioritaire(getJoueurActif().getNiveau());
-						//System.out.println("\nL'Ordi a choisi d'éliminer la pièce en position " + Choix);
-						//Placement + Moulin a la case Choix
 						this.getPieces().elementAt(Choix).setProprietaire(new Joueur());
-						
-						result[5]=Choix; //Piece à détruire
+						result[5]=Choix; // Pièce à détruire
 					}
 				}
 				TourDeJeu++;
@@ -433,23 +426,23 @@ public class PlateauMoulin extends Plateau{
 	
 	
 	//Retire la pièce à la case PlaceARetirer, PosseAdv est la possession du joueur Non-Actif
-	public void RetirerPiece(int PlaceARetirer, int posseAdv){
+	public void RetirerPiece(int PlaceARetirer, int posseAdv)
+	{
 		int []result = new int [8];
 		InitResult(result);
-		// getPossession() renvoi 1 pour l'ordi et 2 pour l'humain
+		
 		if(this.getPieces().elementAt(PlaceARetirer).getPossession()==posseAdv ){
-			// Si la case ne forme pas un moulin -> OK
-			if(!PresenceMoulin(PlaceARetirer)){
+			if(!PresenceMoulin(PlaceARetirer)){ // La pièce n'est pas dans un moulin, on la retire
 				this.getPieces().elementAt(PlaceARetirer).setProprietaire(new Joueur());
 				result[0]=3;
 				result[5]=PlaceARetirer;
 			}
-			else{ // La case forme un moulin, on cherche une case sans moulin
+			else{ // La pièce forme un moulin, on cherche une pièce sans moulin
 				Vector<Integer> V = PiecesPossedeesPar(posseAdv); 
 				boolean trouveCase = false;
 				int compt = 0;
 				while(trouveCase == false && compt < V.size()){
-					//Si une pièce où pas de présence moulin, on ne fait rien
+					// Si il y a au moins une pièce hors moulin, on ne fait rien
 					if(!PresenceMoulin(V.elementAt(compt))){
 						trouveCase=true;
 					}
