@@ -1509,48 +1509,44 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-	// Renvoi le min ou le max en fonction de niveauHarbo, coupure alpha-beta
+	/* Renvoi le min ou le max en fonction de niveauHarbo, avec coupure alpha-beta
+	* possess représente la possession du joueur actif (son numéro de joueur)
+	*/
 	public int MinMax(int posses,int niveauOrdi,int alpha, int beta){
 		
-		//TEST fin de partie
 		int possesAdv = posses==1 ? 2 : 1;
 		
+		//TEST fin de partie pour le joueur adverse
 		Vector<Integer> piecesJNActif = PiecesPossedeesPar(possesAdv);
 		if(piecesJNActif.size()<=3 && TourDeJeu >=18){ 
-//System.out.println("Dans minMax est feuille terminale + nivharbo :"+this.nivArbo);
 			return (10000000);
 		}		
 		
-		if(this.EstFeuille(niveauOrdi)){ // Si le noeud est une feuille
+		// Si le noeud est une feuille
+		if(this.EstFeuille(niveauOrdi)){
 			int eval = this.EvalPlateau();
-//System.out.println("Dans minMax est feuille + nivharbo :"+this.nivArbo+" eval :"+eval);
 			return eval;
 		}
 		else{
 			Vector<PlateauMoulin> vectPlateau = this.plateauCoupSuivant(posses);
-//System.out.println("nb descendans :"+vectPlateau.size()+"nivharbo :"+this.nivArbo);			
 			// On va utiliser la possession de l'adversaire pour le minMax des "sous plateaux"
 			
-			if(this.noeudMax(posses)){ // posses ==1
-//System.out.println("Dans minMax noeud max + nivharbo :"+this.nivArbo);
+			if(this.noeudMax(posses)){ // noeud Max si possess égal à la possession du joueur actif
 				for(int i=0; i<vectPlateau.size();i++){
 					alpha = Math.max(alpha,vectPlateau.elementAt(i).MinMax(possesAdv,niveauOrdi,alpha,beta));
 					if(alpha>=beta){
 						return beta;
 					}
 				}
-//System.out.println("Result max:"+minMax);
 				return alpha;
 			}
 			else{ // noeud Min
-//System.out.println("Dans minMax noeud min + nivharbo :"+this.nivArbo);
 				for(int i=0; i<vectPlateau.size();i++){
 					beta = Math.min(beta,vectPlateau.elementAt(i).MinMax(possesAdv,niveauOrdi,alpha,beta));
 					if(alpha>=beta){
 						return alpha;
 					}
 				}
-//System.out.println("Result min:"+minMax);
 				return beta;
 			}
 		}
