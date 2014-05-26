@@ -48,8 +48,8 @@ public class Constantes {
 
 	public static final int VITESSE_ROT = 10; // 10 default
 	public static final int VITESSE_DEP = 30; // 30 default
-	public static final int VITESSE_EXPL = 30; // 70 default
+	public static final int VITESSE_EXPL = 60; // 70 default
 	public static final int VITESSE_DEP_LASER = 10; // 10 default
-	public static final int VITESSE_PLA = 30; // 60 default
+	public static final int VITESSE_PLA = 50; // 60 default
 	
 }
