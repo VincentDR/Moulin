@@ -138,7 +138,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private JLabel labelJoueur, labelJoueur1, labelJoueur2, labelFaction, labelDifficulte;
 	private JLabel labelFactionJ1, labelFactionJ2;
 	private JButton boutonFactionEmpire, boutonFactionRebelle , boutonEchangerFactions;
-	private JButton boutonFactionEmpirePoney, boutonFactionRebellePoney;
 	private ImageIcon imgXwing, imgXwingSelect, imgTIE, imgTIESelect;
 	private ImageIcon imgXwingPoney, imgXwingSelectPoney, imgTIEPoney, imgTIESelectPoney;
 	private JTextField pseudo, pseudo1, pseudo2;
@@ -214,20 +213,16 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private ImageIcon [] imgCocardeEmpirePoney;
 	private ImageIcon [] imgCocardeRebellePoney;
 
-	private JLabel cocardeEmpire, cocardeEmpirePoney;
-	private JLabel cocardeRebelle, cocardeRebellePoney;
+	private JLabel cocardeEmpire;
+	private JLabel cocardeRebelle;
 	
 	private ImageIcon cases;
-	
-	private int cmpt_anim;
 	
 	private JLabel labelGifAPropos;
 	
 	private JButton [] casesVide;
 	private Vaisseau [][] vaisseau;
 	private Laser [] laser;
-	private Laser laserTest;
-	private Vaisseau vaisseauTest;
 	private JLabel pseudoJ1, pseudoJ2;
 	
 	private Controleur controleur;
@@ -1034,7 +1029,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		
 		
 		
-	    //On ajoute les cartes Ã  la pile avec un nom pour les retrouver
+	    //On ajoute les cartes Ã  la pile avec un nom pour les retrouver
 	    this.add(panelMenu, "Menu");
 	    this.add(panelJeu, "Jeu");
 	    this.add(panelNouvPartie, "NouvellePartie");
@@ -1929,7 +1924,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 							this.remove(casesVide[i]);
 							this.add(casesVide[i]);
 							casesVide[i].setLocation(xTemp, yTemp);
-							// On met Ã  jour le plateau
+							// On met Ã  jour le plateau
 							for(int c=0;c<Constantes.NB_CASES;c++)
 							{
 								if(plateau[c]==vaisseau[tourDeJeu][indice])
@@ -2029,7 +2024,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						// construction d'un Thread en passant cette instance de Runnable en paramÃ¨tre
 						//Thread thread =  new Thread(vaisseau[faction[tourDeJeu]][i]) ;
 						
-				    	 // lancement de ce thread par appel Ã  sa méthode start()
+				    	 // lancement de ce thread par appel Ã  sa méthode start()
 				    	
 						//thread.start() ;
 				    	 // cette méthode rend immédiatement la main
@@ -2128,11 +2123,11 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					vaisseau[j][i].setEtat(Constantes.ET_DEPL);
 					vaisseau[j][i].calculerRotation(casesVide[positionFin].getX(), casesVide[positionFin].getY());
 					thread =  new Thread(vaisseau[j][i]) ;
-			    	 // lancement de ce thread par appel Ã  sa méthode start()
+			    	 // lancement de ce thread par appel Ã  sa méthode start()
 					thread.start() ;
 					
 					vaisseau[j][i].setSelectionne(false);
-					// On met Ã  jour le plateau
+					// On met Ã  jour le plateau
 					plateau[positionDebut] = null;
 					plateau[positionFin] = vaisseau[j][i];
 
@@ -2143,7 +2138,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		}
 		
 		// A tester // marche surement pas
-		// On met Ã  jour le plateau
+		// On met Ã  jour le plateau
 		/*plateau[positionDebut].setLocation(casesVide[positionFin].getLocation());
 		plateau[positionFin] = plateau[positionDebut];
 		plateau[positionDebut] = null;
@@ -2175,7 +2170,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					
 					// construction d'un Thread
 					thread =  new Thread(vaisseau[j][i]) ;
-			    	 // lancement de ce thread par appel Ã  sa méthode start()
+			    	 // lancement de ce thread par appel Ã  sa méthode start()
 					thread.start() ;
 					
 					
@@ -2186,7 +2181,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}*/
-					// On met Ã  jour le plateau
+					// On met Ã  jour le plateau
 					plateau[position] = null;
 					// On décrémente le nombre de vaisseau restant
 					//cmptVaiss[j]--;
@@ -2222,17 +2217,17 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	public void ajouterVaisseau(int position)
 	{
-		// On met Ã  jour le plateau
+		// On met Ã  jour le plateau
 		plateau[position] = vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]];
 		// On stock la position
 		positionCaseVisee = position;
 		
-		// On met Ã  jour l'état du vaisseau
+		// On met Ã  jour l'état du vaisseau
 		vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]].setEtat(Constantes.ET_PLAC_1);
 		
 		// On lance le thread
 		thread =  new Thread(vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]]) ;
-    	 // lancement de ce thread par appel Ã  sa méthode start()
+    	 // lancement de ce thread par appel Ã  sa méthode start()
 		thread.start() ;
 		
 		
@@ -2307,7 +2302,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		for(int l=0;l<3;l++)
 		{
 			thread =  new Thread(laser[l]) ;
-	    	 // lancement de ce thread par appel Ã  sa méthode start()
+	    	 // lancement de ce thread par appel Ã  sa méthode start()
 			thread.start() ;
 		}
 	}
@@ -2321,7 +2316,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
         int x=0, y=0;
         //for(int c=0;c<Constantes.NB_CASES;c++)
         //	panelPlateauJeu.add(casesVide[c]);
-        // Variable indiquant le vaisseau Ã  afficher
+        // Variable indiquant le vaisseau Ã  afficher
         int k=0;
         // 3 carrés imbriqués
         for(int j=0;j<3;j++)
@@ -2485,10 +2480,10 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						panelPlateauJeu.add(casesVide[positionCaseVisee]);
 						casesVide[positionCaseVisee].setLocation(p);*/
 
-						// On positionne le vaisseau Ã  l'endroit de la case
+						// On positionne le vaisseau Ã  l'endroit de la case
 						vaisseau[0][cmptVaiss[0]].setLocation(p);//vaisseau[i].setDeplacement(20);
 						
-						// On met Ã  jour le plateau
+						// On met Ã  jour le plateau
 						plateau[i] = vaisseau[0][cmptVaiss[0]];
 						cmptVaiss[0]++;
 					}
@@ -2501,41 +2496,36 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						panelPlateauJeu.add(casesVide[positionCaseVisee]);
 						casesVide[positionCaseVisee].setLocation(p);*/
 
-						// On positionne le vaisseau Ã  l'endroit de la case
+						// On positionne le vaisseau Ã  l'endroit de la case
 						vaisseau[1][cmptVaiss[1]].setLocation(p);//vaisseau[i].setDeplacement(20);
-						// On met Ã  jour le plateau
+						// On met Ã  jour le plateau
 						plateau[i] = vaisseau[1][cmptVaiss[1]];
 						cmptVaiss[1]++;
 					}
 					
 				}
 				
-				for(int i=0;i<Result[3];i++)
+				for(int i=0;i<tab[3];i++)
 				{
 					panelTop.remove(vaisseau[0][cmptVaiss[0]]);
 					cmptVaiss[0]++;
 				}
-				for(int i=0;i<Result[4];i++)
+				for(int i=0;i<tab[4];i++)
 				{
-					panelBot.remove(vaisseau[1]|cmptVaiss[1]]);
+					panelPionsBot.remove(vaisseau[1][cmptVaiss[1]]);
 					cmptVaiss[1]++;
 				}
 				
-				}
-				else
-				{
-					
-				}
-				
+			
 				panelJeu.validate();
 				panelJeu.repaint();
 				
 				break;
 			default:
-				
+	
 				break;
 		}
-		
+	
 
 		
 		/* 
@@ -2593,7 +2583,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				cocardeRebelle.setIcon(imgCocardeRebellePoney[1]);
 				cocardeEmpire.setIcon(imgCocardeEmpirePoney[0]);}
 		}
-		// Sinon c'est Ã  l'empire de jouer
+		// Sinon c'est Ã  l'empire de jouer
 		else
 		{
 			// On allume sa cocarde
@@ -2697,7 +2687,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		}
 		
 
-		// On met Ã  jour l'état du vaisseau
+		// On met Ã  jour l'état du vaisseau
 		vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]].setEtat(Constantes.ET_PLAC_2);
 		
 		
@@ -2709,12 +2699,12 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		casesVide[positionCaseVisee].setLocation(p);
 		
 		
-		// On positionne le vaisseau Ã  l'endroit de la case
+		// On positionne le vaisseau Ã  l'endroit de la case
 		vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]].setLocation(p);//vaisseau[i].setDeplacement(20);
 		
 		// On lance le thread
 		thread =  new Thread(vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]]) ;
-    	 // lancement de ce thread par appel Ã  sa méthode start()
+    	 // lancement de ce thread par appel Ã  sa méthode start()
 		thread.start() ;
 		
 		// On ajoute 1 au compteur de vaisseau en fonction du joueur
@@ -2798,7 +2788,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				tirerLasers();
 				//detruireVaisseau(positionDuVaissVise);
 			}
-			// Si c'est Ã  l'ordi de jouer et qu'il a fait un moulin 
+			// Si c'est Ã  l'ordi de jouer et qu'il a fait un moulin 
 			// (+ mode JvsIA activé)
 			else if(modeDeJeu == Constantes.MODE_JVSO && tourDeJeu==tourOrdi) // true en atendant
 			{
@@ -3032,7 +3022,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	public void raz()
 	{
 		
-		System.out.println("On remet tout Ã  zero");
+		System.out.println("On remet tout Ã  zero");
 		// On enleve tous les vaisseaux du top, bot et jeu
 		panelPionsTop.removeAll();
 		panelPionsBot.removeAll();
@@ -3067,7 +3057,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	        	int a= j==0?1:0;
 	        	a= j==0?0:1;
 	        	
-	        	//vaisseau[j][i] = new Vaisseau(this, a, i);// On met Ã  jour l'état du vaisseau
+	        	//vaisseau[j][i] = new Vaisseau(this, a, i);// On met Ã  jour l'état du vaisseau
 	        	vaisseau[j][i].raz();
 	
 	        	/*vaisseau[j][i].setFocusPainted( false ); // enleve la bordure de l'image
