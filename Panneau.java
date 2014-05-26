@@ -43,7 +43,6 @@ import java.util.TimerTask;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -185,20 +184,20 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	private File fileFond = new File("Images/Fond/fond.png");
 	private File fileFond2 = new File("Images/Fond/fond2.png");
 	private File fileFond3 = new File("Images/Fond/fond3.png");
-	private File fileFondPoney = new File("Images/Fond/fond4.png");
-	private File fileFondPoney2 = new File("Images/Fond/fond5.png");
-	private File fileFondPoney3 = new File("Images/Fond/fond6.png");
+	private File fileFondPoney = new File("Images/Mlp/fond4.png");
+	private File fileFondPoney2 = new File("Images/Mlp/fond5.png");
+	private File fileFondPoney3 = new File("Images/Mlp/fond6.png");
 	private File fileFondMenu= new File("Images/Fond/fondMenu.png");
-	private File fileFondMenuPoney= new File("Images/Fond/fondMenuPoney.png");
+	private File fileFondMenuPoney= new File("Images/Mlp/fondMenuPoney.png");
 	private File fileFondRegles= new File("Images/Fond/fondRegles.png");
-	private File fileFondReglesPoney= new File("Images/Fond/fondReglesPoney.png");
+	private File fileFondReglesPoney= new File("Images/Mlp/fondReglesPoney.png");
 	private File fileFondVictoireEmpire= new File("Images/Fond/fondVictoireEmpire.png");
-	private File fileFondVictoireEmpirePoney= new File("Images/Fond/fondVictoireEmpirePoney.png");
+	private File fileFondVictoireEmpirePoney= new File("Images/Mlp/fondVictoireEmpirePoney.png");
 	private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
-	private File fileFondVictoireRebellePoney = new File("Images/Fond/fondVictoireRebellePoney.png");
+	private File fileFondVictoireRebellePoney = new File("Images/Mlp/fondVictoireRebellePoney.png");
 	//private File fileFondVictoireRebelle = new File("Images/Fond/fondVictoireRebelle.png");
 	private File fileFondAPropos= new File("Images/Fond/fondAPropos.png");
-	private File fileFondAProposPoney= new File("Images/Fond/fondAProposPoney.gif");
+	private File fileFondAProposPoney= new File("Images/Mlp/fondAProposPoney.gif");
 	
 	
 	// DECLARATION DES IMAGES
@@ -229,15 +228,15 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	public Panneau(Controleur controleur)
 	{		
 
-		faction[tourOrdi] = 1;
-		faction[1] = 0;
+		faction[tourOrdi] = Constantes.FACTION_REBELLE;
+		faction[1] = Constantes.FACTION_EMPIRE;
 		
 		// initialisation de la police star wars
 		//policeStarWars = new Font("Times New Roman", Font.BOLD, 30);
 		//policeStarWars = new Font();
 		//policeStarWars = Font.createFont(Font.TRUETYPE_FONT, "Starjhol.ttf");
 		try {
-			policeStarWars = Font.createFont(Font.TRUETYPE_FONT, new File("Starjhol.ttf"));
+			policeStarWars = Font.createFont(Font.TRUETYPE_FONT, new File("Police/Starjhol.ttf"));
 			policeSpaceAge = Font.createFont(Font.TRUETYPE_FONT, new File("Police/spaceAge.ttf"));
 		} catch (FontFormatException | IOException e1) {
 			// TODO Auto-generated catch block
@@ -295,8 +294,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			}
 			
 			
-		//}
-		
 		
 		btnNouvPartie = new JButton(imgNouvPartie[0]);
 		btnReprPartie = new JButton(imgReprPartie[0]);
@@ -460,33 +457,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		btnRetourP0.setForeground(jauneSW);
 		btnRetourP0.setBorder(bordureJaune);
 		
-		//btnRetourP0.setPreferredSize(new Dimension(200,50));
-
-		/*btnJvsJ.setFont(policeStarWars);
-		btnJvsJ.setText("joueur vs joueur");
-		btnJvsJ.setPreferredSize(new Dimension(380,120));
-		btnJvsJ.setVerticalTextPosition(SwingConstants.CENTER);
-		btnJvsJ.setHorizontalTextPosition(SwingConstants.CENTER); 
-		
-		btnJvsO.setFont(policeStarWars);
-		btnJvsO.setText("joueur vs ordi");
-		//btnJvsJ.setForeground(jauneSW);
-		// couleur jaune : 255 , 241, 31
-		btnJvsO.setVerticalTextPosition(SwingConstants.CENTER);
-		btnJvsO.setHorizontalTextPosition(SwingConstants.CENTER); 
-
-		btnOvsO.setFont(policeStarWars);
-		btnOvsO.setText("ordi vs ordi");
-		btnOvsO.setPreferredSize(new Dimension(380,120));
-		btnOvsO.setVerticalTextPosition(SwingConstants.CENTER);
-		btnOvsO.setHorizontalTextPosition(SwingConstants.CENTER); */
 
 		btnRetourP0.setFont(policeStarWars);
 		btnRetourP0.setText("   retour   ");
-		
-	/*	btnJvsJ.setFocusPainted( false );
-		btnJvsJ.setBorderPainted(false);
-		btnJvsJ.setContentAreaFilled(false);*/
 		
 		gbc = null;
 		gbc = new GridBagConstraints();
@@ -1291,14 +1264,14 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			else if(panelVictoireEmpire.isVisible())
 			{
 				if(modePoney>0)
-					g.drawImage(imageFondVictoireEmpirePoney, 200, 140, null);
+					g.drawImage(imageFondVictoireEmpirePoney, 0, 0, null);
 				else
 					g.drawImage(imageFondVictoireEmpire, 200, 140, null);
 			}
 			else if(panelVictoireRebelle.isVisible())
 			{
 				if(modePoney>0)
-					g.drawImage(imageFondVictoireRebellePoney, 200, 140, null);
+					g.drawImage(imageFondVictoireRebellePoney, 0, 0, null);
 				else
 					g.drawImage(imageFondVictoireRebelle, 200, 140, null);
 			}
@@ -1347,7 +1320,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			btnChargerPartie.setIcon(imgChargerPartie[1]);
 		}
-		else if(event.getSource() == btnSauvPartie)
+		else if(event.getSource() == btnSauvPartie && reprendrePartieCliquable)
 		{
 			btnSauvPartie.setIcon(imgSauvPartie[1]);
 		}
@@ -1482,7 +1455,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			charger();
 		}
 		// Clic sur "Sauvegarder Partie"
-		else if(event.getSource() == btnSauvPartie && SwingUtilities.isLeftMouseButton(event) )
+		else if(event.getSource() == btnSauvPartie && SwingUtilities.isLeftMouseButton(event)  && reprendrePartieCliquable)
 		{
 			//controleur.save(nomPartie)
 			sauvegarder();
@@ -1951,7 +1924,9 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		} // Fin de parcours des cases
 			
 		
-
+System.out.println("phase = " + phase);
+System.out.println("tourDeJeu = " + tourDeJeu);
+System.out.println("faction = " + faction[tourDeJeu]);
 			// Permet de savoir le numero du tour de l'autre joueur
 			int tourAutreJoueur = tourDeJeu==0 ? 1 : 0;
 			
@@ -2020,14 +1995,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						// A MODIFIER
 						vaisseau[faction[tourDeJeu]][i].setSelectionne(true);//vaisseau[i].setDeplacement(20);
 						//mouseMoved(event);
-						// A UTILISER QUAND ON VEUT SE DEPLACER (ou exploser)
-						// construction d'un Thread en passant cette instance de Runnable en paramÃ¨tre
-						//Thread thread =  new Thread(vaisseau[faction[tourDeJeu]][i]) ;
-						
-				    	 // lancement de ce thread par appel Ã  sa méthode start()
-				    	
-						//thread.start() ;
-				    	 // cette méthode rend immédiatement la main
 					}
 					
 					
@@ -2217,12 +2184,14 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	
 	public void ajouterVaisseau(int position)
 	{
-		// On met Ã  jour le plateau
+		System.out.println("tourDeJeu = " + tourDeJeu);
+		System.out.println("faction = " + faction[tourDeJeu]);
+		// On met a  jour le plateau
 		plateau[position] = vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]];
 		// On stock la position
 		positionCaseVisee = position;
 		
-		// On met Ã  jour l'état du vaisseau
+		// On met a  jour l'état du vaisseau
 		vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]].setEtat(Constantes.ET_PLAC_1);
 		
 		// On lance le thread
@@ -2382,7 +2351,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 		 	// Placement
 			case 1:
-				//tourDeJeu=tab[1]-1;
 				actionEnCoursVaisseau=Constantes.PHASE_DE_PLACEMENT;
 				ajouterVaisseau(tab[2]);
 				
@@ -2461,15 +2429,22 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				System.out.println("case 7");
 				raz();
 				phase = tab[2];
+				System.out.println("phase = " + tab[2]);
+				tourDeJeu=tab[1]%2;
+				modeDeJeu=2-tab[29];
+				System.out.println("mode de jeu = " + modeDeJeu);
+				System.out.println("tourDeJeu = " + tourDeJeu);
 		        for(int c=0;c<Constantes.NB_CASES;c++)
 		        {
 		        	panelPlateauJeu.add(casesVide[c]);
 		        }
 				initialisation();
 				panelPlateauJeu.remove(boutonCommencerPartie);
+				reprendrePartieCliquable = true;
+				
 
 				// difficulte = tab[3];
-				for(int i=0;i<Constantes.NB_VAISSEAUX;i++)
+				for(int i=0;i<Constantes.NB_CASES;i++)
 				{
 					if(tab[5+i] == 1)
 					{
@@ -2480,8 +2455,11 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 						panelPlateauJeu.add(casesVide[positionCaseVisee]);
 						casesVide[positionCaseVisee].setLocation(p);*/
 
-						// On positionne le vaisseau Ã  l'endroit de la case
+						// On positionne le vaisseau a l'endroit de la case
 						vaisseau[0][cmptVaiss[0]].setLocation(p);//vaisseau[i].setDeplacement(20);
+						panelPlateauJeu.remove(casesVide[i]);
+						panelPlateauJeu.add(casesVide[i]);
+						casesVide[i].setLocation(p);
 						
 						// On met Ã  jour le plateau
 						plateau[i] = vaisseau[0][cmptVaiss[0]];
@@ -2498,16 +2476,18 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
 						// On positionne le vaisseau Ã  l'endroit de la case
 						vaisseau[1][cmptVaiss[1]].setLocation(p);//vaisseau[i].setDeplacement(20);
+						panelPlateauJeu.remove(casesVide[i]);
+						panelPlateauJeu.add(casesVide[i]);
+						casesVide[i].setLocation(p);
 						// On met Ã  jour le plateau
 						plateau[i] = vaisseau[1][cmptVaiss[1]];
 						cmptVaiss[1]++;
 					}
 					
 				}
-				
 				for(int i=0;i<tab[3];i++)
 				{
-					panelTop.remove(vaisseau[0][cmptVaiss[0]]);
+					panelPionsTop.remove(vaisseau[0][cmptVaiss[0]]);
 					cmptVaiss[0]++;
 				}
 				for(int i=0;i<tab[4];i++)
@@ -2516,9 +2496,13 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					cmptVaiss[1]++;
 				}
 				
-			
+				
+
+				
 				panelJeu.validate();
 				panelJeu.repaint();
+				
+				cl.show(this, "Jeu");
 				
 				break;
 			default:
@@ -2620,8 +2604,11 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			// A l'ordi de jouer
 			else if(modeDeJeu == Constantes.MODE_JVSO && tourDeJeu==tourOrdi)
 			{
+				System.out.println("ordi go");
 				controleur.ordi(); 
 			}
+			System.out.println("tourDeJeu = " + tourDeJeu);
+			System.out.println("tourOrdi = " + tourOrdi);
 		}
 		
 	}
@@ -2632,8 +2619,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		{
 			if(vaisseau[faction[tourDeJeu]][i].getMoulin()==2)
 			{
-				vaisseau[faction[tourDeJeu]][i].setAngle(plateau[positionDuVaissVise].getX()+Constantes.TAILLE_CASE/2
-						,plateau[positionDuVaissVise].getY()+Constantes.TAILLE_CASE/2);
+				vaisseau[faction[tourDeJeu]][i].setAngle(1+plateau[positionDuVaissVise].getX()+Constantes.TAILLE_CASE/2
+						,1+plateau[positionDuVaissVise].getY()+Constantes.TAILLE_CASE/2);
 			}
 				
 		}
@@ -2940,8 +2927,16 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					cocardeEmpire.setIcon(imgCocardeEmpire[0]);
 					cocardeRebelle.setIcon(imgCocardeRebelle[0]);
 					panelAPropos.remove(labelGifAPropos);
-			        labelFactionJ1.setIcon(imgXwing);
-			        labelFactionJ2.setIcon(imgTIE);
+					if(boutonEchangerFactions.isSelected())
+					{
+						labelFactionJ1.setIcon(imgTIE);
+						labelFactionJ2.setIcon(imgXwing);
+					}
+					else
+					{
+						labelFactionJ1.setIcon(imgXwing);
+						labelFactionJ2.setIcon(imgTIE);
+					}
 			        if(boutonFactionRebelle.isSelected())
 			        {
 			        	boutonFactionRebelle.setIcon(imgXwingSelect);
@@ -2964,6 +2959,18 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 					panelAPropos.add(labelGifAPropos);
 			        labelFactionJ1.setIcon(imgXwingPoney);
 			        labelFactionJ2.setIcon(imgTIEPoney);
+			        
+					if(boutonEchangerFactions.isSelected())
+					{
+						labelFactionJ1.setIcon(imgTIEPoney);
+						labelFactionJ2.setIcon(imgXwingPoney);
+					}
+					else
+					{
+						labelFactionJ1.setIcon(imgXwingPoney);
+						labelFactionJ2.setIcon(imgTIEPoney);
+					}
+					
 			        if(boutonFactionRebelle.isSelected())
 			        {
 			        	boutonFactionRebelle.setIcon(imgXwingSelectPoney);
@@ -3022,7 +3029,7 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 	public void raz()
 	{
 		
-		System.out.println("On remet tout Ã  zero");
+		System.out.println("On remet tout a  zero");
 		// On enleve tous les vaisseaux du top, bot et jeu
 		panelPionsTop.removeAll();
 		panelPionsBot.removeAll();
@@ -3034,6 +3041,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		actionEnCoursVaisseau=Constantes.PHASE_DE_JEU;
 		tourDeJeu = 0;
 		phase = 1;
+		faction[0] = Constantes.FACTION_REBELLE; // faction du joueur 1 (ou ordi)
+		faction[1] = Constantes.FACTION_EMPIRE; // faction du joueur 2
 		
 		// On ajoute les cases vides et reinitialise le plateau
         for(int c=0;c<Constantes.NB_CASES;c++)
