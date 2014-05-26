@@ -10,14 +10,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-public class Laser extends JLabel  implements Runnable{
+public class Laser extends JButton  implements Runnable{
 
 	private Panneau monPanneau;
 	private ImageIcon imageOriginale, imageOriginalePoney;
 	private int etat = Constantes.ET_NULL;
-			 // Aucun |Â Deplacement | Explosion
+			 // Aucun | Deplacement | Explosion
 	//private Direction direction = Direction.HAUT;
-	 // 0-Aucun | 1 Deplacement | 2-Explosion
+	 // Aucun | Deplacement | Explosion
 
 	// Equipe du vaisseau : 0 : Rebelle | 1 : Imperiaux
 	private int equipe;
@@ -25,7 +25,7 @@ public class Laser extends JLabel  implements Runnable{
 	
 	private boolean sens;
 	private int x, y;
-	 		// 0 : Haut | 1 : Bas | Gauche | Droite
+	 		// 0 : Haut | 1 : Bas | Gauche | Droite
 	// Déplacement du vaisseau verticalement (en pixel)
 	//private int deplacementY;
 	private int nbr_anim;
@@ -49,6 +49,12 @@ public class Laser extends JLabel  implements Runnable{
     	this.modePoney = monPanneau.modePoney();
     	
     	this.setPreferredSize(new Dimension(200,200));
+
+		
+		this.setFocusPainted( false );
+		this.setBorderPainted(false);
+		this.setContentAreaFilled(false);
+		
 		
 		this.monPanneau = monPanneau;
 
@@ -160,10 +166,12 @@ public class Laser extends JLabel  implements Runnable{
 		x2=getX()+getWidth()/2;
 		y2=getY()+getHeight()/2;
 		//test = Math.toDegrees(Math.atan((x1-x2)/(y2-y1)));
-		if((y2-y1)>=0)
+		if((y2-y1)>0)
 			angle = Math.toDegrees(Math.atan((x1-x2)/(y2-y1)));
-		else
+		else if((y2-y1)<0)
 			angle = Math.toDegrees(Math.atan((x1-x2)/(y2-y1)))+180;
+		else
+			angle = Math.toDegrees(Math.atan((x1-x2)/(1/Integer.MAX_VALUE)));
 		
 		//actualiserAngle();
 		if(modePoney>0)
