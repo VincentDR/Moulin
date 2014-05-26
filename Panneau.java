@@ -1266,14 +1266,14 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 				if(modePoney>0)
 					g.drawImage(imageFondVictoireEmpirePoney, 0, 0, null);
 				else
-					g.drawImage(imageFondVictoireEmpire, 200, 140, null);
+					g.drawImage(imageFondVictoireEmpire, 0, 0, null);
 			}
 			else if(panelVictoireRebelle.isVisible())
 			{
 				if(modePoney>0)
 					g.drawImage(imageFondVictoireRebellePoney, 0, 0, null);
 				else
-					g.drawImage(imageFondVictoireRebelle, 200, 140, null);
+					g.drawImage(imageFondVictoireRebelle, 0, 0, null);
 			}
 			
 		/*} catch (IOException e) {
