@@ -1663,25 +1663,22 @@ public class PlateauMoulin extends Plateau{
 	// Méthode appelée par la vue, quand c'est au tour d'un ordi de jouer
 	public int[] ControleurOrdi(){
 			
-		//System.out.println("Tourdejeu modele "+TourDeJeu);
 		int Choix;
 		int[] Result = new int[8];
-		InitResult(Result); // init à-1
+		InitResult(Result);
 			
-		if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){
+		if((0==TourDeJeu%2 && ordiVsJoueur) || ordiVsOrdi){ //On vérifie que c'est bien au tour d'une machine
 			int numJActif = getJoueurActif().getNumJoueur();
 			int niveauJActif = getJoueurActif().getNiveau();
-			//Possession a l'ordi
 			Result[1]=numJActif;
 			
-			if(TourDeJeu<18){
+			if(TourDeJeu<18){ //Phase de placement
 				if(niveauJActif == 1){//Niveau facile
 					Choix = PlacementRandom();
 				}
-				else {
-					Choix=PlacementPrioritaire(); //Niveau = 2 ou 3 (la différence se fait dans la méthode)
+				else { // Niveau égal à 2 ou 3 pour OrdivsJoueur et 0 pour OrdivsOrdi
+					Choix=PlacementPrioritaire(); 
 				}
-				//System.out.println("\nOrdi a joué à "+Choix);
 				
 				if(CoupValide(Choix)){  
 					AjouterPiece(Choix);
@@ -1697,19 +1694,16 @@ public class PlateauMoulin extends Plateau{
 					if(niveauJActif == 1){
 						coupAJ = DeplacementRandom();
 					}
-					else{ // niveau 2 ou 3 pour OrdivsJoueur  ou 0 pour OrdivsOrdi
-						PlateauMoulin bestCoup = meilleurCoup(numJActif,niveauJActif); // posses joueurActif
+					else{ // niveau égal à 2 ou 3 pour OrdivsJoueur et 0 pour OrdivsOrdi
+						PlateauMoulin bestCoup = meilleurCoup(numJActif,niveauJActif);
 						coupAJ = coupAJouer(bestCoup);
 					}	
 					int ChoixABouger = coupAJ[0];
-					//System.out.println("ChoixABouger"+ChoixABouger);
 					int ChoixAAtteindre = coupAJ[1];
-					//System.out.println("ChoixAAtteindre"+ChoixAAtteindre);
-			
+					
 					Result[3]=ChoixABouger;
 					Result[4]=ChoixAAtteindre;
 					DeplacerPiece(ChoixABouger, ChoixAAtteindre,numJActif);
-					//System.out.println("\n Ordi déplace la case "+ChoixABouger+" vers la case "+ ChoixAAtteindre);	
 				}
 				else{
 					Result[0]=6; // Fin de partie
@@ -1721,7 +1715,7 @@ public class PlateauMoulin extends Plateau{
 	}
 	
 	
-public int[] charger(){
+	public int[] charger(){
 		int[] Result = new int[30];
 		Result = super.charger();		
 		
