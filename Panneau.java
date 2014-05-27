@@ -1792,7 +1792,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		if(event.getSource() == boutonMenu && SwingUtilities.isLeftMouseButton(event)
 				&& ((actionEnCoursVaisseau==Constantes.PHASE_DE_JEU && modeDeJeu==Constantes.MODE_JVSO && tourDeJeu!=tourOrdi)
 				|| (actionEnCoursVaisseau==Constantes.PHASE_DE_JEU && modeDeJeu==Constantes.MODE_JVSJ)
-				|| (modeDeJeu==Constantes.MODE_OVSO)) )
+				|| (modeDeJeu==Constantes.MODE_OVSO))
+				|| reprendrePartieCliquable==false)
 		{
 		        cl.show(this, "Menu");
 				panelMenu.requestFocus();
