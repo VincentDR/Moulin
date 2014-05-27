@@ -1568,8 +1568,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 
 				pseudoJ1.setText(pseudo1.getText());
 				pseudoJ2.setText(pseudo2.getText());
-				System.out.println("pseudo 1 = " + pseudoJ1.getText());
-				System.out.println("pseudo 2 = " + pseudoJ2.getText());
 				if(boutonEchangerFactions.isSelected())
 				{
 					faction[0] = Constantes.FACTION_EMPIRE; // faction du joueur 1
@@ -1792,8 +1790,8 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		if(event.getSource() == boutonMenu && SwingUtilities.isLeftMouseButton(event)
 				&& ((actionEnCoursVaisseau==Constantes.PHASE_DE_JEU && modeDeJeu==Constantes.MODE_JVSO && tourDeJeu!=tourOrdi)
 				|| (actionEnCoursVaisseau==Constantes.PHASE_DE_JEU && modeDeJeu==Constantes.MODE_JVSJ)
-				|| (modeDeJeu==Constantes.MODE_OVSO))
-				|| reprendrePartieCliquable==false)
+				|| (modeDeJeu==Constantes.MODE_OVSO)
+				|| reprendrePartieCliquable==false))
 		{
 		        cl.show(this, "Menu");
 				panelMenu.requestFocus();
@@ -1836,14 +1834,12 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 			// Si on a cliqué sur une case vide (postion i)
 			if(event.getSource() == casesVide[i] && (actionEnCoursVaisseau==Constantes.PHASE_DE_JEU))
 			{
-				  System.out.println("clique sur caseVide num " + i);
 				  
 				  
 				// Test si on est dans la premiere phase ou seconde
 				if(phase == 1) // Premiere phase de jeu
 				{
 					//System.out.println("cmptVaiss["+tourDeJeu+"] = " + cmptVaiss[tourDeJeu]);
-					System.out.println("tourDeJeu =" + tourDeJeu);
 					// Test a enlever
 					if(cmptVaiss[faction[tourDeJeu]] < Constantes.NB_VAISSEAUX/2)
 					{
@@ -1925,9 +1921,6 @@ public class Panneau extends JPanel implements MouseListener, MouseMotionListene
 		} // Fin de parcours des cases
 			
 		
-System.out.println("phase = " + phase);
-System.out.println("tourDeJeu = " + tourDeJeu);
-System.out.println("faction = " + faction[tourDeJeu]);
 			// Permet de savoir le numero du tour de l'autre joueur
 			int tourAutreJoueur = tourDeJeu==0 ? 1 : 0;
 			
@@ -2022,7 +2015,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 		// TODO Auto-generated method stub
 		if(actionEnCoursVaisseau==Constantes.PHASE_DE_CHOIX_CIBLE)
 		{
-			System.out.println("phase de tir activé !");
 			for(int i=0;i<Constantes.NB_VAISSEAUX/2;i++)
 			{
 				//System.out.println(tourDeJeu);
@@ -2049,7 +2041,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 					{
 						// On recuperer la position du composant par rapport a la fenetre
 						// On lui ajoute la position de la souris par rapport au composant
-						System.out.println("eventX = " + event.getComponent().getX());
 						int x = event.getComponent().getX() + event.getX();
 						int y = event.getComponent().getY() + event.getY();
 						vaisseau[faction[tourDeJeu]][i].setAngle(x,y);
@@ -2185,8 +2176,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 	
 	public void ajouterVaisseau(int position)
 	{
-		System.out.println("tourDeJeu = " + tourDeJeu);
-		System.out.println("faction = " + faction[tourDeJeu]);
 		// On met a  jour le plateau
 		plateau[position] = vaisseau[faction[tourDeJeu]][cmptVaiss[faction[tourDeJeu]]];
 		// On stock la position
@@ -2219,7 +2208,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 			
 			if(plateau[c]!=null && plateau[c].getMoulin()==2)
 			{
-				System.out.println("indiceLaser = " + indiceLaser);
 				laser[indiceLaser] = new Laser(this, faction[tourDeJeu], plateau[c].getX(), plateau[c].getY(), indiceLaser);
 
 				laser[indiceLaser].setSize(new Dimension(Constantes.TAILLE_CASE, Constantes.TAILLE_CASE));
@@ -2230,13 +2218,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 				int x1=laser[indiceLaser].getX();
 				int y1=laser[indiceLaser].getY();
 				
-				for(int t=0;t<Constantes.NB_CASES;t++)
-				{
-					if(plateau[t]==null)
-						System.out.println("plateau["+t+"] = null");
-					else
-						System.out.println("plateau["+t+"] = vaisseau");
-				}
 				/*int x2= vaisseau[tourAutreJoueur][i].getX();
 				int y2= vaisseau[tourAutreJoueur][i].getY();*/
 				int x2= plateau[positionDuVaissVise].getX();
@@ -2347,7 +2328,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 		int tab [] = (int []) arg;
 		
 
-		System.out.println("tab[0] = " + tab[0]);
 		switch(tab[0])
 		{
 		 	// Placement
@@ -2355,7 +2335,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 				actionEnCoursVaisseau=Constantes.PHASE_DE_PLACEMENT;
 				ajouterVaisseau(tab[2]);
 				
-				System.out.println("tourDejeu = " + tourDeJeu);
 				break;
 			// Deplacement
 			case 2:
@@ -2427,14 +2406,10 @@ System.out.println("faction = " + faction[tourDeJeu]);
 				//cl.show(this, "VictoireEmpire");
 				break;
 			case 7:
-				System.out.println("case 7");
 				raz();
 				phase = tab[2];
-				System.out.println("phase = " + tab[2]);
 				tourDeJeu=tab[1]%2;
 				modeDeJeu=2-tab[29];
-				System.out.println("mode de jeu = " + modeDeJeu);
-				System.out.println("tourDeJeu = " + tourDeJeu);
 		        for(int c=0;c<Constantes.NB_CASES;c++)
 		        {
 		        	panelPlateauJeu.add(casesVide[c]);
@@ -2605,11 +2580,8 @@ System.out.println("faction = " + faction[tourDeJeu]);
 			// A l'ordi de jouer
 			else if(modeDeJeu == Constantes.MODE_JVSO && tourDeJeu==tourOrdi)
 			{
-				System.out.println("ordi go");
 				controleur.ordi(); 
 			}
-			System.out.println("tourDeJeu = " + tourDeJeu);
-			System.out.println("tourOrdi = " + tourOrdi);
 		}
 		
 	}
@@ -2661,7 +2633,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 	public void threadPlacementPhase1Termine()
 	{
 
-		System.out.println("phase fin thread : " + actionEnCoursVaisseau);
 		// On enleve le vaisseau de son panel d'origine
 		if(faction[tourDeJeu]==0) // Tour des Rebelles
 		{
@@ -2710,7 +2681,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 	
 	public void threadPlacement2Termine()
 	{
-		System.out.println("Placement terminé");
 		// Si moulin
 		if(plateau[positionCaseVisee].getMoulin() == 2)
 		{
@@ -2815,6 +2785,8 @@ System.out.println("faction = " + faction[tourDeJeu]);
 		
 		// On enleve le vaisseau
 		panelPlateauJeu.remove(vaisseau[faction[tourAutreJoueur]][num]);
+		panelPlateauJeu.repaint();
+		panelPlateauJeu.revalidate();
 		
 		testFinDePartie();
 		
@@ -2824,7 +2796,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 			if(vaisseau[faction[tourDeJeu]][i].getMoulin() == 2)
 			{
 	
-				System.out.println("on replace le vaisseau");
 				vaisseau[faction[tourDeJeu]][i].setAngle(0);
 				vaisseau[faction[tourDeJeu]][i].setMoulin(1);
 			}
@@ -2847,7 +2818,6 @@ System.out.println("faction = " + faction[tourDeJeu]);
 		if(actionEnCoursVaisseau==Constantes.PHASE_DE_TIR)
 		{
 			actionEnCoursVaisseau=Constantes.PHASE_D_EXPLOSION;
-			System.out.println("Moulin : destruction du vaisseau");
 			detruireVaisseau(positionDuVaissVise);
 			//if(tourDeJeu==1){ // Si c'est le tour du joueur
 				//controleur.RetirerPiece(positionDuVaissVise, tourAutreJoueur+1);
